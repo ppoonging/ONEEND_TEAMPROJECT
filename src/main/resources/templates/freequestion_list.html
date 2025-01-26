@@ -1,0 +1,10 @@
+자유게시판 페이지
+
+<tr th:each="freeQuestion : ${pageing}">
+
+    <td th:text="${freeQuestion.freeQTitle}"></td>
+
+    <td th:text="${freeQuestion.freeQContent}"></td>
+    <td th:text="${freeQuestion.freeQRegDate}"></td>
+
+</tr>
