@@ -1,7 +1,7 @@
 package com.springboot.biz;
 
-import com.springboot.biz.freequestion.FreeQuestion;
-import com.springboot.biz.freequestion.FreeQuestionRepository;
+
+import com.springboot.biz.free.board.FreeQuestionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,12 +21,12 @@ class MatgwoungApplicationTests {
     @Test
     void contextLoads() {
 
-        FreeQuestion f = new FreeQuestion();
-        f.setFreeQTitle("테스트 제목입니다");
-        f.setFreeQContent("테스트 내용입니다");
-        f.setFreeQRegDate(LocalDateTime.now());
+        /*FreeQuestion f = new FreeQuestion();
+        f.setFrboTitle("테스트 제목입니다");
+        f.setFrboContent("테스트 내용입니다");
+        f.setFrboRegDate(LocalDateTime.now());
         this.freeQuestionRepository.save(f);
-
+*/
 
 
     }

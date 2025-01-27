@@ -1,7 +1,7 @@
-package com.springboot.biz.freequestion;
+package com.springboot.biz.free.board;
 
 
-import com.springboot.biz.freeanswer.FreeAnswer;
+import com.springboot.biz.free.answer.FreeAnswer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,15 +16,18 @@ public class FreeQuestion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer freeQseq; //글번호
+    private Integer frboSeq; //글번호
+
+    @Column(name = "userSeq")
+    private Integer userSeq; // 유저 번호 (FK)
 
     @Column(length = 200)
-    private String freeQTitle; //제목
+    private String frboTitle; //제목
 
     @Column(columnDefinition = "TEXT")
-    private String freeQContent; //내용
+    private String frboContent; //내용
 
-    private LocalDateTime freeQRegDate; //작성일
+    private LocalDateTime frboRegDate; //작성일
 
     //질문에 대한 답변
     @OneToMany(mappedBy = "freeQuestion", cascade = CascadeType.REMOVE)

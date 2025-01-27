@@ -1,4 +1,4 @@
-package com.springboot.biz.freequestion;
+package com.springboot.biz.free.board;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

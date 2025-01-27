@@ -27,7 +27,8 @@ public class MgUserSerevice {
         mgUser.setPhoneNumber(phoneNumber);
         mgUser.setAddress(address);
         mgUser.setAddressDetail(addressDetail);
-        mgUser.setCreateTime(LocalDateTime.now());
+        mgUser.setCreateDate(LocalDateTime.now());
+
         this.diaryUserRepository.save(mgUser);
         return mgUser;
     }

@@ -1,4 +1,4 @@
-package com.springboot.biz.freequestion;
+package com.springboot.biz.free.board;
 
 
 

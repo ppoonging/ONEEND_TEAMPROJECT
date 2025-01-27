@@ -15,10 +15,10 @@ public class MgUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer seq;
+    private Integer userSeq;
 
-    @Column(unique = true)
-    //아이디 글자수 제한???
+    @Column(unique = true)    //아이디 글자수 제한???
+
     private String userId;
 
     private String password;
@@ -35,7 +35,13 @@ public class MgUser {
 
     private String addressDetail;
 
-    private LocalDateTime createTime;
+    private double latitude; //위도
+
+    private double longitude; //경도
+
+
+    private LocalDateTime createDate;
+
 
     //위도
     //경도
