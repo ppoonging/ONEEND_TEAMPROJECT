@@ -9,7 +9,11 @@ public class MainController {
 
     @GetMapping("/")
     public String root(){
-        return "mainpage";
+        return "fragments/main";
     }
 
+    @GetMapping("/free")
+    public String free() {
+        return "main/free/main_layout";
+    }
 }

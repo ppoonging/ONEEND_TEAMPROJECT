@@ -1,0 +1,82 @@
+/* 폰트 가져오기 */
+@font-face {
+    font-family: 'kdg_Medium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/kdg_Medium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'NEXON Lv1 Gothic OTF';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ChungjuKimSaengTTF';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2312-1@1.1/ChungjuKimSaengTTF.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'MapoGoldenPier';
+    src: url('https://gcore.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/MapoGoldenPierA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* 전체 설정 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+/* ul의 list style 제거 */
+ul {
+    list-style: none;
+}
+
+/* 기타 전체 설정 */
+html,body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+/* 기본 폰트 kdg_Medium , MapoGoldenPier*/
+html > body {
+    font-family: "kdg_Medium", "MapoGoldenPier";
+
+}
+
+body {
+
+}
+
+/* a링크 하이퍼링크 제거 */
+a {
+    text-decoration: none;
+    color: #3c3b3b;
+}
+
+
+/* navbar 반응형 설정 */
+.hidden-item {
+    display: none;
+}
+.show-item{
+    display: inline-block;
+}
+
+@media (max-width: 991px) {
+    .hidden-item {
+        display: inline-block;
+    }
+    .show-item {
+        display: none;
+    }
+}
+
