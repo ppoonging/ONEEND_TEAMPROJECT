@@ -18,7 +18,6 @@ public class MgUser {
     private Integer userSeq;
 
     @Column(unique = true)    //아이디 글자수 제한???
-
     private String userId;
 
     private String password;

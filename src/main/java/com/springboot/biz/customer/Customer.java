@@ -17,7 +17,6 @@ public class Customer {
 
     /*   private Integer userSeq; //유저 seq*/
 
-
     private String custName; //작성자 이름
 
     @Column(length = 100)
@@ -27,7 +26,11 @@ public class Customer {
 
     private LocalDateTime custRegTime;
 
+    /*
     private boolean custState;  //처리상태
+*/
 
+    /*
     private String custManyQ; //자주 질문하는 것들
+    */
 }

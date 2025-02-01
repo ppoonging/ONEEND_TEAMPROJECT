@@ -15,9 +15,9 @@ public class FreeAnswer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer frboAeq; //글번호
+    private Integer frAnSeq; //글번호
 
-    @Column(name = "userSeq")
+
     private Integer userSeq; // 유저 번호 (FK)
 
     @Column(columnDefinition = "TEXT")
