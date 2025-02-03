@@ -12,21 +12,22 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 public class MjAnswer {
+    //맛집 답변
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer mjAnSeq;
+    private Integer mjAnSeq;  //맛집 기본키
 
     private Integer userseq; // 유저 번호 (FK)
 
     @Column(columnDefinition = "TEXT")
-    private String mjAnsContent;
+    private String mjAnsContent;   //맛집 내용
 
     @ManyToOne
-    private MgUser author;
+    private MgUser author; //작성자
 
-    private LocalDateTime createRegDate;
+    private LocalDateTime createRegDate;  //작성일
 
-    private String MjAnsImg;
+    private String MjAnsImg;  //이미지
 
 
 }

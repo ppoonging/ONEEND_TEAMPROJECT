@@ -17,15 +17,14 @@ public class Customer {
 
     private Integer userSeq; // 유저 번호 (FK)
 
-
     private String custName; //작성자 이름
 
     @Column(length = 100)
-    private String custTitle;
+    private String custTitle;  //고객센터 제목
 
-    private String custContent;
+    private String custContent;   //고객센터 내용
 
-    private LocalDateTime custRegTime;
+    private LocalDateTime custRegTime;   //작성일
 
     /*
     private boolean custState;  //처리상태
