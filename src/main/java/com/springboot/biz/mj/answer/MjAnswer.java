@@ -1,6 +1,7 @@
-package com.springboot.biz.mj.board;
+package com.springboot.biz.mj.answer;
 
 
+import com.springboot.biz.user.MgUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,12 +14,15 @@ import java.time.LocalDateTime;
 public class MjAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer mjAnsSeq;
+    private Integer mjAnSeq;
 
-    @Column(name = "userseq")
     private Integer userseq; // 유저 번호 (FK)
 
+    @Column(columnDefinition = "TEXT")
     private String mjAnsContent;
+
+    @ManyToOne
+    private MgUser author;
 
     private LocalDateTime createRegDate;
 

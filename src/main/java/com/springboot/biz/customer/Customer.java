@@ -15,7 +15,7 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer custSeq;
 
-    /*   private Integer userSeq; //유저 seq*/
+    private Integer userSeq; // 유저 번호 (FK)
 
 
     private String custName; //작성자 이름
@@ -27,7 +27,11 @@ public class Customer {
 
     private LocalDateTime custRegTime;
 
+    /*
     private boolean custState;  //처리상태
+*/
 
+    /*
     private String custManyQ; //자주 질문하는 것들
+    */
 }
