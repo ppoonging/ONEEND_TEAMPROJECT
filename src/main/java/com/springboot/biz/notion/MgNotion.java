@@ -16,7 +16,7 @@ public class MgNotion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer notioeSeq; // 공지사항 번호 (PK)
 
-    @Column(name = "userseq")
+
     private Integer userseq; // 유저 번호 (FK)
 
     @Column( length = 100)

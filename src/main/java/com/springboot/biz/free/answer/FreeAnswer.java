@@ -17,7 +17,6 @@ public class FreeAnswer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer frAnSeq; //글번호
 
-
     private Integer userSeq; // 유저 번호 (FK)
 
     @Column(columnDefinition = "TEXT")

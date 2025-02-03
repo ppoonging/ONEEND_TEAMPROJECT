@@ -12,19 +12,19 @@ public class userRecipe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userRecipeSeq;
+    private Integer userRecipeSeq; //유저레시피 기본치
 
     @Column(length = 100 )
-    private String userRecipeTitle;
+    private String userRecipeTitle;  //유저 레시피 제목
 
     @Column(columnDefinition = "TEXT")
-    private String userRecipeContent;
+    private String userRecipeContent;  //유저 레시피 내용
 
-    private String userRecipeRegDate;
+    private String userRecipeRegDate;  //작성일
 
-    private String userRecipeCnt;
+    private String userRecipeCnt;  //추천수
 
-    private String userRecipeImage;
+    private String userRecipeImage;  //이미지
 
     private Integer userSeq; // 유저 번호 (FK)
 
