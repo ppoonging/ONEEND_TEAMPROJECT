@@ -38,7 +38,6 @@ public class MgUser {
 
     private double longitude; //경도
 
-
     private LocalDateTime createDate;
 
 

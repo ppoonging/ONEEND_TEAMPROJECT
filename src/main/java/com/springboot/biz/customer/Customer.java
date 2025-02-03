@@ -15,7 +15,8 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer custSeq;
 
-    /*   private Integer userSeq; //유저 seq*/
+    private Integer userSeq; // 유저 번호 (FK)
+
 
     private String custName; //작성자 이름
 
