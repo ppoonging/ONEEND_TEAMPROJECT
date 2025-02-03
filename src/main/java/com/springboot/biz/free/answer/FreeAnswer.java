@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 public class FreeAnswer {
 
+    //테스트중
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer frboAeq; //글번호
