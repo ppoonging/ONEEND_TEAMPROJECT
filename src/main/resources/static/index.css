@@ -39,13 +39,6 @@ ul {
     list-style: none;
 }
 
-/* 기타 전체 설정 */
-html,body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-}
-
 /* 기본 폰트 kdg_Medium , MapoGoldenPier*/
 html > body {
     font-family: "kdg_Medium", "MapoGoldenPier";
@@ -55,6 +48,11 @@ html > body {
 body {
 
 }
+
+main {
+
+}
+
 
 /* a링크 하이퍼링크 제거 */
 a {
@@ -71,6 +69,29 @@ a {
     display: inline-block;
 }
 
+/* navbar 스크롤 고정 */
+.nav-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 0 3px 7px rgba(0,0,0, 0.06);
+}
+
+/* 추후 네비바 드롭 색 변경시 사용 */
+.dropdown-item:active,
+.dropdown-item:focus {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* 네비바 아이콘 회원 드롭바 */
+.coll:hover,
+.coll:focus {
+    background-color: rgba(101,98,98,0.05);
+    color: black !important;
+}
+
+/* 화면이 991px 미만이면 동작 (반응형) */
 @media (max-width: 991px) {
     .hidden-item {
         display: inline-block;
@@ -78,5 +99,13 @@ a {
     .show-item {
         display: none;
     }
+    .media-sub-nav {
+        justify-content: end;
+    }
+    .media-sub-nav>li {
+        flex: 0 0 0;
+    }
+
+
 }
 
