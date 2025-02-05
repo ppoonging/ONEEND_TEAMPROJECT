@@ -2,6 +2,7 @@ package com.springboot.biz.free.board;
 
 
 import com.springboot.biz.free.answer.FreeAnswer;
+import com.springboot.biz.user.MgUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,9 +17,8 @@ public class FreeQuestion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer frboSeq; //글번호
+    private Integer frSeq; //글번호
 
-    @Column(name = "userSeq")
     private Integer userSeq; // 유저 번호 (FK)
 
     @Column(length = 200)
@@ -26,6 +26,9 @@ public class FreeQuestion {
 
     @Column(columnDefinition = "TEXT")
     private String frboContent; //내용
+
+    @ManyToOne
+    private MgUser author; //작성자
 
     private LocalDateTime frboRegDate; //작성일
 
