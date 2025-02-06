@@ -1,5 +1,6 @@
 package com.springboot.biz.customer;
 
+import com.springboot.biz.user.MgUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +16,8 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer custSeq;
 
-    private Integer userSeq; // 유저 번호 (FK)
+    @ManyToOne
+    private MgUser userId; // 유저 번호 (FK)
 
     private String custName; //작성자 이름
 
@@ -26,11 +28,10 @@ public class Customer {
 
     private LocalDateTime custRegTime;   //작성일
 
-    /*
     private boolean custState;  //처리상태
-*/
 
-    /*
-    private String custManyQ; //자주 질문하는 것들
-    */
+    private String custFilePath;  //파일경로
+
+    private String custFileName;  //파일 이름
+
 }

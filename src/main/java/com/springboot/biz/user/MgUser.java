@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -22,7 +23,7 @@ public class MgUser {
 
     private String password;  //비밀번호
 
-    private String username;//이름
+    private String nickname;//이름
 
     @Column(unique = true)
     private String email; //이메일 정확하게 작성할것
@@ -30,14 +31,20 @@ public class MgUser {
     @Column(unique = true)
     private String phoneNumber;  //유저 폰넘버
 
+    private Date birthday;  //유저 생년월일 (타입수정 필요)
+
     private String address;  //주소
 
     private String addressDetail;  //상세주소
+
+    private String zipCode; //우편번호
 
     private double latitude; //위도
 
     private double longitude; //경도
 
     private LocalDateTime createDate;   //만든날짜
+
+    private String role;  //유저권한
 
 }
