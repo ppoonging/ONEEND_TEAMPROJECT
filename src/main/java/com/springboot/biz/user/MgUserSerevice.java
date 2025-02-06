@@ -17,11 +17,11 @@ public class MgUserSerevice {
     /*private final PasswordEncoder passwordEncoder;*/
 
 
-    public MgUser create(String userId, String username, String password
+    public MgUser create(String userId, String nickname, String password
             , String email, String phoneNumber, String address, String addressDetail){
         MgUser mgUser= new MgUser();
         mgUser.setUserId(userId);
-        mgUser.setUsername(username);
+        mgUser.setNickname(nickname);
       /*  dU.setPassword(passwordEncoder.encode(password) );*/
         mgUser.setEmail(email);
         mgUser.setPhoneNumber(phoneNumber);
@@ -33,8 +33,8 @@ public class MgUserSerevice {
         return mgUser;
     }
 
-    public MgUser getUser(String username){
-        Optional<MgUser> diaryUser = this.diaryUserRepository.findByUsername(username);
+    public MgUser getUser(String nickname){
+        Optional<MgUser> diaryUser = this.diaryUserRepository.findBynickname(nickname);
         if(diaryUser.isPresent()){
             return diaryUser.get();
         }else{
