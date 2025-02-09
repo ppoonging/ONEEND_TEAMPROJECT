@@ -1,30 +1,20 @@
 <header th:fragment="header" style="background-color: #fff;" id="header" class="pt-3">
-    <div class="container d-flex justify-content-end" style="font-family: 'MapoGoldenPier';">
-        <span style="border-right: 1px solid #ccc; font-size: 14px; color: #666;" class="px-2">회원가입 </span>
-        <span class="px-2" style="font-size: 14px; color: #666;">로그인</span>
-    </div>
-    <div class="container">
-        <!--로고-->
-        <div class="d-flex justify-content-center">
-            <div class="show-item">
-                <span style="font-size: 46px;">맛</span>
-                <span class="mt-4" style="font-size: 14px; color: #383434">있는  관</span>
-                <span style="font-size: 46px; color: #d6474a">광</span>
-            </div>
-        </div>
+    <div class="container d-flex justify-content-end">
+        <a href="#" style="text-decoration: none">
+            <span style="border-right: 1px solid #ccc; font-size: 14px; color: #777;" class="px-2">회원가입 </span>
+        </a>
+        <a href="#" style="text-decoration: none">
+            <span class="px-2" style="font-size: 14px; color: #777;">로그인</span>
+        </a>
     </div>
 
     <!--네비바-->
     <div id="navbar" class="container-fluid" style="background-color: white;">
         <nav class="navbar navbar-expand-lg border-bottom w-100 ">
             <div class="container">
-                <!--반응형 로고-->
-                <a class="navbar-brand hidden-item" href="#" th:if="width">
-                    <span style="font-size: 36px;">맛</span>
-                    <xspan style="font-size: 14px; color: #383434">있는 관</xspan>
-                    <span style="font-size: 36px; color: #d6474a;">광</span>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll"
+                <a class="" th:href="@{/}">
+                    <img th:src="@{/images/total/로고2.png}" width="80%"></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -33,26 +23,30 @@
                         <li class="nav-item dropdown">
                             <!--맛광커뮤니티-->
                             <a class="nav-link me-5 fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                맛광 커뮤니티
+                                레시피
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">자유게시판</a></li>
-                                <li><a class="dropdown-item" href="#">맛집소개</a></li>
-                                <li><a class="dropdown-item" href="#">SNS</a></li>
+                                <li><a class="dropdown-item" href="#">정석 레시피</a></li>
+                                <li><a class="dropdown-item" href="#">우리들의 레시피</a></li>
                             </ul>
                         </li>
                         <!--맛광레시피-->
                         <li class="nav-item dropdown">
                             <a class="nav-link me-5 fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                맛광 레시피
+                                맛집
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link me-5 fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                소근소근
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">한식 레시피</a></li>
-                                <li><a class="dropdown-item" href="#">추천 레시피</a></li>
+                                <li><a class="dropdown-item" href="#">자유게시판</a></li>
+                                <li><a class="dropdown-item" href="#">한식루트 인증</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link me-5 fs-5" href="#">관광</a>
+                            <a class="nav-link me-5 fs-5" href="#">SNS</a>
                         </li>
                         <!--고객센터-->
                         <li class="nav-item dropdown">
@@ -70,19 +64,26 @@
                     </div>
                     <!--네비바 아이콘-->
                     <div class="navbar-nav">
-                        <ul class="row my-2 my-lg-0 media-sub-nav">
-                            <li class="col fs-4 pt-2">
-                                <a href="#" style="color: #333"><i class="bi bi-search"></i></a>
+                        <ul class="row my-2 my-lg-0 media-sub-nav" style="transform: translateY(5px)">
+                            <!--팀 소개-->
+                            <li class="col fs-4 pt-2" >
+                                <a href="#" style="color: #333">
+                                    <i class="bi bi-hand-index-thumb-fill" style="color: #555"></i>
+                                </a>
                             </li>
-                            <li class="col fs-4 pt-2">
-                                <a href="#" style="color: #333"><i class="bi bi-translate"></i></a>
+                            <!--채팅-->
+                            <li class="col fs-4 pt-2" style="transform: translateX(3px)">
+                                <a href="#" style="color: #333">
+                                    <i class="bi bi-chat-dots-fill" style="color: #555"></i>
+                                </a>
                             </li>
+                            <!--회원-->
                             <li class="col fs-3 pt-2">
                                 <div type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
-                                    <i class="bi bi-person-fill"></i>
+                                    <i class="bi bi-person-fill" style="color: #555"></i>
                                 </div>
                                 <div class="collapse bg-white" id="collapseExample2" style="position: absolute; border: 1px solid #eee; border-radius: 10%; transform: translateX(-35%)" >
-                                    <div class="py-2" style="font-size: 16px; display: flex; flex-flow: column; text-wrap: nowrap">
+                                    <div class="py-2" style="font-size: 13px; display: flex; flex-flow: column; text-wrap: nowrap">
                                        <a href="#" class="coll py-1 px-3" style="color: #333; text-decoration: none">마이페이지</a>
                                        <a href="#" class="coll py-1 px-3" style="color: #333; text-decoration: none;">내 글 목록</a>
                                     </div>
