@@ -1,11 +1,5 @@
 /* 폰트 가져오기 */
 @font-face {
-    font-family: 'kdg_Medium';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/kdg_Medium.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
     font-family: 'NEXON Lv1 Gothic OTF';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff') format('woff');
     font-weight: normal;
@@ -13,15 +7,15 @@
 }
 
 @font-face {
-    font-family: 'ChungjuKimSaengTTF';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2312-1@1.1/ChungjuKimSaengTTF.woff2') format('woff2');
+    font-family: 'HakgyoansimWoojuR';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimWoojuR.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'MapoGoldenPier';
-    src: url('https://gcore.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/MapoGoldenPierA.woff') format('woff');
+    font-family: 'Jal_Haru';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/Jal_Haru.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
@@ -39,9 +33,9 @@ ul {
     list-style: none;
 }
 
-/* 기본 폰트 kdg_Medium , MapoGoldenPier*/
+/* 기본 폰트 */
 html > body {
-    font-family: "kdg_Medium", "MapoGoldenPier";
+    font-family: "Jal_Haru","HakgyoansimWoojuR";
 
 }
 
@@ -60,20 +54,12 @@ a {
     color: #3c3b3b;
 }
 
-
-/* navbar 반응형 설정 */
-.hidden-item {
-    display: none;
-}
-.show-item{
-    display: inline-block;
-}
-
 /* navbar 스크롤 고정 */
 .nav-fixed {
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 1022;
     box-shadow: 0 3px 7px rgba(0,0,0, 0.06);
 }
 
@@ -93,12 +79,6 @@ a {
 
 /* 화면이 991px 미만이면 동작 (반응형) */
 @media (max-width: 991px) {
-    .hidden-item {
-        display: inline-block;
-    }
-    .show-item {
-        display: none;
-    }
     .media-sub-nav {
         justify-content: end;
     }
