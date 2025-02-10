@@ -1,0 +1,117 @@
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+    <!--상단-->
+    <div style="background-color: #F4E9E3">
+        <div class="container py-2">
+
+            <!--수정해야할 부분-->
+            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">고객센터 > 공지사항</span>
+
+        </div>
+    </div>
+    <div class="container mt-5">
+        <div class="text-center">
+            <img th:src="@{/images/total/밥그릇.png}" width="5%">
+        </div>
+
+        <!--수정해야할 부분-->
+        <!--title-->
+        <h2 class="text-center py-2">공지사항</h2>
+        <!--content-->
+        <section class="py-5">
+
+            <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+
+                <!-- **내용** -->
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>공지사항</title>
+                <!-- Add Bootstrap for styling -->
+                <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+                <style>
+                    .table thead {
+                        background-color: #f4e9;
+                    }
+                    .table th, .table td {
+                        text-align: center;
+                        vertical-align: middle;
+                    }
+                    .table a {
+                        text-decoration: none;
+                        color: #007bff;
+                    }
+                    .table a:hover {
+                        color: #0056b3;
+                    }
+                </style>
+            </head>
+            <body>
+            <div class="container mt-5">
+
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Content</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="mgNotion, loop : ${paging}">
+                        <!-- Display the index of each row -->
+                        <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
+
+                        <!-- Link to notion details with proper styling -->
+                        <td><a th:href="@{|/notionDetail/${mgNotion.notionSeq}|}" th:text="${mgNotion.notionTitle}"></a></td>
+
+                        <!-- Display the notion content -->
+                        <td th:text="${mgNotion.notionContent}"></td>
+
+                        <!-- Display the notion registration date -->
+                        <td th:text="${mgNotion.getNotionRegDate()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            </body>
+            </html>
+
+
+
+            <!--하단 줄 (필요에 따라 사용)-->
+            <hr style="margin-top: 50px">
+            <!--pagination-->
+            <div class="d-flex justify-content-center">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true"> < </span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true"> > </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <a th:href="@{/notion/create}" class="btn btn-primary">질문 등록하기</a>
+
+</main>
+</html>

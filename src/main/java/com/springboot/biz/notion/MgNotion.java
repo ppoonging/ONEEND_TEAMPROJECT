@@ -15,7 +15,7 @@ public class MgNotion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer notioeSeq; // 공지사항 번호 (PK)
+    private Integer notionSeq; // 공지사항 번호 (PK)
 
     @ManyToOne
     private MgUser userId; // 유저 번호 (FK)
@@ -35,6 +35,9 @@ public class MgNotion {
     private String notionFilePath; //파일 경로
 
     private String notionFileName;  //파일 이름
+
+    @ManyToOne
+    private MgUser author;    //작성자
 
 }
 
