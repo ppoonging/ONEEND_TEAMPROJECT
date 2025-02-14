@@ -2,9 +2,13 @@ package com.springboot.biz;
 
 
 import com.springboot.biz.free.board.FreeQuestionRepository;
+import com.springboot.biz.notion.MgNotion;
+import com.springboot.biz.notion.MgRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDateTime;
 
 @SpringBootTest
 class OneendApplicationTests {
@@ -12,19 +16,23 @@ class OneendApplicationTests {
 
 
     @Autowired
-    private FreeQuestionRepository freeQuestionRepository;
+
+    private MgRepository mgRepository;
 
 
 
     @Test
     void contextLoads() {
 
-        /*FreeQuestion f = new FreeQuestion();
-        f.setFrboTitle("테스트 제목입니다");
-        f.setFrboContent("테스트 내용입니다");
-        f.setFrboRegDate(LocalDateTime.now());
-        this.freeQuestionRepository.save(f);
-*/
+        MgNotion m = new MgNotion();
+
+        m.setNotionTitle("제목");
+        m.setNotionContent("내용");
+        m.setNotionRegDate(LocalDateTime.now());
+        this.mgRepository.save(m);
+
+
+
 
 
     }
