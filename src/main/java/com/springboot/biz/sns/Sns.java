@@ -1,17 +1,19 @@
-package com.springboot.biz.SNSBoard;
+package com.springboot.biz.sns;
 
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
-public class SNS {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Sns{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
