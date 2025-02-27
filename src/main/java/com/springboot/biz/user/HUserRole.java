@@ -3,10 +3,10 @@ package com.springboot.biz.user;
 import lombok.Getter;
 
 @Getter
-public enum MgUserRole {
+public enum HUserRole {
 ADMIN("ROLE_ADMIN"), USER("ROLE_USER");
 
-    private MgUserRole(String value){
+    private HUserRole(String value){
         this.value= value;
     }
     private String value;

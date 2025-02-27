@@ -1,5 +1,5 @@
 package com.springboot.biz.user;
-/*
+
 
 
 import lombok.RequiredArgsConstructor;
@@ -17,27 +17,27 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class MgUserSecurityService implements UserDetailsService {
+public class HUserSecurityService implements UserDetailsService {
 
-    private final MgUserRepository diaryUserRepository;
+    private final HUserRepository userRepository;
     //UserDetailssms는 가장 큰 씨큐리티
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<MgUser> _diary = this.diaryUserRepository.findByUsername(username);//_안 넣어도 됨
+        Optional<HUser> _hUser = this.userRepository.findByUsername(username);//_안 넣어도 됨
 
-        if (_diary.isEmpty()) {
+        if (_hUser.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다");
         }
-        MgUser diary = _diary.get();
+        HUser hUser = _hUser.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
         if ("admin".equals(username)) {
-            authorities.add(new SimpleGrantedAuthority(MgUserRole.ADMIN.getValue()));
+            authorities.add(new SimpleGrantedAuthority(HUserRole.ADMIN.getValue()));
         } else {
-            authorities.add(new SimpleGrantedAuthority(MgUserRole.USER.getValue()));
+            authorities.add(new SimpleGrantedAuthority(HUserRole.USER.getValue()));
         }
-        return new User(diary.getUsername(), diary.getPassword(), authorities);
+        return new User(hUser.getUsername(), hUser.getPassword(), authorities);
         // 둘다 아니면 새로운 유저로 만들자(회원가입이 가능햐짐)
     }
 
 
 }
-*/
+

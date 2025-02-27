@@ -6,12 +6,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
 @Entity
-public class MgUser {
+public class HUser {
 
 
     @Id
@@ -19,7 +18,7 @@ public class MgUser {
     private Integer userSeq;
 
     @Column(unique = true)    //아이디 글자수 제한???
-    private String userId;
+    private String username;
 
     private String password;  //비밀번호
 
@@ -31,7 +30,7 @@ public class MgUser {
     @Column(unique = true)
     private String phoneNumber;  //유저 폰넘버
 
-    private Date birthday;  //유저 생년월일 (타입수정 필요)
+    private String birthday;  //유저 생년월일 (타입수정 필요)
 
     private String address;  //주소
 
