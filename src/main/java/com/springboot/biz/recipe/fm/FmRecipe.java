@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @Entity
@@ -15,8 +17,6 @@ public class FmRecipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer fmrecipeSeq;   //fm레시피 (PK)
-
-
 
     @ManyToOne
     private MgUser userId;  //유저번호(FK)
@@ -29,11 +29,11 @@ public class FmRecipe {
     @Column(columnDefinition = "TEXT")
     private String fmrecipeContent;//fm레시피 내용
 
-    private String fmrecipeRegDate;  //작성일
+    private LocalDateTime fmrecipeRegDate;  //작성일
 
     @Column(columnDefinition = "Integer default 0")
     @NonNull
-    private String fmrecipeCnt;   //추천수
+    private Integer fmrecipeCnt;   //추천수
 
     private String fmrecipeFilePath;  //이미지,파일
 

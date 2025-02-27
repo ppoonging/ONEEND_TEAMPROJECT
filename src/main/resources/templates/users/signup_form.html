@@ -1,0 +1,82 @@
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+    <!--상단-->
+    <div style="background-color: #F4E9E3">
+        <div class="container py-2">
+
+            <!--수정해야할 부분-->
+            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">맛광 커뮤니티 > 자유게시판</span>
+
+        </div>
+    </div>
+    <div class="container mt-5">
+        <div class="text-center">
+            <img th:src="@{/images/total/밥그릇.png}" width="5%">
+        </div>
+
+        <!--수정해야할 부분-->
+        <!--title-->
+        <h2 class="text-center py-2">자유게시판</h2>
+        <!--content-->
+        <section class="py-5 center">
+
+            <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+            <div>
+
+                <form th:action="@{/users/signup}" method="post" th:object="${mgUserForm}">
+
+                   <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+
+                    <div>
+                        <label for="username" class="form-label">아이디</label>
+                        <input type="text" name="username" id="username"class="form-control">
+
+                        <label for="password" class="form-label">비밀번호</label>
+                        <input type="text" name="password" id="password"class="form-control">
+
+                        <label for="password2" class="form-label">비밀번호 확인</label>
+                        <input type="text" name="password2" id="password2"class="form-control">
+                    </div>
+                    <div>
+                        <label for="nickname" class="form-label">이름</label>
+                        <input type="text" name="nickname" id="nickname"class="form-control">
+
+
+                        <label for="email" class="form-label">이메일</label>
+                        <input type="text" name="email" id="email"class="form-control">
+                    </div>
+
+                    <label for="phoneNumber" class="form-label">핸드폰번호</label>
+                    <input type="text" name="phoneNumber" id="phoneNumber"class="form-control">
+
+                    <label for="birthday" class="form-label">생년월일</label>
+                    <input type="text" name="birthday" id="birthday"class="form-control">
+
+
+
+                    <label for="address" class="form-label">주소</label>
+                    <input type="text" name="address" id="address"class="form-control">
+
+
+                    <label for="addressDetail" class="form-label">상세주소</label>
+                    <input type="text" name="addressDetail" id="addressDetail"class="form-control">
+
+                    <label for="zipCode" class="form-label">우편주소</label>
+                    <input type="text" name="zipCode" id="zipCode"class="form-control">
+
+
+                    <input type="submit" value="회원가입" class="  btn btn-primary">
+
+                </form>
+
+            </div>
+
+            <!--하단 줄 (필요에 따라 사용)-->
+            <hr style="margin-top: 50px">
+            <!--pagination-->
+
+        </section>
+    </div>
+
+</main>
+</html>

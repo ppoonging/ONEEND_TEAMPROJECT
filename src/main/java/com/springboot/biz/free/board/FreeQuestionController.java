@@ -1,7 +1,6 @@
 package com.springboot.biz.free.board;
 
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;

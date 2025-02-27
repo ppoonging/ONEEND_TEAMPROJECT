@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface MgUserRepository extends JpaRepository<MgUser,Integer> {
 
 
-    Optional<MgUser> findBynickname(String nickname);
+    Optional<MgUser> findByUsername(String username);
+
 
 }
