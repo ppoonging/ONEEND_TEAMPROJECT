@@ -22,6 +22,7 @@ public class MgUser {
     @Column(unique = true)    //아이디 글자수 제한???
     private String username;
 
+
     private String password;  //비밀번호
 
     private String nickname;//이름
