@@ -1,7 +1,7 @@
 package com.springboot.biz.tour.mjtour;
 
 import com.springboot.biz.tour.mjroot.Root;
-import com.springboot.biz.user.MgUser;
+import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +18,7 @@ public class Tour {
     private Integer tourSeq;
 
     @ManyToOne
-    private MgUser userId;  //유저 아이디(FK)
+    private HUser userId;  //유저 아이디(FK)
 
     private String tourTitle;  //투어 루트 제목
 
