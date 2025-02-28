@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -38,6 +40,12 @@ public class FreeAnswer {
     @ManyToOne
     private FreeQuestion freeQuestion; //관계맺기
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_frboAnSeq")
+    private FreeAnswer parentAnswer; // 부모 댓글 (대댓글 구현)
+
+    @OneToMany(mappedBy = "parentAnswer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FreeAnswer> childAnswers = new ArrayList<>();
 
 
 }
