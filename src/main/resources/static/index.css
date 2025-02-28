@@ -40,11 +40,13 @@ html > body {
 }
 
 body {
-
+    width: 100%;
+    height: 100%;
 }
 
 main {
-
+    width: 100%;
+    height: 100%;
 }
 
 
@@ -52,6 +54,10 @@ main {
 a {
     text-decoration: none;
     color: #3c3b3b;
+}
+
+.mj {
+    color: #0a53be;
 }
 
 /* navbar 스크롤 고정 */
@@ -85,7 +91,80 @@ a {
     .media-sub-nav>li {
         flex: 0 0 0;
     }
+}
 
+
+/* ---------------------------------------- */
+
+/*root css*/
+.tour-checkbox-input {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: 1px solid #333;
+    appearance: none;
+    cursor: pointer;
+    transition: background 0.1s;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='black' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+    background-size: 100% 100%;
+    background-position: 50%;
+    background-repeat: no-repeat;
+}
+
+.tour-checkbox-input:checked {
+    border-color: transparent;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+    background-size: 100% 100%;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-color: #857761;
+}
+
+#restaurant {
+    border-bottom: 1px solid #fff
+}
+
+#restaurant:last-child {
+    border-bottom: 0;
+}
+
+.tour-list-style {
+    font-size: 14px;
+    margin-right: 5px;
+    color: #555;
+}
+
+.tour-button-style {
+    border: 0;
+    background: none;
+    transform: translateY(2px);
+}
+
+.tour-button-style > i  {
+    font-size: 20px;
+    font-weight: bold;
+    color: #853a22;
 
 }
+
+
+
+.custom-card {
+    width: 18rem; /* 기본 카드 너비 */
+    transition: transform 0.3s ease-in-out; /* 카드 호버 효과 */
+}
+
+.custom-card:hover {
+    transform: scale(1.05); /* 마우스 호버 시 카드 확대 */
+}
+
+.card-divider {
+    margin: 0; /* 여백 제거 */
+    border: none; /* 기본 선 제거 */
+    border-top: 2px solid #ddd; /* 상단에 회색 선 추가 */
+}
+
+
+
+
 

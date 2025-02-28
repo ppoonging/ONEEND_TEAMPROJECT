@@ -2,7 +2,7 @@ package com.springboot.biz.recipe.user.answer;
 
 
 import com.springboot.biz.recipe.user.board.UserRecipe;
-import com.springboot.biz.user.MgUser;
+import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,7 @@ public class UserRecipeAnswer {
     private Integer  uRecipeAnsSeq;
 
     @ManyToOne
-    private MgUser userId; //유저 아이디 (FK)
+    private HUser userId; //유저 아이디 (FK)
 
     private Integer uRecipeSeq; //유저 레시피 (FK)
 

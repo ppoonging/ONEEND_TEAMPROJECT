@@ -1,0 +1,82 @@
+<html layout:decorate="~{layout}">
+    <main layout:fragment="content">
+        <!--상단-->
+        <div style="background-color: #F4E9E3">
+            <div class="container py-2">
+
+                <!--수정해야할 부분-->
+                <span class="" style="color: #777; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">SNS</span>
+
+            </div>
+        </div>
+        <div class="container mt-5">
+            <div class="text-center">
+                <img th:src="@{/images/total/밥그릇.png}" width="100">
+            </div>
+
+            <!--수정해야할 부분-->
+            <!--title-->
+            <h2 class="text-center py-2">SNS</h2>
+            <!--content-->
+            <section class="py-5">
+
+                <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+                <div>
+                    <!--유튜브 영상-->
+                    <div style="height: 500px; background-color: #75b798;">
+
+                    </div>
+                    <!--sns 카드-->
+                    <div class="pt-5">
+                        <div class="d-flex justify-content-between">
+                            <div th:each="snsList : ${snsList}" class="card" style="width: 24rem;">
+                                <img th:src="@{${snsList.snsImagePath}}" height="300px">
+                                <div class="card-body">
+                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <h2>이미지 업로드</h2>
+                    <form action="/upload" method="post" enctype="multipart/form-data">
+                        <label for="file">이미지 등록</label>
+                        <input type="file" id="file" name="file" required>
+                        <label for="link">링크 등록</label>
+                        <input type="text" id="link" name="link" >
+                        <button type="submit">업로드</button>
+                    </form>
+
+
+                </div>
+
+                <!--하단 줄 (필요에 따라 사용)-->
+                <hr style="margin-top: 50px">
+                <!--pagination-->
+                <div class="d-flex justify-content-center">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true"> < </span>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true"> > </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+    </main>
+</html>
