@@ -2,7 +2,7 @@ package com.springboot.biz.free.answer;
 
 
 import com.springboot.biz.free.board.FreeQuestion;
-import com.springboot.biz.user.MgUser;
+import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +22,7 @@ public class FreeAnswer {
     private Integer frboAnSeq; //글번호
 
     @ManyToOne
-    private MgUser userId; // 유저 번호 (FK)
+    private HUser userId; // 유저 번호 (FK)
 
     private Integer frboSeq; //질문 번호 (FK)
 

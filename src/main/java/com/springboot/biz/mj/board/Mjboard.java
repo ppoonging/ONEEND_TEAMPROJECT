@@ -1,9 +1,8 @@
 package com.springboot.biz.mj.board;
 
-import com.springboot.biz.free.answer.FreeAnswer;
 import com.springboot.biz.mj.answer.MjAnswer;
 import com.springboot.biz.tour.mjtour.Tour;
-import com.springboot.biz.user.MgUser;
+import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
@@ -22,7 +21,7 @@ public class Mjboard {
     private Integer mjSeq;
 
     @ManyToOne
-    private MgUser userId; // 유저 번호 (FK)
+    private HUser userId; // 유저 번호 (FK)
 
     @OneToMany
     private List<Tour> tourSeq;  //투어 루트번호

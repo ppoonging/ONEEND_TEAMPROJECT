@@ -1,7 +1,7 @@
 package com.springboot.biz.notion;
 
 import com.springboot.biz.DataNotFoundException;
-import com.springboot.biz.user.MgUser;
+import com.springboot.biz.user.HUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,7 +37,7 @@ public class MgService {
         }
     }
 
-    public void create(String notionTitle, String notionContent, MgUser mgUser) {
+    public void create(String notionTitle, String notionContent, HUser mgUser) {
         MgNotion q = new MgNotion();
         q.setNotionTitle(notionTitle);
         q.setNotionContent(notionContent);
