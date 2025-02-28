@@ -1,125 +1,71 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>글 등록</title>
-    <style>
-        /* 상단 헤더 스타일 */
-        .header {
-            background-color: #F4E9E3;
-            padding: 15px 0;
-        }
-        .header span {
-            font-family: 'MapoGoldenPier', serif;
-            font-size: 18px;
-            color: #D87C61;
-            padding-left: 10px;
-        }
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자유게시판 질문 등록</title>
 
-        /* 폼 레이아웃 */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-        /* 제목 스타일 */
-        h2 {
-            font-family: 'MapoGoldenPier', serif;
-            color: #D87C61;
-            font-size: 32px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    <!-- Summernote CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 
-        h5 {
-            font-family: 'MapoGoldenPier', serif;
-            font-size: 28px;
-            color: #D87C61;
-            border-bottom: 2px solid #D87C61;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        /* 폼 필드 스타일 */
-        .form-label {
-            font-family: 'MapoGoldenPier', serif;
-            font-size: 18px;
-            color: #333;
-        }
+    <!-- Summernote JS -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
-        .form-control {
-            font-size: 16px;
-            padding: 12px;
-            border: 1px solid #D87C61;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        /* 파일 업로드 스타일 */
-        .form-control[type="file"] {
-            padding: 8px;
-        }
-
-        /* 등록 버튼 스타일 */
-        .btn-primary {
-            background-color: #D87C61;
-            color: #fff;
-            font-family: 'MapoGoldenPier', serif;
-            font-size: 18px;
-            padding: 12px 24px;
-            border-radius: 8px;
-            border: none;
-            width: 100%;
-            max-width: 200px;
-            margin-top: 20px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
+    <!-- 한국어 언어 파일 -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/lang/summernote-ko-KR.js"></script>
 </head>
+<body>
+<div class="container my-5">
+    <h2 class="mb-4">자유게시판 질문 등록</h2>
+    <form method="post" action="/freequestion/create" enctype="multipart/form-data">
 
-<main layout:fragment="content">
-    <!-- 상단 헤더 -->
-    <div class="header">
-        <div class="container">
-            <span>맛광 커뮤니티 > 자유게시판</span>
+        <!-- CSRF 토큰 자동 추가 (Thymeleaf 사용 시) -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+        <!-- 제목 입력 -->
+        <div class="form-group">
+            <label for="frboTitle">제목</label>
+            <input type="text" name="frboTitle" id="frboTitle" class="form-control" required>
         </div>
-    </div>
 
-    <div class="container mt-5">
-        <div class="text-center">
-            <img th:src="@{/images/total/기와.png}" width="100">
+        <!-- 내용 입력 (써머노트 에디터 사용) -->
+        <div class="form-group">
+            <label for="frboContent">내용</label>
+            <textarea name="frboContent" id="summernote" class="form-control" rows="10" required></textarea>
         </div>
 
-        <h2>글 등록</h2>
+        <!-- 파일 업로드 -->
+        <div class="form-group">
+            <label for="frboFile">첨부 파일</label>
+            <input type="file" name="frboFile" id="frboFile" class="form-control-file">
+        </div>
 
-        <!-- 글 등록 폼 -->
-        <h5 class="my-3">글 등록</h5>
-        <form method="post" th:object="${freeQuestionForm}" enctype="multipart/form-data">
+        <!-- 제출 버튼 -->
+        <button type="submit" class="btn btn-primary">저장하기</button>
+    </form>
+</div>
 
-            <!-- 제목 입력 필드 -->
-            <div class="mb-3">
-                <label for="frboTitle" class="form-label">제목</label>
-                <input type="text" id="frboTitle" th:field="*{frboTitle}" class="form-control">
-            </div>
+<!-- Bootstrap JS, Popper.js -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-            <!-- 내용 입력 필드 -->
-            <div class="mb-3">
-                <label for="frboContent" class="form-label">내용</label>
-                <textarea rows="15" id="frboContent" th:field="*{frboContent}" class="form-control"></textarea>
-            </div>
-
-            <!-- 파일 업로드 -->
-            <div class="mb-3">
-                <label for="file" class="form-label">파일 업로드</label>
-                <input type="file" name="file" id="file" class="form-control">
-            </div>
-
-            <!-- 등록 버튼 -->
-            <input type="submit" value="등록하기" class="btn btn-primary">
-        </form>
-    </div>
-</main>
+<!-- 써머노트 초기화 스크립트 -->
+<script>
+    $(document).ready(function() {
+        $('#summernote').summernote({
+            height: 300,           // 에디터 높이
+            minHeight: null,       // 최소 높이
+            maxHeight: null,       // 최대 높이
+            focus: true,           // 페이지 로드 시 자동 포커스
+            lang: 'ko-KR',         // 한국어 설정
+            placeholder: '질문 내용을 입력해주세요...',
+        });
+    });
+</script>
+</body>
 </html>
