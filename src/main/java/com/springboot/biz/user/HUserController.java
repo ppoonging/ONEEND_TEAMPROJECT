@@ -7,9 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -57,15 +55,34 @@ public class HUserController {
 
     @GetMapping("/login")
     public String login() {
-
         return "users/login_form";
     }
 
+     /*아이디 찾기*/
+     @GetMapping("/findLoginId")
+     public String findByEmail(@RequestParam(name = "email", required = false) String email, Model model) {
+         if (email == null || email.isEmpty()) {
+             model.addAttribute("error", "이메일을 입력해주세요.");
+             return "users/find_form"; // 이메일이 없으면 폼으로 다시 돌아감
+         }
 
-        @GetMapping("/mypage")
+         HUser hUser = hUserSerevice.getUserByEmail(email);
+
+         if (hUser != null) {
+             model.addAttribute("user", hUser);
+         } else {
+             model.addAttribute("error", "이메일에 해당하는 사용자가 없습니다.");
+         }
+
+         return "users/find_form"; // 결과를 보여줄 뷰로 리턴
+     }
+
+
+
+    @GetMapping("/mypage")
         public String infor(Model model, Principal principal) {
-            HUser mgUser = this.hUserSerevice.getUser(principal.getName());
-            model.addAttribute("siteUser", mgUser);
+            HUser hUser = this.hUserSerevice.getUser(principal.getName());
+            model.addAttribute("hUser", hUser);
             return "mypage_Form";
         }
     }

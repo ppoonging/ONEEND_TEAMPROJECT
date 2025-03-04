@@ -36,14 +36,17 @@ public class HUserSerevice {
     }
 
     public HUser getUser(String username){
-        Optional<HUser> diaryUser = this.userRepository.findByUsername(username);
-        if(diaryUser.isPresent()){
-            return diaryUser.get();
+        Optional<HUser> hUser = this.userRepository.findByUsername(username);
+        if(hUser.isPresent()){
+            return hUser.get();
         }else{
             throw new DataNotFoundException("데이터 없음");
         }
-
     }
+    public HUser getUserByEmail(String email){
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
 
 
 }
