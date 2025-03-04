@@ -1,7 +1,6 @@
 package com.springboot.biz.root.rootAdmin;
 
-
-import com.springboot.biz.user.MgUser;
+import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +20,7 @@ public class RootList {
     private Root root; // 루트
 
     @ManyToOne
-    private MgUser userId;  //유저 아이디(FK)
+    private HUser userId;  //유저 아이디(FK)
 
     private String rootListTitle;  //목적지명
 

@@ -1,0 +1,188 @@
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+    <!--상단-->
+    <div style="background-color: #F4E9E3">
+        <div class="container py-2">
+            <span style="color: #777; font-family: 'MapoGoldenPier'; padding-left: 8px">맛광 커뮤니티 > 자유게시판</span>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="text-center">
+            <img th:src="@{/images/total/기와.png}" width="100">
+        </div>
+
+        <!-- 제목 -->
+        <h2 class="text-center py-2">자유게시판</h2>
+
+        <!-- 검색 폼 -->
+        <div class="text-center py-4">
+            <form th:action="@{/freequestion/list}" method="get">
+                <!-- 검색 옵션 선택 -->
+                <select name="searchType" class="form-control d-inline-block" style="width: 20%; padding: 10px; font-size: 16px; border-radius: 25px;">
+                    <option value="title" th:selected="${searchType == 'title'}">제목만 검색</option>
+                    <option value="content" th:selected="${searchType == 'content'}">내용만 검색</option>
+                    <option value="both" th:selected="${searchType == 'both'}">제목+내용 검색</option>
+                </select>
+
+                <!-- 검색어 입력 -->
+                <input type="text" name="kw" class="form-control d-inline-block" style="width: 60%; padding: 10px;" placeholder="검색어 입력" th:value="${kw}">
+
+                <!-- 검색 버튼 -->
+                <button type="submit" class="btn btn-primary" style="background-color: #8B5A2B; border-color: #8B5A2B;">
+                    검색
+                </button>
+            </form>
+        </div>
+
+        <!-- 테이블 -->
+        <section class="py-5">
+            <style>
+                table {
+                    width: 80%;
+                    margin: auto;
+                    border-collapse: collapse;
+                    background: url('/images/hanji_texture.png') no-repeat center;
+                    background-size: cover;
+                    font-family: 'Gowun Batang', serif;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    border: 4px solid #D9B999;
+                    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.15);
+                }
+
+                thead {
+                    background: #EED3B6;
+                    color: #5E3A1D;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    font-size: 18px;
+                }
+
+                th, td {
+                    padding: 16px;
+                    text-align: center;
+                    border-bottom: 2px solid #D9B999;
+                }
+
+                tbody tr:hover {
+                    background: rgba(255, 239, 204, 0.6);
+                }
+
+                td:first-child {
+                    font-weight: bold;
+                    color: #774936;
+                }
+
+                table, th:first-child, td:first-child {
+                    border-top-left-radius: 12px;
+                    border-bottom-left-radius: 12px;
+                }
+
+                table, th:last-child, td:last-child {
+                    border-top-right-radius: 12px;
+                    border-bottom-right-radius: 12px;
+                }
+
+                @media (max-width: 768px) {
+                    th, td {
+                        padding: 12px;
+                        font-size: 14px;
+                    }
+                }
+            </style>
+
+            <table>
+
+                <tbody>
+                <tr th:each="freeQuestion : ${pageing}">
+                    <td>
+                        <img th:if="${freeQuestion.frbothumbnailUrl != null}"
+                             th:src="@{${freeQuestion.frbothumbnailUrl}}"
+                             alt="썸네일 이미지"
+                             style="width: 60px; height: 50px; object-fit: cover;">
+                    </td>
+                    <td>
+                        <a th:href="@{|/freequestion/detail/${freeQuestion.frboSeq}|}" th:text="${freeQuestion.frboTitle}"></a>
+                    </td>
+                    <td th:text="${freeQuestion.frboContent}"></td>
+                    <td th:text="${#temporals.format(freeQuestion.getFrboRegDate(),'yyyy-MM-dd')}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- 글 작성 버튼 -->
+            <div class="text-end my-3">
+                <a th:href="@{/freequestion/form}" class="btn btn-primary" style="background-color: #8B5A2B; border-color: #8B5A2B;">
+                    글 작성
+                </a>
+            </div>
+
+            <!-- 페이지네이션 -->
+            <style>
+                .pagination {
+                    display: flex;
+                    justify-content: center;
+                    padding: 10px;
+                    background-color: #FAF3E0;
+                    border-radius: 8px;
+                    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+                }
+
+                .page-item {
+                    margin: 0 5px;
+                }
+
+                .page-link {
+                    width: 40px;
+                    height: 40px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    color: #8B5A2B;
+                    background: #FCE8D5;
+                    border: 2px solid #D9B999;
+                    border-radius: 50%;
+                    text-decoration: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .page-item.active .page-link {
+                    background: #C29263;
+                    color: white;
+                }
+
+                .page-link:hover {
+                    background: #EED3B6;
+                }
+
+                .page-item.disabled .page-link {
+                    background: #EFEFEF;
+                    color: #B5B5B5;
+                    cursor: not-allowed;
+                }
+            </style>
+
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item" th:classappend="${!pageing.hasPrevious} ? 'disabled'">
+                        <a class="page-link" th:href="@{|?page=${pageing.number-1}|}" aria-label="Previous">〈</a>
+                    </li>
+
+                    <li th:each="i : ${#numbers.sequence(0, pageing.totalPages - 1)}"
+                        class="page-item"
+                        th:classappend="${pageing.number == i} ? 'active'">
+                        <a class="page-link" th:href="@{|?page=${i}|}" th:text="${i + 1}"></a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${!pageing.hasNext} ? 'disabled'">
+                        <a class="page-link" th:href="@{|?page=${pageing.number+1}|}" aria-label="Next">〉</a>
+                    </li>
+                </ul>
+            </nav>
+
+        </section>
+    </div>
+</main>
+</html>

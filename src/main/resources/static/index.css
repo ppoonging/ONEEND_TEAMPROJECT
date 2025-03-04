@@ -64,7 +64,6 @@ a {
     color: black !important;
 }
 
-
 /* 네비바 아이콘 회원 드롭바 */
 .coll:hover,
 .coll:focus {
@@ -135,6 +134,25 @@ a {
     color: #853a22;
 
 }
+
+
+
+.custom-card {
+    width: 18rem; /* 기본 카드 너비 */
+    transition: transform 0.3s ease-in-out; /* 카드 호버 효과 */
+}
+
+.custom-card:hover {
+    transform: scale(1.05); /* 마우스 호버 시 카드 확대 */
+}
+
+.card-divider {
+    margin: 0; /* 여백 제거 */
+    border: none; /* 기본 선 제거 */
+    border-top: 2px solid #ddd; /* 상단에 회색 선 추가 */
+}
+
+
 
 
 
