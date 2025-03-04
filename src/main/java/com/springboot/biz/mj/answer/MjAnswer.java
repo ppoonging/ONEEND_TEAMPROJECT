@@ -2,7 +2,7 @@ package com.springboot.biz.mj.answer;
 
 
 import com.springboot.biz.mj.board.Mjboard;
-import com.springboot.biz.user.MgUser;
+import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,7 @@ public class MjAnswer {
     private Integer mjAnsSeq;  //맛집 기본키
 
     @ManyToOne
-    private MgUser userId; // 유저 번호 (FK)
+    private HUser userId; // 유저 번호 (FK)
 
     private String mjSeq;  //맛집소개 번호(FK)
 

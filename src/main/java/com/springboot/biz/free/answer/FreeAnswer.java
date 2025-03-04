@@ -2,12 +2,14 @@ package com.springboot.biz.free.answer;
 
 
 import com.springboot.biz.free.board.FreeQuestion;
-import com.springboot.biz.user.MgUser;
+import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -20,7 +22,7 @@ public class FreeAnswer {
     private Integer frboAnSeq; //글번호
 
     @ManyToOne
-    private MgUser userId; // 유저 번호 (FK)
+    private HUser userId; // 유저 번호 (FK)
 
     private Integer frboSeq; //질문 번호 (FK)
 
@@ -38,6 +40,12 @@ public class FreeAnswer {
     @ManyToOne
     private FreeQuestion freeQuestion; //관계맺기
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_frboAnSeq")
+    private FreeAnswer parentAnswer; // 부모 댓글 (대댓글 구현)
+
+    @OneToMany(mappedBy = "parentAnswer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FreeAnswer> childAnswers = new ArrayList<>();
 
 
 }

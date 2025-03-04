@@ -2,7 +2,7 @@ package com.springboot.biz.tour.mjroot;
 
 
 import com.springboot.biz.tour.mjtour.Tour;
-import com.springboot.biz.user.MgUser;
+import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,7 @@ public class Root {
     private Tour tourSeq;  //투어루트 번호(FK)
 
     @ManyToOne
-    private MgUser userId;  //유저 아이디(FK)
+    private HUser userId;  //유저 아이디(FK)
 
     private String rootDistination;  //목적지명
 

@@ -5,13 +5,13 @@
         <div class="container py-2">
 
             <!--수정해야할 부분-->
-            <span class="" style="color: #777; font-family: 'MapoGoldenPier'; padding-left: 8px">맛광 커뮤니티 > 자유게시판</span>
+            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">맛광 커뮤니티 > 자유게시판</span>
 
         </div>
     </div>
     <div class="container mt-5">
         <div class="text-center">
-            <img th:src="@{/images/total/기와.png}" width="100">
+            <img th:src="@{/images/total/밥그릇.png}" width="5%">
         </div>
 
         <!--수정해야할 부분-->
@@ -23,14 +23,9 @@
             <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
             <div style="height: 700px">
                 <!-- **내용** -->
-                <tr th:each="freeQuestion : ${pageing}">
 
-                    <td th:text="${freeQuestion.freeQTitle}"></td>
 
-                    <td th:text="${freeQuestion.freeQContent}"></td>
-                    <td th:text="${freeQuestion.freeQRegDate}"></td>
 
-                </tr>
             </div>
 
             <!--하단 줄 (필요에 따라 사용)-->

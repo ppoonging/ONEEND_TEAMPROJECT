@@ -1,8 +1,7 @@
 package com.springboot.biz.recipe.user.board;
 
-import com.springboot.biz.free.answer.FreeAnswer;
 import com.springboot.biz.recipe.user.answer.UserRecipeAnswer;
-import com.springboot.biz.user.MgUser;
+import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +19,7 @@ public class UserRecipe {
     private Integer userRecipeSeq; //유저레시피 기본키
 
     @ManyToOne
-    private MgUser userId; // 유저 번호 (FK)
+    private HUser userId; // 유저 번호 (FK)
 
 
     @Column(length = 100 )

@@ -1,0 +1,130 @@
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+    <!--상단-->
+    <div style="background-color: #F4E9E3; border-bottom: 3px solid #D87C61;">
+        <div class="container py-2">
+            <span style="color: #777; font-family: 'MapoGoldenPier', sans-serif; font-size: 18px; padding-left: 10px;">
+                맛광 커뮤니티 > 상세보기
+            </span>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="container mt-5">
+        <div class="text-center">
+            <img th:src="@{/images/total/기와.png}" width="140" class="rounded">
+        </div>
+
+        <h2 class="text-center py-4" style="font-family: 'MapoGoldenPier', serif; color: #D87C61; font-size: 32px;">상세보기</h2>
+
+        <h2 class="border-bottom py-3" th:text="${freeQuestion.frboTitle}" style="font-family: 'MapoGoldenPier', serif; color: #333; font-size: 28px;"></h2>
+
+        <div class="card my-4" style="border: 1px solid #D87C61; border-radius: 8px;">
+            <div class="card-body">
+                <img th:if="${freeQuestion.frboFilePath}"
+                     th:src="@{${freeQuestion.frboFilePath} + '?t=' + ${#dates.createNow().getTime()}}"
+                     class="img-fluid rounded mb-4" alt="Uploaded Image" style="max-height: 500px; object-fit: cover;">
+                <div class="card-text" style="white-space: pre-line; font-family: 'Noto Sans KR', sans-serif; color: #555; font-size: 18px;">
+                    <p th:text="${freeQuestion.frboContent}"></p>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <div class="badge bg-light text-dark p-3" style="font-size: 16px; font-family: 'MapoGoldenPier', serif;"></div>
+                </div>
+                <div class="my-4">
+                    <a th:href="@{|/freequestion/modify/${freeQuestion.frboSeq}|}" class="btn btn-lg btn-outline-secondary"
+                       style="font-family: 'MapoGoldenPier', serif; font-size: 16px;" th:text="수정"></a>
+                    <a href="javascript:void(0);" th:data-uri="@{|/freequestion/delete/${freeQuestion.frboSeq}|}"
+                       class="delete btn btn-lg btn-outline-danger"
+                       style="font-family: 'MapoGoldenPier', serif; font-size: 16px;" th:text="삭제"></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🔹 댓글 입력 폼 -->
+        <div class="card my-4">
+            <div class="card-header bg-light">
+                <h4>댓글 작성</h4>
+            </div>
+            <div class="card-body">
+                <form th:action="@{|/freeanswer/create/${freeQuestion.frboSeq}|}" method="post" th:object="${freeAnswerForm}">
+                    <textarea class="form-control" name="frboAnsContent" id="frboAnsContent" rows="3"></textarea>
+                    <button class="btn btn-primary mt-2" type="submit">등록</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 🔹 댓글 목록 -->
+        <div class="card my-4">
+            <div class="card-header bg-light">
+                <h4>댓글 목록</h4>
+            </div>
+            <div class="card-body">
+                <!-- 댓글 목록 -->
+                <ul class="list-group">
+                    <li th:each="answer : ${freeQuestion.answerList}" class="list-group-item">
+                        <div th:id="'answerContent-' + ${answer.frboAnSeq}" th:text="${answer.frboAnsContent}"></div>
+                        <small class="text-muted" th:text="${#temporals.format(answer.frboARegDate, 'yyyy-MM-dd HH:mm')}"></small>
+
+                        <!-- 🔹 수정 버튼 -->
+                        <button class="btn btn-sm btn-outline-secondary mt-2" th:onclick="|showEditForm(${answer.frboAnSeq})|">수정</button>
+
+                        <!-- 🔹 수정 폼 (숨김) -->
+                        <form th:id="'editForm-' + ${answer.frboAnSeq}" th:action="@{|/freeanswer/modify/${answer.frboAnSeq}|}" method="post"
+                              style="display: none; margin-top: 10px;">
+                            <textarea class="form-control" name="frboAnsContent" th:text="${answer.frboAnsContent}" rows="3"></textarea>
+                            <button class="btn btn-sm btn-success mt-2" type="submit">수정 완료</button>
+                        </form>
+
+                        <!-- 🔹 삭제 버튼 -->
+                        <form th:action="@{|/freeanswer/delete/${answer.frboAnSeq}|}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-sm btn-outline-danger mt-2" onclick="return confirm('댓글을 삭제하시겠습니까?');">삭제</button>
+                        </form>
+
+                        <!-- 🔹 대댓글 버튼 -->
+                        <button class="btn btn-sm btn-outline-primary mt-2" th:onclick="|toggleReplyForm(${answer.frboAnSeq})|">댓글달기</button>
+
+                        <!-- 🔹 대댓글 입력 폼 (기본적으로 숨김) -->
+                        <form th:id="'replyForm-' + ${answer.frboAnSeq}" th:action="@{|/freeanswer/reply/${answer.frboAnSeq}|}" method="post"
+                              style="display: none; margin-top: 10px;">
+                            <textarea class="form-control" name="frboAnsContent" rows="2"></textarea>
+                            <button class="btn btn-sm btn-primary mt-2" type="submit">등록</button>
+                        </form>
+
+                        <!-- 🔹 대댓글 목록 -->
+                        <ul class="list-group mt-2">
+                            <li th:each="childAnswer : ${answer.childAnswers}" class="list-group-item" style="margin-left: 20px;">
+                                <div th:text="${childAnswer.frboAnsContent}"></div>
+                                <small class="text-muted" th:text="${#temporals.format(childAnswer.frboARegDate, 'yyyy-MM-dd HH:mm')}"></small>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function showEditForm(answerId) {
+            const editForm = document.getElementById('editForm-' + answerId);
+            const answerContent = document.getElementById('answerContent-' + answerId);
+            if (editForm.style.display === "none") {
+                editForm.style.display = "block";
+                answerContent.style.display = "none";
+            } else {
+                editForm.style.display = "none";
+                answerContent.style.display = "block";
+            }
+        }
+
+        function toggleReplyForm(answerId) {
+            var form = document.getElementById('replyForm-' + answerId);
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        }
+    </script>
+</main>
+</html>
