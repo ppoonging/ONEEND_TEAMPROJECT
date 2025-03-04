@@ -1,9 +1,8 @@
-package com.springboot.biz.tour.mjtour;
+package com.springboot.biz.root.rootAdmin;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springboot.biz.tour.mjroot.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.RequestEntity;
@@ -15,17 +14,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class TourService {
+public class RootService {
 
     private final RestTemplate restTemplate;
-    private final TourRepository tourRepository;
+    private final RootRepository rootRepository;
+    private final RootListRepository rootListRepository;
 
     @Value("${naver.client-id}")
     private String id;
@@ -88,10 +86,38 @@ public class TourService {
 
     }
 
-    public void save(String title, List<Root> rootList) {
-        Tour tour = new Tour();
-        tour.setTourTitle(title);
-        tour.setTourList(rootList);
-        this.tourRepository.save(tour);
+    public List<Root> getList() {
+        return this.rootRepository.findAll();
     }
+
+    public void save(String title, List<RootListDTO> rootListDTO) {
+        Root root = new Root();
+        root.setRootTitle(title);
+
+
+        // System.out.println("service"+rootListDTO.get(1).getRoadaddress());
+
+        List<RootList> rootList = new ArrayList<>();
+
+        root.setRootList(rootList);
+        root.setRootDate(LocalDateTime.now());
+
+        this.rootRepository.save(root);
+
+        for(RootListDTO rel : rootListDTO) {
+            RootList list = RootList.builder()
+                    .root(root)
+                    .rootListTitle(rel.getTitle())
+                    .rootListAddress(rel.getAddress())
+                    .rootListRodeAddress(rel.getRoadaddress())
+                    .rootListLatitude(rel.getLatitude())
+                    .rootListLongitude(rel.getLongitude())
+                    .build();
+
+            this.rootListRepository.save(list);
+        }
+
+    }
+
+
 }

@@ -1,8 +1,7 @@
 package com.springboot.biz.mj.board;
 
-import com.springboot.biz.free.answer.FreeAnswer;
 import com.springboot.biz.mj.answer.MjAnswer;
-import com.springboot.biz.tour.mjtour.Tour;
+import com.springboot.biz.root.rootAdmin.Root;
 import com.springboot.biz.user.MgUser;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,7 +24,7 @@ public class Mjboard {
     private MgUser userId; // 유저 번호 (FK)
 
     @OneToMany
-    private List<Tour> tourSeq;  //투어 루트번호
+    private List<Root> tourSeq;  //투어 루트번호
 
     @Column(length = 100)
     private String mjTitle;   //제목
