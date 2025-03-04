@@ -23,7 +23,7 @@ public class FreeAnswerService {
         freeAnswer.setFreeQuestion(freeQuestion); // 해당 게시글(질문) 연결
         freeAnswer.setParentAnswer(parentAnswer); //부모댓글
 
-        return freeAnswerRepository.save(freeAnswer); // 저장 후 반환gggggggg
+        return freeAnswerRepository.save(freeAnswer); // 저장 후 반환
     }
 
     // 🔹 댓글 조회 (ID로 찾기)

@@ -9,7 +9,7 @@
 
     <div class="container mt-5">
         <div class="text-center">
-            <img th:src="@{/images/total/기와.png}" width="100">
+            <img th:src="@{/images/total/bab.png}" width="100">
         </div>
 
         <!-- 제목 -->
@@ -97,15 +97,17 @@
                 <tbody>
                 <tr th:each="freeQuestion : ${pageing}">
                     <td>
+                        <!-- 썸네일이 존재하면 이미지를 표시 -->
                         <img th:if="${freeQuestion.frbothumbnailUrl != null}"
                              th:src="@{${freeQuestion.frbothumbnailUrl}}"
                              alt="썸네일 이미지"
                              style="width: 60px; height: 50px; object-fit: cover;">
                     </td>
+
                     <td>
                         <a th:href="@{|/freequestion/detail/${freeQuestion.frboSeq}|}" th:text="${freeQuestion.frboTitle}"></a>
                     </td>
-                    <td th:text="${freeQuestion.frboContent}"></td>
+                    <td><span th:if="${freeQuestion.freeAuthor != null}" th:text="${freeQuestion.freeAuthor.nickname}"></span></td>
                     <td th:text="${#temporals.format(freeQuestion.getFrboRegDate(),'yyyy-MM-dd')}"></td>
                 </tr>
                 </tbody>
