@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 
 
@@ -43,12 +45,16 @@ public class FmRecipeController {
 
         @PostMapping("/create")
         @PreAuthorize("isAuthenticated()")  // 로그인한 사용자만 접근 가능 (OAuth2 포함)
-        public String questionCreate(Principal principal,FmRecipe fmRecipe) {
+        public String questionCreate(Principal principal,FmRecipe fmRecipe,@RequestParam("file") MultipartFile file) throws IOException {
+
             HUser mgUser = this.mgUserSerevice.getUser(principal.getName());
+
             this.fmRecipeService.createRecipe(fmRecipe.getFmrecipeCategory(),
-                    fmRecipe.getFmrecipeTitle(), fmRecipe.getFmrecipeContent(), fmRecipe.getFmrecipeFileName(), fmRecipe.getFmrecipeFilePath() );
+                    fmRecipe.getFmrecipeTitle(), fmRecipe.getFmrecipeContent()
+                    , file);
             return "redirect:/fm/fmRecipeList";
         }
+
 
 
     }

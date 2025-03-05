@@ -60,8 +60,10 @@ public class FreeQuestionController {
 
 
     //게시글 작성
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/form")
+
   public String freeQuestionForm(FreeQuestionForm freeQuestionForm){
         return "free/freeQuestion_form";
   }
