@@ -3,7 +3,6 @@ package com.springboot.biz.mj.board;
 import com.springboot.biz.free.answer.FreeAnswer;
 import com.springboot.biz.mj.answer.MjAnswer;
 import com.springboot.biz.root.rootAdmin.Root;
-import com.springboot.biz.tour.mjtour.Tour;
 import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
