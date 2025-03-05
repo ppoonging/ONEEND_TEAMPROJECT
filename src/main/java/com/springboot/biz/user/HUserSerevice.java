@@ -3,6 +3,7 @@ package com.springboot.biz.user;
 
 
 import com.springboot.biz.DataNotFoundException;
+import com.springboot.biz.notion.MgNotion;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,6 +47,15 @@ public class HUserSerevice {
     }
     public HUser getUserByEmail(String email){
         return userRepository.findByEmail(email).orElse(null);
+    }
+
+
+    public void modify(HUser hUser, String nickname, String email, String phoneNumber, String address) {
+        hUser.setNickname(nickname);
+        hUser.setEmail(email);
+        hUser.setPhoneNumber(phoneNumber);
+        hUser.setAddress(address);
+        this.userRepository.save(hUser);
     }
 
 

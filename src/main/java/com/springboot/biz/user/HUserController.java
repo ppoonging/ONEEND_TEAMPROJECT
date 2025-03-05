@@ -1,9 +1,12 @@
 package com.springboot.biz.user;
 
 
+import com.springboot.biz.notion.MgNotion;
+import com.springboot.biz.notion.MgNotionForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -79,10 +82,36 @@ public class HUserController {
 
 
 
-    @GetMapping("/mypage")
+    @GetMapping("/myPage")
         public String infor(Model model, Principal principal) {
             HUser hUser = this.hUserSerevice.getUser(principal.getName());
             model.addAttribute("hUser", hUser);
-            return "mypage_Form";
+            return "myPage";
         }
+
+
+        @GetMapping("/modify/{username}")
+    public String Modify(HUserForm hUserForm, @PathVariable("username") String username) {
+         HUser hUser = this.hUserSerevice.getUser(username);
+
+         hUserForm.setNickname(hUser.getNickname());
+         hUserForm.setEmail(hUser.getEmail());
+         hUserForm.setPhoneNumber(hUser.getPhoneNumber());
+         hUserForm.setAddress(hUser.getAddress());
+         return "myPageForm";
+        }
+
+
+    @PostMapping("/modify/{username}")
+    public String Modify(@PathVariable("username") String username, @Valid HUserForm hUserForm, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) {
+            return "myPageForm";
+        }
+        HUser hUser = this.hUserSerevice.getUser(username);
+
+        this.hUserSerevice.modify(hUser, hUserForm.getNickname(), hUserForm.getEmail(), hUserForm.getPhoneNumber(), hUserForm.getAddress());
+        return "redirect:/users/myPage";
+    }
+
     }

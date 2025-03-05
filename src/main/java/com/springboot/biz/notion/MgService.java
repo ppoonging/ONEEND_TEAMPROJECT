@@ -1,18 +1,22 @@
 package com.springboot.biz.notion;
 
 import com.springboot.biz.DataNotFoundException;
-import com.springboot.biz.user.HUser;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,20 +34,47 @@ public class MgService {
     public MgNotion getMgNotion(Integer notionSeq) {
         Optional<MgNotion> mgNotion = this.mgRepository.findById(notionSeq);
 
-        if(mgNotion.isPresent()) {
+        if (mgNotion.isPresent()) {
             return mgNotion.get();
-        }else {
+        } else {
             throw new DataNotFoundException("검색한 데이터가 없습니다");
         }
     }
 
-    public void create(String notionTitle, String notionContent, HUser mgUser) {
+    public void create(String notionTitle, String notionContent, MultipartFile file) throws Exception {
+       String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files";
+        // Generate the file name with UUID
+        UUID uuid = UUID.randomUUID();
+        String frboFileName = uuid + "_" + file.getOriginalFilename();
+
+        // Save the file to disk
+        File saveFile = new File(projectPath, frboFileName);
+        file.transferTo(saveFile);
+
+        // Create MgNotion object
         MgNotion q = new MgNotion();
         q.setNotionTitle(notionTitle);
         q.setNotionContent(notionContent);
         q.setNotionRegDate(LocalDateTime.now());
-        q.setAuthor(mgUser);
+        q.setFrboFilePath("/files/" + frboFileName);  // Use the correct file name
+        q.setFrboFileName(frboFileName);
+
+        // Save the MgNotion entity to the repository
         this.mgRepository.save(q);
     }
+
+    public void modify(MgNotion mgNotion, String notionTitle, String notionContent) {
+        mgNotion.setNotionTitle(notionTitle);
+        mgNotion.setNotionContent(notionContent);
+        mgNotion.setModifyDate(LocalDateTime.now());
+        this.mgRepository.save(mgNotion);
+    }
+
+    public void delete(MgNotion mgNotion) {
+        this.mgRepository.delete(mgNotion);
+    }
+
+
+
 
 }

@@ -67,7 +67,7 @@
                         <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
 
                         <!-- Link to notion details with proper styling -->
-                        <td><a th:href="@{|/notionDetail/${mgNotion.notionSeq}|}" th:text="${mgNotion.notionTitle}"></a></td>
+                        <td><a th:href="@{|/notion/detail/${mgNotion.notionSeq}|}" th:text="${mgNotion.notionTitle}"></a></td>
 
                         <!-- Display the notion content -->
                         <td th:text="${mgNotion.notionContent}"></td>
@@ -91,19 +91,21 @@
             <!--하단 줄 (필요에 따라 사용)-->
             <hr style="margin-top: 50px">
             <!--pagination-->
-            <div class="d-flex justify-content-center">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true"> < </span>
+            <div th:if="${!paging.isEmpty()}" class="pagination-bottom-center">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                        <a class="page-link" th:href="@{|?page=${paging.number-1}|}">
+                            <span>이전</span>
                         </a>
                     </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true"> > </span>
+                    <li th:each="page : ${#numbers.sequence(0, paging.totalPages-1)}"
+                        th:if="${page >= paging.number-2 and page <= paging.number +2}"
+                        th:classappend="${page == paging.number} ? 'active'" class="page-item">
+                        <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                        <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+                            <span>다음</span>
                         </a>
                     </li>
                 </ul>

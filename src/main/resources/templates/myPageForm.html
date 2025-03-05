@@ -1,0 +1,78 @@
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+  <!--상단-->
+  <div style="background-color: #F4E9E3">
+    <div class="container py-2">
+
+      <!--수정해야할 부분-->
+      <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">맛광 커뮤니티 > 자유게시판</span>
+
+    </div>
+  </div>
+  <div class="container mt-5">
+    <div class="text-center">
+      <img th:src="@{/images/total/밥그릇.png}" width="5%">
+    </div>
+
+    <!--수정해야할 부분-->
+    <!--title-->
+    <h2 class="text-center py-2">자유게시판</h2>
+    <!--content-->
+    <section class="py-5">
+
+      <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+      <div style="height: 700px">
+        <!-- **내용** -->
+       <!-- <h2 class="text-center py-2">회원 정보 수정</h2>
+
+        <section class="py-5">
+          <div class="container">
+            <div class="profile-card">
+
+            <form th:action="@{/users/modify}" method="post">
+
+
+                <div class="form-group">
+                  <label for="email"><strong>이메일</strong></label>
+                  <input type="email" id="email" name="email" class="form-control"  required>
+                </div>
+
+                <div class="form-group">
+                  <label for="nickname"><strong>닉네임</strong></label>
+                  <input type="text" id="nickname" name="nickname" class="form-control"  required>
+                </div>
+
+                <div class="form-group">
+                  <label for="phoneNumber"><strong>연락처</strong></label>
+                  <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"  required>
+                </div>
+
+                <div class="form-group">
+                  <label for="address"><strong>주소</strong></label>
+                  <input type="text" id="address" name="address" class="form-control"  required>
+                </div>
+                <button type="submit" class="btn btn-primary">수정 완료</button>
+
+              </form>-->
+
+              <!-- <div class="text-center mt-4">
+
+                 <a th:href="@{/users/myPage}" class="btn btn-secondary">취소</a>
+               </div>-->
+
+
+
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!--하단 줄 (필요에 따라 사용)-->
+      <hr style="margin-top: 50px">
+      <!--pagination-->
+
+    </section>
+  </div>
+
+</main>
+</html>

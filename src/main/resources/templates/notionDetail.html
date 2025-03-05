@@ -1,59 +1,59 @@
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
     <!--상단-->
-    <div style="background-color: #F4E9E3">
+    <div style="background-color: #F4E9E3; border-bottom: 3px solid #D87C61;">
         <div class="container py-2">
-
-            <!--수정해야할 부분-->
-            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">맛광 커뮤니티 > 자유게시판</span>
-
+            <span style="color: #777; font-family: 'MapoGoldenPier', sans-serif; font-size: 18px; padding-left: 10px;">
+                맛광 커뮤니티 > 상세보기
+            </span>
         </div>
     </div>
+
+    <!-- Main Content Container -->
     <div class="container mt-5">
         <div class="text-center">
-            <img th:src="@{/images/total/밥그릇.png}" width="5%">
+            <img th:src="@{/images/total/logo.png}" width="140" class="rounded">
         </div>
 
-        <!--수정해야할 부분-->
-        <!--title-->
-        <h2 class="text-center py-2">자유게시판</h2>
-        <!--content-->
-        <section class="py-5">
+        <h2 class="text-center py-4" style="font-family: 'MapoGoldenPier', serif; color: #D87C61; font-size: 32px;">상세보기</h2>
 
-            <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
-            <div style="height: 700px">
-                <!-- **내용** -->
+        <!-- Title Section with "제목" -->
+        <div class="d-flex align-items-center border-bottom py-3">
+            <span style="font-family: 'MapoGoldenPier', serif; color: #333; font-size: 28px; margin-right: 10px;">제목:</span>
+            <h2 th:text="${mgNotion.notionTitle}" style="font-family: 'MapoGoldenPier', serif; color: #333; font-size: 28px;"></h2>
+        </div>
+
+        <div class="card my-4" style="border: 1px solid #D87C61; border-radius: 8px;">
+            <div class="card-body">
+                <!-- Content Section with "내용" -->
+                <div class="my-4">
+                    <span style="font-family: 'MapoGoldenPier', serif; color: #333; font-size: 24px;">내용</span>
+                    <div class="card-text" style="white-space: pre-line; font-family: 'Noto Sans KR', sans-serif; color: #555; font-size: 18px;">
+                        <p th:text="${mgNotion.notionContent}"></p>
+                    </div>
+                    <img th:if="${mgNotion.frboFilePath}"
+                         th:src="@{${mgNotion.frboFilePath} + '?t=' + ${#dates.createNow().getTime()}}"
+                         class="img-fluid rounded mb-4" alt="Uploaded Image" style="max-height: 500px; object-fit: cover;">
+                </div>
 
 
-                <h2 class="border-bottom py-2" th:text="${mgNotion.notionTitle}"></h2>
+                <div class="d-flex justify-content-end">
+                    <div class="badge bg-light text-dark p-3" style="font-size: 16px; font-family: 'MapoGoldenPier', serif;"></div>
+                </div>
 
-
-                <div th:text="${mgNotion.notionContent}"></div>
-
+                <div class="my-4">
+                    <a th:href="@{|/notion/modify/${mgNotion.notionSeq}|}" class="btn btn-lg btn-outline-secondary"
+                       style="font-family: 'MapoGoldenPier', serif; font-size: 16px;" th:text="수정"></a>
+                    <a th:href="@{|/notion/delete/${mgNotion.notionSeq}|}"
+                       class="delete btn btn-lg btn-outline-danger"
+                       style="font-family: 'MapoGoldenPier', serif; font-size: 16px;" th:text="삭제"></a>
+                </div>
             </div>
+        </div>
 
-            <!--하단 줄 (필요에 따라 사용)-->
-            <hr style="margin-top: 50px">
-            <!--pagination-->
-            <div class="d-flex justify-content-center">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true"> < </span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true"> > </span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </section>
+
+
     </div>
-
 </main>
+
 </html>

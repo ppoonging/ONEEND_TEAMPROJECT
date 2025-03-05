@@ -1,0 +1,221 @@
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+    <!--상단-->
+    <div style="background-color: #F4E9E3">
+        <div class="container py-2">
+            <!--수정해야할 부분-->
+            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">고객센터 > 공지사항</span>
+        </div>
+    </div>
+    <div class="container mt-5">
+        <div class="text-center">
+            <img th:src="@{/images/total/bab.png}" width="5%">
+        </div>
+
+        <!--수정해야할 부분-->
+        <!--title-->
+        <h2 class="text-center py-2">공지사항</h2>
+        <!--content-->
+        <section class="py-5">
+
+            <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애야 할거임) ***-->
+            <!-- **내용** -->
+
+            <html lang="ko">
+            <head>
+                <!-- Required meta tags -->
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+                <!-- Bootstrap CSS -->
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+                <title>마이페이지</title>
+
+                <style>
+                    /* Circle image styling */
+                    .circle-image {
+                        width: 150px;
+                        height: 150px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        border: 5px solid #fff;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        margin-bottom: 20px;
+                    }
+
+                    /* Profile card styling */
+                    .profile-card {
+                        padding: 25px;
+                        background-color: #f8f9fa;
+                        border-radius: 10px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        margin-top: 20px;
+                    }
+
+                    .table td, .table th {
+                        border: none;
+                    }
+
+                    /* White background for all rows */
+                    .table-white {
+                        background-color: #ffffff;
+                    }
+
+                    /* Header styling */
+                    .header {
+                        text-align: center;
+                        margin-top: 30px;
+                    }
+
+                    /* Change text color to a darker tone */
+                    .profile-header {
+                        font-weight: bold;
+                        font-size: 28px;
+                        color: #D1C5B2; /* Darker text color */
+                    }
+
+                    /* Text Styling */
+                    .profile-info {
+                        font-size: 16px;
+                        color: #B4A99C; /* Darker text color */
+                    }
+
+                    .profile-info strong {
+                        color: #007bff;
+                    }
+
+                    .container {
+                        margin-top: 50px;
+                    }
+
+                    /* Align text to the left for specific rows */
+                    .left-align {
+                        text-align: left;
+                    }
+
+                    /* Layout adjustments */
+                    .left-column {
+                        width: 30%;  /* Adjust the width of the left column */
+                        padding-right: 30px;
+                    }
+
+                    .right-column {
+                        width: 70%; /* Adjust the width of the right column */
+                    }
+
+                    /* Flex container to align left and right columns */
+                    .flex-container {
+                        display: flex;
+                    }
+
+                    /* Info edit button at the bottom-right corner */
+                    .info-edit-btn {
+                        position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        background-color: #F4E9E3;
+                        color: #000;
+                        font-size: 14px;
+                        padding: 10px 20px;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    }
+
+                    .info-edit-btn:hover {
+                        background-color: #e0d1c4;  /* Button hover color */
+                    }
+                </style>
+            </head>
+
+            <body>
+            <div class="container">
+                <!-- Profile header -->
+                <div class="header">
+                    <h1 class="profile-header">회원정보</h1>
+                </div>
+
+                <!-- Flex container to split content -->
+                <div class="flex-container">
+                    <!-- Left column for phone and boyfriend -->
+                    <div class="left-column">
+                        <div class="profile-card">
+                            <table class="table">
+                                <tr class="table-white left-align">
+                                    <td><strong>회원정보</strong></td>
+                                </tr>
+                                <tr class="table-white left-align">
+                                    <td><strong>내 글 목록</strong></td>
+                                </tr>
+                                <tr class="table-white left-align">
+                                    <td><strong>회원탈퇴</strong></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right column for profile image and other info -->
+                    <div class="right-column">
+                        <div class="text-center">
+                            <img src="https://via.placeholder.com/150" alt="프로필 이미지" class="circle-image">
+                        </div>
+                        <div class="profile-card">
+                            <table class="table">
+                                <tr class="table-white">
+                                    <td><strong>아이디</strong></td>
+                                    <td class="profile-info" th:text="${hUser.username}"></td>
+                                </tr>
+                                <tr class="table-white">
+                                    <td><strong>비밀번호</strong></td>
+                                    <td class="profile-info">
+                                        <span th:text="${#strings.repeat('*', 4)}"></span>
+                                        <button class="btn custom-btn" style="background-color: #F4E9E3; color: #000;" onclick="location.href='/change-password'">변경</button>
+                                    </td>
+                                </tr>
+                                <tr class="table-white">
+                                    <td><strong>이메일</strong></td>
+                                    <td class="profile-info" th:text="${hUser.email}"></td>
+                                </tr>
+                                <tr class="table-white">
+                                    <td><strong>닉네임</strong></td>
+                                    <td class="profile-info" th:text="${hUser.nickname}"></td>
+                                </tr>
+                                <tr class="table-white">
+                                    <td><strong>연락처</strong></td>
+                                    <td class="profile-info" th:text="${hUser.phoneNumber}"></td>
+                                </tr>
+                                <tr class="table-white">
+                                    <td><strong>주소</strong></td>
+                                    <td class="profile-info" th:text="${hUser.address}"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a th:href="@{|/users/modify/${hUser.username}|}"
+               class="btn btn-lg btn-outline-secondary"
+               style="font-family: 'MapoGoldenPier', serif; font-size: 16px;
+          background-color: #F4E9E3; color: #000;
+          border-color: #F4E9E3;
+          position: fixed; bottom: 20px; right: 20px;
+          padding: 10px 20px; border-radius: 5px; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"
+               th:text="정보수정">
+            </a>
+
+
+            <!-- Bootstrap JS and dependencies -->
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+            </body>
+            </html>
+
+
+        </section>
+    </div>
+</main>
+</html>
