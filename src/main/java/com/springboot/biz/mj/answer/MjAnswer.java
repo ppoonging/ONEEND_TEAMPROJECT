@@ -37,4 +37,6 @@ public class MjAnswer {
     @ManyToOne
     private Mjboard mjBoard;   //맛집 질문과 관계맺기
 
+
+
 }

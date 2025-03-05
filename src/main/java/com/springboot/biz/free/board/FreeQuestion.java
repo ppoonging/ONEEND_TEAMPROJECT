@@ -49,8 +49,12 @@ public class FreeQuestion {
     @OneToMany(mappedBy = "freeQuestion", cascade = CascadeType.REMOVE)
     private List<FreeAnswer> answerList;
 
+    //추가함
+    @ManyToOne
+    private HUser freeAuthor;//작성자 
 
-    // 👍 좋아요 & 👎 싫어요 필드 추가
+
+    // 👍 좋아요 & 👎 싫어요 필드 추가 추가함
     @Column(nullable = false, columnDefinition = "int default 0")
     private Integer frboLike = 0;
 
