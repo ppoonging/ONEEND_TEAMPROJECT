@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -59,13 +60,17 @@ public class FreeQuestionController {
 
 
     //게시글 작성
-          @GetMapping("/form")
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/form")
+
   public String freeQuestionForm(FreeQuestionForm freeQuestionForm){
         return "free/freeQuestion_form";
   }
 
 
   @PostMapping("/form")
+  @PreAuthorize("isAuthenticated()")
     public String freeQuestionForm(@Valid FreeQuestionForm freeQuestionForm , BindingResult bindingResult
      ,@RequestParam("file")MultipartFile file)throws Exception{
 

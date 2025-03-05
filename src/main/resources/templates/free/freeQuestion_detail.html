@@ -81,7 +81,11 @@
                         </form>
 
                         <!-- 🔹 대댓글 버튼 -->
+
                         <button class="btn btn-sm btn-outline-primary mt-2" th:onclick="|toggleReplyForm(${answer.frboAnSeq})|">댓글달기</button>
+
+                        <button class="btn btn-sm btn-outline-primary mt-2" th:onclick="|toggleReplyForm(${answer.frboAnSeq})|">대댓글</button>
+
 
                         <!-- 🔹 대댓글 입력 폼 (기본적으로 숨김) -->
                         <form th:id="'replyForm-' + ${answer.frboAnSeq}" th:action="@{|/freeanswer/reply/${answer.frboAnSeq}|}" method="post"
