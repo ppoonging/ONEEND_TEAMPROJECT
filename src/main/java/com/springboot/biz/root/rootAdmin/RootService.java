@@ -3,6 +3,7 @@ package com.springboot.biz.root.rootAdmin;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springboot.biz.user.HUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.RequestEntity;
@@ -90,9 +91,10 @@ public class RootService {
         return this.rootRepository.findAll();
     }
 
-    public void save(String title, List<RootListDTO> rootListDTO) {
+    public void save(String title, List<RootListDTO> rootListDTO, HUser user) {
         Root root = new Root();
         root.setRootTitle(title);
+        root.setUserId(user);
 
 
         // System.out.println("service"+rootListDTO.get(1).getRoadaddress());
@@ -112,11 +114,16 @@ public class RootService {
                     .rootListRodeAddress(rel.getRoadaddress())
                     .rootListLatitude(rel.getLatitude())
                     .rootListLongitude(rel.getLongitude())
+                    .userId(user)
                     .build();
 
             this.rootListRepository.save(list);
         }
 
+    }
+
+    public List<RootList> getRootList(Integer rootSeq) {
+        return rootListRepository.findByRootId(rootSeq);
     }
 
 

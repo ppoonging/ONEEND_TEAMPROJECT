@@ -21,7 +21,7 @@ public class SnsService {
         String originalImgName = multipartFile.getOriginalFilename();
         String imgName = "";
 
-        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/uploads/sns";
+        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/sns";
 
         UUID uuid = UUID.randomUUID();
 
@@ -33,7 +33,7 @@ public class SnsService {
 
         Sns sns = Sns.builder()
                 .snsImageName(imgName)
-                .snsImagePath("/uploads/sns/" + imgName)
+                .snsImagePath("/files/sns/" + imgName)
                 .snsLink(link)
                 .build();
 

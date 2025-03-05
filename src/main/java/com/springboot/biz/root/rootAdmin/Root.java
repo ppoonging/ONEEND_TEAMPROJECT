@@ -1,5 +1,6 @@
 package com.springboot.biz.root.rootAdmin;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,7 +25,8 @@ public class Root {
     private String rootTitle;  //루트 제목
 
     @OneToMany(mappedBy = "root", cascade = CascadeType.REMOVE)
-    private List<RootList> rootList = new ArrayList<>(); // 루트 목록
+    @JsonManagedReference
+    private List<RootList> rootList; // 루트 목록
 
     private LocalDateTime rootDate;
 

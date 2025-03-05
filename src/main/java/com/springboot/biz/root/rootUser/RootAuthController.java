@@ -20,8 +20,8 @@ public class RootAuthController {
     @GetMapping("/form")
     public String register(Model model) {
 
-//        List<Root> rootList =  this.rootAuthService.get();
-//        model.addAttribute("rootList", rootList);
+        List<Root> rootList =  this.rootAuthService.get();
+        model.addAttribute("rootList", rootList);
 
         return "/main/root/user/root_form_user";
     }

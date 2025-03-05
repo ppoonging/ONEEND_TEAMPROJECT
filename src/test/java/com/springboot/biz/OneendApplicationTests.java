@@ -6,12 +6,15 @@ import com.springboot.biz.free.board.FreeQuestionRepository;
 import com.springboot.biz.free.board.FreeQuestionService;
 import com.springboot.biz.notion.MgNotion;
 import com.springboot.biz.notion.MgRepository;
+import com.springboot.biz.root.rootAdmin.Root;
+import com.springboot.biz.root.rootUser.RootAuthService;
 import com.springboot.biz.user.HUserSerevice;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @SpringBootTest
 class OneendApplicationTests {
@@ -23,13 +26,16 @@ class OneendApplicationTests {
     private FreeQuestionService freeQuestionService;
     private HUserSerevice hUserSerevice;
 
+    @Autowired
+    private RootAuthService rootAuthService;
+
 
     @Test
     void contextLoads() {
 
-        FreeQuestion q = new FreeQuestion();
 
-        q.setFreeAuthor(hUserSerevice.getUser(String username));
+        List<Root> root = this.rootAuthService.get();
+        System.out.println(root.get(1).getRootTitle());
 
 
 

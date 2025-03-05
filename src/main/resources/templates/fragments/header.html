@@ -3,8 +3,11 @@
         <a th:href="@{/users/signup}" style="text-decoration: none">
             <span style="border-right: 1px solid #ccc; font-size: 14px; color: #777;" class="px-2">회원가입 </span>
         </a>
-        <a th:href="@{/users/login}" style="text-decoration: none">
+        <a sec:authorize="isAnonymous()" th:href="@{/users/login}" style="text-decoration: none">
             <span class="px-2" style="font-size: 14px; color: #777;">로그인</span>
+        </a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/users/logout}" style="text-decoration: none">
+            <span class="px-2" style="font-size: 14px; color: #777;">로그아웃</span>
         </a>
     </div>
 

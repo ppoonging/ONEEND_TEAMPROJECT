@@ -5,7 +5,7 @@
         <div class="container py-2">
 
             <!--수정해야할 부분-->
-            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">소근소근 > 루트인증</span>
+            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">소근소근 > 한식루트 인증</span>
 
         </div>
     </div>
@@ -16,7 +16,7 @@
 
         <!--수정해야할 부분-->
         <!--title-->
-        <h2 class="text-center py-2">루트 인증하기</h2>
+        <h2 class="text-center py-2">한식루트 인증하기</h2>
         <!--content-->
         <section class="py-5">
 
@@ -33,10 +33,13 @@
                     <div class="mb-3 row">
                         <label for="root-select" class="col-sm-1 col-form-label">루트 선택</label>
                         <div class="col" id="root-select">
-                            <select  class="form-select" aria-label="Default select example">
-                                <option class="option" th:each="rootList : ${rootList}" th:value="${rootList.getRootTitle()}" th:text="${rootList.getRootTitle()}"
-                                        th:data-root="${rootList.getRootList()}"
-                                ></option>
+                            <select id="form-select"  class="form-select" aria-label="Default select example">
+                                <option class="option"
+                                        th:each="root : ${rootList}"
+                                        th:value="${root.rootSeq}"
+                                        th:text="${root.rootTitle}"
+                                >
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -54,37 +57,63 @@
 
         </section>
     </div>
+    <script th:inline="javascript" layout:fragment="script">
+        let map;
+        let marker;
+        let polyline;
 
-</main>
-<script th:inline="javascript" layout:fragment="script">
-    let map;
-    let rootList = /*[[${rootList}]]*/ [];
+        // 페이지 로드 시 동작
+        document.addEventListener("DOMContentLoaded", ()=>{
+            setMap(37.5666805, 126.9784147);
 
-    // 페이지 로드 시 동작
-    document.addEventListener("DOMContentLoaded", ()=>{
-        setMap(37.5666805, 126.9784147);
-    });
-
-    function setMap(lat, lng) {
-        map = new naver.maps.Map("map", {
-            center: new naver.maps.LatLng(lat, lng),
-            zoom: 16, // 값이 클수록 확대
-            zoomControl: true,
-            mapTypeControl: true
         });
-    }
 
-    document.getElementsByClassName("form-select").addEventListener("change", function (sel) {
-        console.log(rootList);
+        function setMap(lat, lng) {
+            map = new naver.maps.Map("map", {
+                center: new naver.maps.LatLng(lat, lng),
+                zoom: 16, // 값이 클수록 확대
+                zoomControl: true,
+                mapTypeControl: true
+            });
+        }
 
+        document.getElementById("form-select").addEventListener("change", function () {
+            let rootSeq = this.value;
+
+            console.log("선택: " + rootSeq);
+
+            if(!rootSeq) return;
+
+            fetch(`/root/form/${rootSeq}`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log("list: ", data);
+
+                    displayMap(data);
+                })
+                .catch(err => console.log("오류: ", err));
+        });
+
+        function displayMap(rootList) {
+            rootList.forEach(data => {
+                map.setCenter(new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude));
+
+                if (marker) {
+                    marker.setMap(null);
+                }
+
+                drawPolyline(rootList);
+
+            });
+
+        }
 
         // 라인 그리기
-        function drawPolyline() {
-            const localChkData = obj;
+        function drawPolyline(line) {
 
-            const path = localChkData.map((data)=>{
+            const path = line.map((data)=>{
                 console.log(data)
-                return new naver.maps.LatLng(data.latitude, data.longitude)
+                return new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)
             })
 
             if(polyline) {
@@ -104,9 +133,9 @@
             window.markers = [];
 
             // 순서대로 마커 추가
-            localChkData.forEach((data, index) => {
+            line.forEach((data, index) => {
                 const marker = new naver.maps.Marker({
-                    position: new naver.maps.LatLng(data.latitude, data.longitude),
+                    position: new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude),
                     map: map,
                     icon: {
                         content: `<div style="background-color: red; width: 20px; height: 20px; border-radius: 50%;"><span style="font-size: 12px; color: white; text-align: center">${index + 1}</span></div>`,
@@ -118,11 +147,9 @@
             });
         }
 
-        drawPolyline();
-
-    })
 
 
+    </script>
+</main>
 
-</script>
 </html>
