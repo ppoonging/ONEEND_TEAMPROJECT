@@ -1,16 +1,16 @@
-<header th:fragment="header" style="background-color: #fff;" id="header" class="pt-3">
+<header th:fragment="header" style="background-color: #fff;" id="header" class="pt-3 sticky-top">
     <div class="container d-flex justify-content-end">
-        <a href="#" style="text-decoration: none">
+        <a th:href="@{/users/signup}" style="text-decoration: none">
             <span style="border-right: 1px solid #ccc; font-size: 14px; color: #777;" class="px-2">회원가입 </span>
         </a>
-        <a href="#" style="text-decoration: none">
+        <a th:href="@{/users/login}" style="text-decoration: none">
             <span class="px-2" style="font-size: 14px; color: #777;">로그인</span>
         </a>
     </div>
 
     <!--네비바-->
     <div id="navbar" class="container-fluid" style="background-color: white;">
-        <nav class="navbar navbar-expand-lg border-bottom w-100 ">
+        <nav class="navbar navbar-expand-lg border-bottom w-100">
             <div class="container">
                 <a class="" th:href="@{/}">
                     <img th:src="@{/images/total/logo.png}" width="80%"></a>
@@ -26,8 +26,8 @@
                                 레시피
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">정석 레시피</a></li>
-                                <li><a class="dropdown-item" href="#">우리들의 레시피</a></li>
+                                <li><a class="dropdown-item" th:href="@{/fm/recipe}">정석 레시피</a></li>
+                                <li><a class="dropdown-item" th:href="@{/}">우리들의 레시피</a></li>
                             </ul>
                         </li>
                         <!--맛광레시피-->
@@ -41,12 +41,12 @@
                                 소근소근
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">자유게시판</a></li>
-                                <li><a class="dropdown-item" href="#">한식루트 인증</a></li>
+                                <li><a class="dropdown-item" th:href="@{/freequestion/}">자유게시판</a></li>
+                                <li><a class="dropdown-item" th:href="@{/root/list}">한식루트 인증</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link me-5 fs-5" href="#">SNS</a>
+                            <a class="nav-link me-5 fs-5" th:href="@{/sns}">SNS</a>
                         </li>
                         <!--고객센터-->
                         <li class="nav-item dropdown">
@@ -54,8 +54,8 @@
                                 고객센터
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">공지사항</a></li>
-                                <li><a class="dropdown-item" href="#">Q&A</a></li>
+                                <li><a class="dropdown-item" th:href="@{/notion/}">공지사항</a></li>
+                                <li><a class="dropdown-item" th:href="@{/inquriy/}">Q&A</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -66,25 +66,25 @@
                     <div class="navbar-nav">
                         <ul class="row my-2 my-lg-0 media-sub-nav" style="transform: translateY(5px)">
                             <!--팀 소개-->
-                            <li class="col fs-4 pt-2" >
+                            <li class="col fs-4 pt-1" >
                                 <a href="#" style="color: #333">
                                     <i class="bi bi-hand-index-thumb-fill" style="color: #555"></i>
                                 </a>
                             </li>
                             <!--채팅-->
-                            <li class="col fs-4 pt-2" style="transform: translateX(3px)">
+                            <li class="col fs-4 pt-1" style="transform: translateX(3px)">
                                 <a href="#" style="color: #333">
                                     <i class="bi bi-chat-dots-fill" style="color: #555"></i>
                                 </a>
                             </li>
                             <!--회원-->
-                            <li class="col fs-3 pt-2">
+                            <li class="col fs-3 pt-1">
                                 <div type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
                                     <i class="bi bi-person-fill" style="color: #555"></i>
                                 </div>
                                 <div class="collapse bg-white" id="collapseExample2" style="position: absolute; border: 1px solid #eee; border-radius: 10%; transform: translateX(-35%)" >
                                     <div class="py-2" style="font-size: 13px; display: flex; flex-flow: column; text-wrap: nowrap">
-                                       <a href="#" class="coll py-1 px-3" style="color: #333; text-decoration: none">마이페이지</a>
+                                       <a th:href="@{/users/myPage}" class="coll py-1 px-3" style="color: #333; text-decoration: none">마이페이지</a>
                                        <a href="#" class="coll py-1 px-3" style="color: #333; text-decoration: none;">내 글 목록</a>
                                     </div>
                                 </div>
@@ -96,19 +96,6 @@
             </div>
         </nav>
     </div>
-
-    <script type="text/javascript" layout:fragment="script">
-        window.addEventListener('scroll', function (){
-            const navbar = document.getElementById('navbar');
-            if(window.scrollY > 180) {
-                navbar.classList.add('nav-fixed');
-
-            } else {
-                navbar.classList.remove('nav-fixed');
-            }
-        })
-    </script>
-
 </header>
 
 

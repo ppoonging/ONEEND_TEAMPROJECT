@@ -80,7 +80,6 @@
                                                 onclick="return confirm('댓글을 삭제하시겠습니까?');">삭제</button>
                                     </form>
                                 </div>
-
                                 <!-- 대댓글 버튼 (로그인한 사용자만 가능) -->
                                 <div sec:authorize="isAuthenticated()">
                                     <button class="btn btn-sm btn-outline-primary mt-2" th:onclick="|toggleReplyForm(${answer.frboAnSeq})|">대댓글</button>
@@ -92,6 +91,7 @@
                                         <button class="btn btn-sm btn-primary mt-2" type="submit">등록</button>
                                     </form>
                                 </div>
+
 
                                 <!-- 대댓글 목록 -->
                                 <ul class="list-group mt-2">

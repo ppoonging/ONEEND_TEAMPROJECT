@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>아이디 찾기</title>
+</head>
+<body>
+
+<h1>아이디 찾기</h1>
+
+<form th:action="@{/users/findLoginId}" method="get">
+<label for="email">이메일</label>
+    <input type="email" id="email" name="email" required>
+    <button type="submit">아이디 찾기</button>
+</form>
+
+<!-- 사용자 정보가 있을 때 -->
+<div th:if="${user != null}">
+    <p>아이디: <span th:text="${user.username}"></span></p>
+</div>
+
+<!-- 사용자 정보가 없을 때 -->
+<div th:if="${error != null}">
+    <p th:text="${error}"></p>
+</div>
+
+</body>
+</html>
