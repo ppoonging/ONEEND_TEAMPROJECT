@@ -15,14 +15,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HUserSerevice {
     private final HUserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+   /* private final PasswordEncoder passwordEncoder;*/
 
 
     public HUser create(String username, String password, String nickname, String email,
                         String phoneNumber,String birthday, String address, String addressDetail,String zipCode){
         HUser hUser= new HUser();
         hUser.setUsername(username);
-        hUser.setPassword(passwordEncoder.encode(password));
+      /*  hUser.setPassword(passwordEncoder.encode(password));*/
+        hUser.setPassword(password);
         hUser.setNickname(nickname);
         hUser.setEmail(email);
         hUser.setPhoneNumber(phoneNumber);
