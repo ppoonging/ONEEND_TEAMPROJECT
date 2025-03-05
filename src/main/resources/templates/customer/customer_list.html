@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>고객센터</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #FAF3EE; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #d4c4b7; padding: 10px; text-align: center; }
+        th { background-color: #EADBC8; }
+        button, .inquiry-btn {
+            padding: 8px 12px; border: none; background-color: #C8A888;
+            color: white; cursor: pointer; border-radius: 5px;
+        }
+        button:hover, .inquiry-btn:hover { background-color: #a88c66; }
+        .faq-section, .inquiry-section { margin-bottom: 20px; }
+        .faq-item { background: #F3E2D3; padding: 10px; border-radius: 5px; margin-bottom: 5px; cursor: pointer; }
+        .faq-content { display: none; padding: 5px 10px; }
+        .pagination { text-align: center; margin-top: 10px; }
+        .pagination a { margin: 0 5px; text-decoration: none; color: #C8A888; }
+        .pagination a:hover { font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<!-- 자주 묻는 질문 -->
+<div class="faq-section">
+    <h2>자주 묻는 질문</h2>
+    <div class="faq-item" onclick="toggleFaq(this)">이메일을 변경하고 싶습니다.</div>
+    <div class="faq-content">온라인에서 변경할 수 없습니다. 관리자에게 문의하세요. (matgwane@gmail.com)</div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">맛과 서비스에 지원하고 싶습니다.</div>
+    <div class="faq-content">파트너 신청 페이지에서 지원 가능합니다.</div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">비밀번호 변경이 문제있습니다.</div>
+    <div class="faq-content">비밀번호 변경 페이지에서 해결하세요.</div>
+</div>
+
+<!-- 문의 목록 -->
+<div class="inquiry-section">
+    <h2>문의</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>상태</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="customer : ${customers}">
+            <td th:text="${customer.custSeq}"></td>
+            <td th:text="${customer.custTitle}"></td>
+            <td th:text="${customer.user.nickname}"></td>
+            <td th:text="${#temporals.format(customer.custRegTime, 'yyyy-MM-dd')}"></td>
+            <td>
+                <form th:action="@{/customers/update/{id}(id=${customer.custSeq})}" method="post">
+                    <select name="state">
+                        <option value="PENDING" th:selected="${customer.custState == 'PENDING'}">대기중</option>
+                        <option value="IN_PROGRESS" th:selected="${customer.custState == 'IN_PROGRESS'}">처리중</option>
+                        <option value="COMPLETED" th:selected="${customer.custState == 'COMPLETED'}">처리완료</option>
+                    </select>
+                    <button type="submit">변경</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 페이징 -->
+    <div class="pagination">
+        <a href="#">«</a>
+        <a href="#" class="active">1</a>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <a href="#">4</a>
+        <a href="#">5</a>
+        <a href="#">»</a>
+    </div>
+
+    <!-- 문의하기 버튼 -->
+    <a href="/customer/add" class="inquiry-btn">문의</a>
+</div>
+
+<script>
+    function toggleFaq(element) {
+        var next = element.nextElementSibling;
+        next.style.display = next.style.display === "none" ? "block" : "none";
+    }
+</script>
+
+</body>
+</html>
