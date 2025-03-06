@@ -25,8 +25,8 @@ public class FmRecipeService {
 
 
     //정형화된 레시피 작성은 admin만 할 수있게 만들아야함
-    public void createRecipe(String fmrecipeCategory,
-                             String fmrecipeTitle,String fmrecipeContent,
+    public void createRecipe(String fmrecipeCategory, String fmrecipeTitle,String fmrecipeIngre
+            , String fmrecipeReady,String fmrecipeContent,
                               MultipartFile file) throws IOException {
 
         /*ㄱ경로*/
@@ -43,6 +43,8 @@ public class FmRecipeService {
         FmRecipe fR = new FmRecipe();
         fR.setFmrecipeCategory(fmrecipeCategory);
         fR.setFmrecipeTitle(fmrecipeTitle);
+        fR.setFmrecipeIngre(fmrecipeIngre);
+        fR.setFmrecipeReady(fmrecipeReady);
         fR.setFmrecipeContent(fmrecipeContent);
         fR.setFmrecipeFilePath("/files/" + fmrecipeFileName );
         fR.setFmrecipeFileName(fmrecipeFileName);

@@ -25,10 +25,18 @@ public class FmRecipe {
     private String fmrecipeCategory; //카테고리 설정
 
     @Column(length = 100)
-    private String fmrecipeTitle;  //fm레시피 제목
+    private String fmrecipeTitle;  //fm레시피 음식이름
 
     @Column(columnDefinition = "TEXT")
-    private String fmrecipeContent;//fm레시피 내용
+    private String fmrecipeIngre;  //재료 분량
+
+    @Column(columnDefinition = "TEXT")
+    private String fmrecipeReady;  //준비하기
+
+    @Column(columnDefinition = "TEXT")
+    private String fmrecipeContent;   //fm레시피 레시피
+
+
 
     private LocalDateTime fmrecipeRegDate;  //작성일
 

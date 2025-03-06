@@ -47,7 +47,7 @@ public class FreeQuestionController {
     }*/
 
     //글목록 조회
-    @GetMapping("/list")
+    @GetMapping("/")
     public String freeQuestionList(Model model,
                                    @RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "kw", defaultValue = "") String kw,
@@ -90,7 +90,7 @@ public class FreeQuestionController {
 
         this.freeQuestionService.freeForm(freeQuestionForm.getFrboTitle(),freeQuestionForm.getFrboContent(),file,hUser);
 
-        return "redirect:/freequestion/list";
+        return "redirect:/freequestion/";
 
     }
 
@@ -149,7 +149,7 @@ public class FreeQuestionController {
         }
 
         this.freeQuestionService.delete(question);
-        return "redirect:/freequestion/list";
+        return "redirect:/freequestion/";
     }
 
 

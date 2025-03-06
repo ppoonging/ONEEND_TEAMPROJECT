@@ -8,7 +8,7 @@
     </div>
     <div class="container mt-5">
         <div class="text-center">
-            <img th:src="@{/images/total/밥그릇.png}" width="5%">
+            <img th:src="@{/images/total/bab.png}" width="5%">
         </div>
 
         <!--수정해야할 부분-->
@@ -25,26 +25,36 @@
                 <!-- 일반 로그인 -->
                 <form th:action="@{/users/login}" method="post">
 
-                    <div th:if="${param.error}">
+                    <!--<div th:if="${param.error}">
                         <div class="alert alert-danger">
                             아이디 또는 비밀번호가 틀렸습니다.
                         </div>
-                    </div>
+                    </div>-->
+                    <!DOCTYPE html>
+                    <html lang="ko">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>회원가입</title>
+                    </head>
+                    <body>
 
-                    <div class="mb-3">
-                        <label for="username" class="form-label">아이디</label>
-                        <input type="text" name="username" id="username" class="form-control" placeholder="아이디을 입력하세요">
-                    </div>
+                        <label for="username" class="form-label">
+                        <input class="input" type="text" name="username" id="username" placeholder="          를 입력하세요" required>
+                            <span>아이디</span>
+                        </label>
 
-                    <div class="mb-3">
-                        <label for="password" class="form-label">비밀번호</label>
-                        <input type="text" name="password" id="password" class="form-control" placeholder="비밀번호를 입력하세요">
-                    </div>
+
+                        <label for="password" class="form-label">
+                        <input class="input" type="text" name="password" id="password" placeholder="             를 입력하세요" required>
+                            <span>비밀번호</span>
+                        </label>
 
                     <div class=" d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary w-75 py-1" style="font-size: 13px;" >로그인</button>
+                        <button type="submit" class="btn btn-primary w-55 py-1" style="font-size: 13px;" >로그인</button>
                     </div>
                 </form>
+
                 <!-- 소셜 로그인 -->
 
                 <!--open Api 로그인 아이콘으로 변경할 예정?????-->
@@ -59,18 +69,33 @@
                         <img src="/images/apple_logo.png" alt="애플" width="20" class="me-2"> 로그인
                     </a>
                 </div>
+     <!--아이디 칮기 비밀번호 찾기 회원가입하기-->
 
-                <div>
-                    <form th:action="@{/users/findLoginId}" method="post " >
-                        <button type="submit" class="btn btn-primary w-75 py-1" style="font-size: 13px;" >아이디 찾기</button>
+                <html lang="ko">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>링크 메뉴</title>
 
-                    </form>
+                </head>
+                <body>
+                <div class="container-1">
+                <div class="link-menu">
+                    <a href="/users/findLoginId">아이디 찾기</a>
+                    <span class="divider">|</span>
+                    <a href="/findPassword">비밀번호 찾기</a>
+                    <span class="divider">|</span>
+                    <a href="/users/signup">회원가입</a>
+                </div>
                 </div>
 
+                </body>
+                </html>
+            </div>
 
                 <!--하단 줄 (필요에 따라 사용)-->
                 <hr style="margin-top: 50px">
-            </div>
+
         </section>
     </div>
 

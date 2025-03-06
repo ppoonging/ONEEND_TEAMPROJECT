@@ -12,7 +12,7 @@
     </div>
     <div class="container mt-5">
         <div class="text-center">
-            <img th:src="@{/images/total/밥그릇.png}" width="5%">
+            <img th:src="@{/images/total/bab.png}" width="5%">
         </div>
 
         <!--수정해야할 부분-->
@@ -23,17 +23,38 @@
 
 
 
-            <div class="d-flex flex-wrap gap-3 justify-content-center"> <!-- 가로 정렬 및 간격 추가 -->
+          <!--  <div class="d-flex flex-wrap gap-3 justify-content-center"> &lt;!&ndash; 가로 정렬 및 간격 추가 &ndash;&gt;
                 <div th:each="fm: ${paging}" class="card custom-card">
+                    <img th:if="${fm.fmrecipeFilePath !=null}"
+                         th:src="@{${fm.fmrecipeFilePath}}" class="card-img-top" alt="이미지 설명">
+                    <hr class="card-divider"> &lt;!&ndash; 이미지 아래 구분선 &ndash;&gt;
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a th:href="@{|/fmRecipe/detail/${fm.fmrecipeSeq}|}" th:text="${fm.fmrecipeTitle}"></a>
+                        </h5>
+                  <p class="card-text" th:text="${fm.fmrecipeContent}"></p>
+                        <p class="card-text" th:text="${fm.fmrecipeReady}"></p>
+                           <p class="card-text" th:text="${fm.fmrecipeIngre}"></p>
+
+                            <h6 th:text=" ${#temporals.format(fm.fmrecipeRegDate,'yyyy-MM-dd HH:mm')}"></h6>
+                    </div>
+                </div>
+            </div>
+-->
+            <div class="d-flex flex-wrap gap-3 justify-content-center"> <!-- 가로 정렬 및 간격 추가 -->
+                <div th:each="fm: ${paging}" class="card custom-card" style="cursor: pointer;"
+                     th:attr="onclick=|location.href='/fmRecipe/detail/${fm.fmrecipeSeq}'|">
                     <img th:if="${fm.fmrecipeFilePath !=null}"
                          th:src="@{${fm.fmrecipeFilePath}}" class="card-img-top" alt="이미지 설명">
                     <hr class="card-divider"> <!-- 이미지 아래 구분선 -->
                     <div class="card-body">
                         <h5 class="card-title">
-                            <a th:href="@{|/fmRecipe/detail/${fm.fmrecipeSeq}|}" th:text="${fm.fmrecipeTitle}"></a>
+                            <a th:href="@{|/fmRecipe/detail/${fm.fmrecipeSeq}|}" th:text="${fm.fmrecipeTitle}" style="pointer-events: none;"></a>
                         </h5>
-                        <p class="card-text" th:text="${fm.getFmrecipeContent()}"></p>
-                        <h6 th:text=" ${#temporals.format(fm.fmrecipeRegDate,'yyyy-MM-dd HH:mm')}"></h6>
+                        <p class="card-text" th:text="${fm.fmrecipeContent}"></p>
+                        <p class="card-text" th:text="${fm.fmrecipeReady}"></p>
+                        <p class="card-text" th:text="${fm.fmrecipeIngre}"></p>
+                        <h6 th:text="${#temporals.format(fm.fmrecipeRegDate,'yyyy-MM-dd HH:mm')}"></h6>
                     </div>
                 </div>
             </div>

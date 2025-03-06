@@ -50,8 +50,8 @@ public class FmRecipeController {
             HUser mgUser = this.mgUserSerevice.getUser(principal.getName());
 
             this.fmRecipeService.createRecipe(fmRecipe.getFmrecipeCategory(),
-                    fmRecipe.getFmrecipeTitle(), fmRecipe.getFmrecipeContent()
-                    , file);
+                    fmRecipe.getFmrecipeTitle(),fmRecipe.getFmrecipeReady(),fmRecipe.getFmrecipeIngre()
+                    , fmRecipe.getFmrecipeContent(), file);
             return "redirect:/fm/fmRecipeList";
         }
 
