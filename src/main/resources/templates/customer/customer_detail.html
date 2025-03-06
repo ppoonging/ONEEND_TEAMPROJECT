@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>문의 상세보기</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #FAF3EE; padding: 20px; }
+        .container { max-width: 700px; margin: auto; padding: 20px; background: white; border-radius: 10px; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        .content-box { border: 1px solid #ccc; padding: 10px; border-radius: 5px; background: #fff8f0; }
+        .back-btn { display: inline-block; margin-top: 15px; padding: 8px 12px; background: #C8A888; color: white; text-decoration: none; border-radius: 5px; }
+        .back-btn:hover { background: #a88c66; }
+    </style>
+</head>
+
+<main layout:fragment="content">
+    <div class="container">
+        <h2>문의 상세보기</h2>
+
+        <label>제목</label>
+        <div class="content-box" th:text="${customer.custTitle}"></div>
+
+        <label>내용</label>
+        <div class="content-box" th:text="${customer.custContent}"></div>
+
+        <label>작성자</label>
+        <div class="content-box" th:text="${customer.user.nickname}"></div>
+
+        <label>작성일</label>
+        <div class="content-box" th:text="${#temporals.format(customer.custRegTime, 'yyyy-MM-dd HH:mm')}"></div>
+
+        <label>처리 상태</label>
+        <div class="content-box" th:text="${customer.custState}"></div>
+
+        <!-- 목록으로 돌아가기 버튼 -->
+        <a href="/customer/" class="back-btn">목록으로 돌아가기</a>
+    </div>
+</main>
+
+</html>

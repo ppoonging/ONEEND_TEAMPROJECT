@@ -15,15 +15,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HUserSerevice {
     private final HUserRepository userRepository;
-   /* private final PasswordEncoder passwordEncoder;*/
+    private final PasswordEncoder passwordEncoder;
 
 
     public HUser create(String username, String password, String nickname, String email,
                         String phoneNumber,String birthday, String address, String addressDetail,String zipCode){
         HUser hUser= new HUser();
         hUser.setUsername(username);
-      /*  hUser.setPassword(passwordEncoder.encode(password));*/
-        hUser.setPassword(password);
+        hUser.setPassword(passwordEncoder.encode(password));
         hUser.setNickname(nickname);
         hUser.setEmail(email);
         hUser.setPhoneNumber(phoneNumber);
@@ -47,6 +46,19 @@ public class HUserSerevice {
     public HUser getUserByEmail(String email){
         return userRepository.findByEmail(email).orElse(null);
     }
+
+
+    /*추가 사용자 정보조회*/
+    public HUser getUserById(Integer userSeq) {
+        return userRepository.findById(userSeq)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. ID: " + userSeq));
+
+    }
+
+    public Integer getLoggedInUserSeq() {
+        return 1; // seq번호 나중에 바꿔줘야함
+    }
+
 
 
 
