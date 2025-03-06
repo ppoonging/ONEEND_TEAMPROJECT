@@ -24,7 +24,7 @@
                 <div>
 
                     <!--제목, 주소검색-->
-                    <form th:action="@{/root/register/form/save}" method="post">
+                    <form th:action="@{/root/register/form/save}" id="registerForm" method="post">
                         <div class="mb-2 row">
                             <label for="title" class="col-sm-1 col-form-label">제목</label>
                             <div class="col-sm-11">
@@ -61,7 +61,8 @@
                                 <ul th:if="${searchData}" style="background-color: #E8DCD4;" class="p-3 h-100 mb-0">
                                     <li id="restaurant" th:each="searchData : ${searchData}" class="d-flex flex-row p-2 h-100" >
                                         <div class="my-2" style="width: 90%;">
-                                            <h6 th:utext="${searchData.title}" name="click-address" th:data-lat="${searchData.latitude}" th:data-lng="${searchData.longitude}"></h6>
+                                            <h6 th:utext="${searchData.title}" style="font-weight: bold " name="click-address" th:data-lat="${searchData.latitude}" th:data-lng="${searchData.longitude}"></h6>
+                                            <p th:text="'카테고리: ' + ${searchData.category}" class="mb-2" style="font-size: 14px; color: #777"></p>
                                             <p th:text="'지번: ' + ${searchData.address}" class="mb-2" style="font-size: 14px; color: #444"></p>
                                             <p th:text="'도로명: ' + ${searchData.roadAddress}" class="mb-0" style="font-size: 14px; color: #444"></p>
                                             <input type="hidden" id="latitude" th:value = "${searchData.latitude}" />
@@ -75,6 +76,9 @@
                                                        th:data-roadaddress="${searchData.roadAddress}"
                                                        th:data-latitude="${searchData.latitude}"
                                                        th:data-longitude="${searchData.longitude}"
+                                                       th:data-link="${searchData.link}"
+                                                       th:data-category="${searchData.category}"
+
                                                 />
                                             </div>
                                         </div>
@@ -82,10 +86,12 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-end mt-3">
+                        <input type="hidden" id="rootListData" name="rootList">
+                        <div class="d-flex justify-content-between mt-3">
+                            <input type="button" id="map-button" class="btn btn-outline-secondary" value="루트 확인">
                             <input type="button" id="form-submit" name="form-submit" value="저장" class="btn btn-primary">
-                        </div>
 
+                        </div>
                     </form>
 
                     <form id="searchForm" th:action="@{/root/register/form/search}" method="get">
@@ -102,16 +108,39 @@
             let marker;
             let polyline;
 
+            // 페이지 로드 시 동작
+            document.addEventListener("DOMContentLoaded", () => {
+                updateSavedList();
+                setMap(37.5666805, 126.9784147);
+                checkboxState();
+
+                if (localStorage.getItem("savedCheckRoot")) {
+                    localStorage.setItem("checkRoot", localStorage.getItem("savedCheckRoot"));
+                    localStorage.removeItem("savedCheckRoot");  // 임시 저장한 데이터 제거
+                    checkboxState();  // 체크박스 다시 적용
+                    updateSavedList();  // 리스트 다시 업데이트
+                    drawPolyline();  // 경로 다시 그리기
+                }
+
+                const savedTitle = localStorage.getItem("savedTitle");
+                if (savedTitle) {
+                    document.getElementById("title").value = savedTitle;
+                }
+            });
+
             // 주소 검색 동작
             document.getElementById("search-submit").addEventListener("click", function () {
                 const query = document.getElementById("query").value;
-                document.getElementById("hiddenQuery").value = query;
-                document.getElementById("searchForm").submit();
 
                 // 검색 시 결과가 없을 경우
                 if(query.length === 0) {
                     alert("검색 결과가 없습니다. 정확한 키워드를 입력해주세요.")
                 }
+
+                localStorage.setItem("savedCheckRoot", localStorage.getItem("checkRoot"));
+                document.getElementById("hiddenQuery").value = query;
+                document.getElementById("searchForm").submit();
+
             });
 
             // 검색 시 타이틀 초기화 방지
@@ -119,17 +148,7 @@
                 localStorage.setItem("savedTitle", this.value);
             });
 
-            // 페이지 로드 시 동작
-            document.addEventListener("DOMContentLoaded", ()=>{
-                updateSavedList();
-                setMap(37.5666805, 126.9784147);
-                checkboxState();
 
-                const savedTitle = localStorage.getItem("savedTitle");
-                if (savedTitle) {
-                    document.getElementById("title").value = savedTitle;
-                }
-            });
 
 
             // 맵 초기 설정
@@ -144,32 +163,66 @@
             }
 
 
+
+
             // title 체크 시 지도/마커
-            const clickAddress = document.getElementsByName('click-address');
-
-            Array.from(clickAddress).forEach((data)=>{
-                data.addEventListener('click', function (){
-
+            document.querySelectorAll('h6[name="click-address"]').forEach((data) => {
+                data.addEventListener("click", function () {
                     const lat = parseFloat(data.dataset.lat);
                     const lng = parseFloat(data.dataset.lng);
 
-                    console.log(lat);
-                    console.log(lng);
-
-                    // 체크 시 map 새로 초기화
                     map.setCenter(new naver.maps.LatLng(lat, lng));
+                    if (marker) marker.setMap(null);
 
-                    if (marker) {
-                        marker.setMap(null);
-                    }
-
-                    // 체크 시 해당 좌표 마커
                     marker = new naver.maps.Marker({
                         position: new naver.maps.LatLng(lat, lng),
-                        map: map
+                        map: map,
+                        icon: {
+                            content: `<img width="25" height="25" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
+                            anchor: new naver.maps.Point(15, 18)
+                        },
+                        animation: naver.maps.Animation.BOUNCE
                     });
-                })
-            })
+                });
+            });
+
+            // const clickAddress = document.getElementsByName('click-address');
+            //
+            // Array.from(clickAddress).forEach((data)=>{
+            //     data.addEventListener('click', function (){
+            //
+            //         const lat = parseFloat(data.dataset.lat);
+            //         const lng = parseFloat(data.dataset.lng);
+            //
+            //         console.log(lat);
+            //         console.log(lng);
+            //
+            //         // 체크 시 map 새로 초기화
+            //         map.setCenter(new naver.maps.LatLng(lat, lng));
+            //
+            //         if (marker) {
+            //             marker.setMap(null);
+            //         }
+            //
+            //         // 체크 시 해당 좌표 마커
+            //         marker = new naver.maps.Marker({
+            //             position: new naver.maps.LatLng(lat, lng),
+            //             map: map,
+            //             // icon: {
+            //             //     url: '/images/root/pin.png', // 50 68
+            //             //     size: new naver.maps.Size(25, 34),
+            //             //     scaledSize: new naver.maps.Size(25, 34),
+            //             //     origin: new naver.maps.Point(0, 0),
+            //             //     anchor: new naver.maps.Point(12, 34)
+            //             // },
+            //             icon: {
+            //                 content: `<img width="25" height="25" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="standing-man-skin-type-1"/>`,
+            //                 anchor: new naver.maps.Point(15, 18)
+            //             },
+            //             animation: naver.maps.Animation.BOUNCE
+            //         });
+            //     })
+            // })
 
 
             // 체크박스 이벤트 처리
@@ -180,7 +233,10 @@
                         address: checkbox.dataset.address,
                         roadaddress: checkbox.dataset.roadaddress,
                         latitude: checkbox.dataset.latitude,
-                        longitude: checkbox.dataset.longitude
+                        longitude: checkbox.dataset.longitude,
+                        link: checkbox.dataset.link,
+                        category: checkbox.dataset.category,
+
                     }
                     // console.log(typeof obj);
                     let localChkData = JSON.parse(localStorage.getItem("checkRoot")) || [];
@@ -198,8 +254,9 @@
                     }
 
                     localStorage.setItem("checkRoot", JSON.stringify(localChkData));
-                    drawPolyline();
                     updateSavedList();
+                    drawPolyline();
+
                 });
             });
 
@@ -209,8 +266,7 @@
                 let localChkData = JSON.parse(localStorage.getItem("checkRoot")) || [];
 
                 document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
-                    const isChecked = localChkData.some(item => item.title === checkbox.dataset.title);
-                    checkbox.checked = isChecked;
+                    checkbox.checked = localChkData.some(item => item.title === checkbox.dataset.title);
                 });
             }
 
@@ -254,15 +310,13 @@
                 li.dataset.roadaddress = item.roadaddress
                 li.dataset.latitude = item.latitude
                 li.dataset.longitude = item.longitude
-
-
+                li.dataset.link = item.link
+                li.dataset.category = item.category
 
                 rootSaveList.appendChild(li);
             });
         }
 
-
-            const list = document.getElementsByClassName("root-list-style");
 
             document.getElementById("rootSaveList").addEventListener("click", function (event) {
 
@@ -286,7 +340,19 @@
                     // 체크 시 해당 좌표 마커
                     marker = new naver.maps.Marker({
                         position: new naver.maps.LatLng(lat, lng),
-                        map: map
+                        map: map,
+                        // icon: {
+                        //     url: '/images/root/pin.png', // 50 68
+                        //     size: new naver.maps.Size(25, 34),
+                        //     scaledSize: new naver.maps.Size(25, 34),
+                        //     origin: new naver.maps.Point(0, 0),
+                        //     anchor: new naver.maps.Point(12, 34)
+                        // },
+                        icon: {
+                            content: `<img width="25" height="25" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="standing-man-skin-type-1"/>`,
+                            anchor: new naver.maps.Point(15, 18)
+                        },
+                        animation: naver.maps.Animation.BOUNCE
                     });
                 }
 
@@ -300,9 +366,7 @@
             localStorage.setItem("checkRoot", JSON.stringify(localChkData));
 
             document.querySelectorAll('input[name="checkbox"]').forEach((chk)=>{
-                if(chk.dataset.title === value.title){
-                chk.checked = false;
-                }
+                if(chk.dataset.title === value.title) chk.checked = false;
             })
             updateSavedList();
             drawPolyline();
@@ -312,72 +376,114 @@
         function drawPolyline() {
             const localChkData = JSON.parse(localStorage.getItem("checkRoot")) || [];
 
-            const path = localChkData.map((data)=>{
-                console.log(data)
-                return new naver.maps.LatLng(data.latitude, data.longitude)
-            })
+            const path = localChkData.map(data => new naver.maps.LatLng(data.latitude, data.longitude))
 
-            if(polyline) {
-                polyline.setMap(null);
-            }
+            if(polyline) polyline.setMap(null);
 
             polyline = new naver.maps.Polyline({
                 map: map,
                 path: path,
-                strokeColor: '#ff0000',
-                strokeWeight: 3
+                strokeColor: '#FA5858',
+                strokeStyle: 'stroke',
+                strokeWeight: 2
             });
 
-            if (window.markers) {
-                window.markers.forEach(marker => marker.setMap(null));
-            }
+            if (window.markers) window.markers.forEach(marker => marker.setMap(null));
             window.markers = [];
 
             // 순서대로 마커 추가
-            localChkData.forEach((data, index) => {
+            localChkData.forEach(data => {
+
                 const marker = new naver.maps.Marker({
                     position: new naver.maps.LatLng(data.latitude, data.longitude),
                     map: map,
                     icon: {
-                        content: `<div style="background-color: red; width: 20px; height: 20px; border-radius: 50%;"><span style="font-size: 12px; color: white; text-align: center">${index + 1}</span></div>`,
-                        anchor: new naver.maps.Point(12, 12)
-                    }                });
+                        content: `<img width="24" height="24" src="https://img.icons8.com/tiny-color/32/map-pin.png" alt="map-pin"/>`,
+                        anchor: new naver.maps.Point(14, 20)
+                    }
+                });
 
                 window.markers.push(marker);
 
             });
         }
 
+        // 루트 중앙 이동
+        document.getElementById("map-button").addEventListener("click", function (){
+            console.log("click")
+            const localChkData = JSON.parse(localStorage.getItem("checkRoot")) || [];
 
-
-        document.getElementById("form-submit").addEventListener("click", function () {
-            let title = document.getElementById("title").value;
-            let rootList = JSON.parse(localStorage.getItem("checkRoot")) || [];
-            console.log(rootList);
-
-            fetch("/root/register/form/save", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({
-                    title: title,
-                    rootList: rootList
-                })
+            const path = localChkData.map((data)=>{
+                console.log(data)
+                return new naver.maps.LatLng(data.latitude, data.longitude)
             })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("성공", data);
-                    // localStorage.removeItem("checkRoot");
-                    // localStorage.removeItem("savedTitle")
-                    //
-                    // window.location.reload();
-                })
-                .catch(err => console.log("실패", err))
 
+            // list 의 중앙값
+            const center = getCenter(localChkData);
 
+            // 중심 이동
+            map.setCenter(center);
+
+            // 경로에 맞게 줌 자동 조정
+            const bounds = new naver.maps.LatLngBounds();
+            path.forEach(coord => bounds.extend(coord));
+            map.fitBounds(bounds);
         })
+
+        // 중앙 값 구해서 설정
+        function getCenter(localChkData) {
+            let latSum = 0;
+            let lngSum = 0;
+            let cnt = localChkData.length;
+
+            localChkData.forEach(data => {
+                latSum += data.latitude;
+                lngSum += data.longitude;
+            });
+
+            return new naver.maps.LatLng(latSum / cnt, lngSum / cnt);
+        }
+
+        // 저장
+        document.getElementById("form-submit").addEventListener("click", function () {
+            console.log("click");
+            let rootList = JSON.parse(localStorage.getItem("checkRoot")) || [];
+            document.getElementById("rootListData").value = JSON.stringify(rootList);
+            localStorage.removeItem("checkRoot");
+            localStorage.removeItem("savedTitle")
+            document.getElementById("registerForm").submit();
+
+        });
+
+        // fetch 로 처리
+        // document.getElementById("form-submit").addEventListener("click", function () {
+        //     let title = document.getElementById("title").value;
+        //     let rootList = JSON.parse(localStorage.getItem("checkRoot")) || [];
+        //     console.log(rootList);
+        //
+        //     fetch("/root/register/form/save", {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //             "Accept": "application/json"
+        //         },
+        //         body: JSON.stringify({
+        //             title: title,
+        //             rootList: rootList
+        //         })
+        //     })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             console.log("성공fe", data);
+        //             localStorage.removeItem("checkRoot");
+        //             localStorage.removeItem("savedTitle")
+        //
+        //             window.location.href = "/root/register/save";
+        //         })
+        //         .catch(err => console.log("실패fe", err))
+        //
+        //
+        // })
 
     </script>
     </main>

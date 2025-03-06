@@ -35,7 +35,7 @@
                         <tr th:each="list : ${list}" class="text-center">
                             <td th:text="상태">1</td>
                             <td th:text="${list.getRootSeq()}"></td>
-                            <td th:text="${list.getRootTitle()}" class="text-start"></td>
+                            <td  class="text-start"><a th:text="${list.getRootTitle()}" th:href="@{|/root/register/detail/${list.getRootSeq()}|}"></a></td>
                             <td th:text="${#temporals.format(list.getRootDate,'YYYY-MM-dd HH:mm')} "></td>
                         </tr>
                     </tbody>
@@ -61,6 +61,9 @@
                         </a>
                     </li>
                 </ul>
+                <button type="button">
+                    <a th:href="@{/root/register/form}">작성</a>
+                </button>
             </div>
         </section>
     </div>

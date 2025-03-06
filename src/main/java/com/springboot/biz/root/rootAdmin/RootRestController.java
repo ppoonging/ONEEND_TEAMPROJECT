@@ -17,23 +17,18 @@ public class RootRestController {
     private final RootService rootService;
     private final HUserSerevice hUserSerevice;
 
-    @PostMapping("/root/register/form/save")
-    public ResponseEntity<String> saveRoot(@RequestBody RootDTO rootDTO, Principal principal) {
-        System.out.println(rootDTO.getTitle());
-        List<RootListDTO> list = rootDTO.getRootList();
-
-        HUser user = this.hUserSerevice.getUser(principal.getName());
-
-        rootService.save(rootDTO.getTitle(), rootDTO.getRootList(),user);
-
-        if (list == null) {
-            System.out.println("❌ rootList가 null입니다!");
-        } else {
-            System.out.println("✅ rootList 개수: " + list.size());
-            System.out.println("controller"+list.get(1).getRoadaddress());
-        }
-        return ResponseEntity.ok("성공~");
-    }
+//    // 그냥 Controller 로 옮김 -> script에서 fetch 로 처리하는걸 form submit 으로 처리
+//    @PostMapping("/root/register/form/save")
+//    public ResponseEntity<String> saveRoot(@RequestBody RootDTO rootDTO, Principal principal) {
+//        System.out.println(rootDTO.getTitle());
+//        List<RootListDTO> list = rootDTO.getRootList();
+//
+//        HUser user = this.hUserSerevice.getUser(principal.getName());
+//
+//        rootService.save(rootDTO.getTitle(), rootDTO.getRootList(),user);
+//
+//        return ResponseEntity.ok("성공~");
+//    }
 
     @GetMapping("/root/form/{rootSeq}")
     public ResponseEntity<List<RootList>> getRootList(@PathVariable("rootSeq") Integer rootSeq) {

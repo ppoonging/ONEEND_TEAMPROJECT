@@ -22,18 +22,6 @@
 
             <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
             <div style="height: 700px">
-                <form id="select-form" th:action="@{/root/form}" method="get">
-                    <label for="select-root">루트 선택</label>
-                    <select id="select-root" name="rootSeq" class="form-select">
-                        <option value="">선택</option>
-                        <option th:each="root : ${root}"
-                                th:value="${root.rootSeq}"
-                                th:text="${root.rootTitle}"
-                                th:selected="${selRoot != null and selRoot.rootSeq == root.rootSeq}">
-                        </option>
-                    </select>
-                </form>
-
                 <form th:action="@{/root/form/save}" method="post">
                     <div class="mb-2 row">
                         <label for="title" class="col-sm-1 col-form-label">제목</label>
@@ -43,43 +31,23 @@
 
                     </div>
                     <div class="mb-3 row">
-
+                        <label for="root-select" class="col-sm-1 col-form-label">루트 선택</label>
+                        <div class="col" id="root-select">
+                            <select id="form-select"  class="form-select" aria-label="Default select example">
+                                <option>선택</option>
+                                <option class="option"
+                                        th:each="root : ${rootList}"
+                                        th:value="${root.rootSeq}"
+                                        th:text="${root.rootTitle}"
+                                >
+                                </option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="d-flex justify-content-between h-100">
+                        <div id="map" style="width: 100%; min-height: 500px; flex-grow: 1;"></div>
 
-                        <!--left-->
-                        <div class="d-flex flex-column justify-content-between" style="width: 60%;">
-                            <!--top-->
-                            <div id="map" style="width: 100%; min-height: 500px; flex-grow: 1;"></div>
-                            <!--bottom-->
-                            <div style="background-color: #E8DCD4; width: 100%;" class="py-2 ">
-                                <ul class="d-flex mb-0 flex-wrap" id="rootSaveList">
-                                    <li></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!--right-->
-                        <div class="h-100" style="width: 35%;">
-                            <ul th:if="${selRootList}" style="background-color: #E8DCD4;" class="p-3 h-100 mb-0">
-                                <li id="restaurant" th:each="selRootList : ${selRootList}" class="d-flex flex-row p-2 h-100" >
-                                    <div class="my-2" style="width: 90%;">
-                                        <h6 th:utext="${selRootList.rootListTitle}" style="font-weight: bold " name="click-address" th:data-lat="${selRootList.rootListLatitude}" th:data-lng="${selRootList.rootListLongitude}"></h6>
-                                        <p th:text="'카테고리: ' + ${selRootList.rootListCategory}" class="mb-2" style="font-size: 14px; color: #777"></p>
-                                        <p th:text="'지번: ' + ${selRootList.rootListAddress}" class="mb-2" style="font-size: 14px; color: #444"></p>
-                                        <p th:text="'도로명: ' + ${selRootList.rootListRodeAddress}" class="mb-0" style="font-size: 14px; color: #444"></p>
-                                        <input type="hidden" id="latitude" th:value = "${selRootList.rootListLatitude}" />
-                                        <input type="hidden"  id="longitude" th:value = "${selRootList.rootListLongitude}"/>
-                                    </div>
-                                    <div class="d-flex justify-content-center align-items-center" style="width: 10%">
-                                        <div class="checkbox-form">
-
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                     <div class="d-flex justify-content-end mt-3">
                         <input type="button" id="form-submit" name="form-submit" value="저장" class="btn btn-primary">
@@ -94,12 +62,10 @@
         let map;
         let marker;
         let polyline;
-        let rootList = /*[[${selRootList}]]*/ [];
 
         // 페이지 로드 시 동작
         document.addEventListener("DOMContentLoaded", ()=>{
             setMap(37.5666805, 126.9784147);
-            displayMap(rootList);
 
         });
 
@@ -114,9 +80,21 @@
         }
 
         // select 선택 시
-        document.getElementById("select-root").addEventListener("change", function () {
+        document.getElementById("form-select").addEventListener("change", function () {
+            let rootSeq = this.value;
 
-            document.getElementById("select-form").submit();
+            console.log("선택: " + rootSeq);
+
+            if(!rootSeq) return;
+
+            fetch(`/root/form/${rootSeq}`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log("list: ", data);
+
+                    displayMap(data);
+                })
+                .catch(err => console.log("오류: ", err));
         });
 
         // map 에 표시

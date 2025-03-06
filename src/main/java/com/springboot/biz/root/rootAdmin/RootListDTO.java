@@ -16,4 +16,9 @@ public class RootListDTO {
     private Double latitude;  //위도
 
     private Double longitude;  //경도
+
+    private String link; // 장소 정보 url
+
+    private String category; // 장소 분류
+
 }

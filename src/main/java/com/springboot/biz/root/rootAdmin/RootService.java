@@ -3,6 +3,7 @@ package com.springboot.biz.root.rootAdmin;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springboot.biz.DataNotFoundException;
 import com.springboot.biz.user.HUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,6 +70,8 @@ public class RootService {
                 restaurant.put("title", itemNode.path("title").asText()); // 장소 이름
                 restaurant.put("address", itemNode.path("address").asText());
                 restaurant.put("roadAddress", itemNode.path("roadAddress").asText());// 장소 주소
+                restaurant.put("link", itemNode.path("link").asText());// 장소 상세 정보 url
+                restaurant.put("category", itemNode.path("category").asText());// 장소 분류 정보
 
                 double latitude = Double.parseDouble(itemNode.path("mapy").asText()) / 1e7;
                 double longitude = Double.parseDouble(itemNode.path("mapx").asText()) / 1e7;
@@ -114,6 +117,8 @@ public class RootService {
                     .rootListRodeAddress(rel.getRoadaddress())
                     .rootListLatitude(rel.getLatitude())
                     .rootListLongitude(rel.getLongitude())
+                    .rootListLink(rel.getLink())
+                    .rootListCategory(rel.getCategory())
                     .userId(user)
                     .build();
 
@@ -125,6 +130,16 @@ public class RootService {
     public List<RootList> getRootList(Integer rootSeq) {
         return rootListRepository.findByRootId(rootSeq);
     }
+
+    public Root get(Integer rootSeq) {
+        Optional<Root> root = this.rootRepository.findById(rootSeq);
+        if(root.isPresent()) {
+            return root.get();
+        }
+
+       throw new DataNotFoundException("루트 데이터가 없습니다.");
+    }
+
 
 
 }

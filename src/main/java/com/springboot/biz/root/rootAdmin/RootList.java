@@ -35,6 +35,9 @@ public class RootList {
 
     private Double rootListLongitude;  //경도
 
+    private String rootListLink; // 장소 정보 url
+
+    private String rootListCategory; // 장소 분류
 
 
 }
