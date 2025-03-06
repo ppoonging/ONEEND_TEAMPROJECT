@@ -1,0 +1,89 @@
+<html layout:decorate="~{layout}" xmlns:sec="http://www.w3.org/1999/xhtml">`
+    <main layout:fragment="content">
+        <!--상단-->
+        <div style="background-color: #F4E9E3">
+            <div class="container py-2">
+
+                <!--수정해야할 부분-->
+                <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px"> 한 끝 > 맛집 소개 </span>
+
+            </div>
+        </div>
+        <div class="container mt-5">
+            <div class="text-center">
+                <img th:src="@{/images/total/밥그릇.png}" width="5%">
+            </div>
+
+            <!--수정해야할 부분-->
+            <!--title-->
+            <h2 class="text-center py-2">맛집 소개</h2>
+            <!--content-->
+            <section class="py-5">
+
+                <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+                    <div class="card-body">
+                        <div class="card-text" style="white-space: pre-line;"
+                             th:text="${mjboard.mjTitle}"></div>
+                        <div class="d-flex justify-content-end"> <!--justify-content-end끝단으로맞추기-->
+                            <div class="badge bg-light text-dark p-2 text-start">
+                                <div class="mb-2">
+							<span th:if="${mjboard.userId!=null}"
+                                  th:text="${mjboard.userid.username}"></span>
+                                </div>
+                                <div th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd HH:mm')}"></div>
+                            </div>
+                        </div>
+                        <div class="my-3">
+                            <div th:text ="${#temporals.format(mjboard.mjModifyDate,'yyyy-MM-dd HH:mm')}">
+                            </div>
+                            <a th:href="@{|/mjboard/modify/${mjboard.mjSeq}|}"
+                            >맛집 수정</a>
+                            <!--답변 갯수 표시-->
+                            <h7 class="border-bottom py-2" th:text="|${#lists.size(mjboard.mjAanswerList)} 개의 답변이 있습니다.|"></h7>
+                            <!--답변 반복 시작-->
+                            <div class="card-my-3" th:each="mjanswer : ${mjboard.mjAanswerList}">
+                                <div class="card-body">
+                                    <div class="card-text" style="white-space: pre-line" th:text="${mjanswer.mjcontent}"></div>
+                                    <div class="d-flex justify-content-end">
+                                        <div class="badge bg-light text-dark p-2 text-start">
+                                            <div th:text="${#temporals.format(mjanswer.mjAnsRegDate, 'yyyy-MM-dd HH:mm')}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--답변 작성-->
+                            <form th: action="@{|/mjanswer/mjregdate/${mjboard.userid}|}" method="post" th:object="${mjAnswerForm}">
+
+                                <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+                                    <div th:each="err:${#fields.allErrors()}" th:text="${err}"></div>
+                                </div>
+                                <textarea class="form-control" name="mjcontent" userid="mjcontent" rows="15"></textarea>
+                                <input class="btn btn-primary my-2" type="submit" value="답변등록">
+
+                            </form>
+
+                <!--하단 줄 (필요에 따라 사용)-->
+                <hr style="margin-top: 50px">
+                <!--pagination-->
+                <div class="d-flex justify-content-center">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true"> < </span>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true"> > </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+    </main>
+</html>

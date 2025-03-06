@@ -1,0 +1,88 @@
+<html layout:decorate="~{layout}">
+    <main layout:fragment="content">
+        <!--상단-->
+        <div style="background-color: #F4E9E3">
+            <div class="container py-2">
+
+                <!--수정해야할 부분-->
+                <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px"> 한 끝 > 맛집 소개 </span>
+            </div>
+        </div>
+        <div class="container mt-5">
+            <div class="text-center">
+                <img th:src="@{/images/total/밥그릇.png}" width="5%">
+            </div>
+
+            <!--수정해야할 부분-->
+            <!--title-->
+            <h2 class="text-center py-2">맛집 소개</h2>
+            <!--content-->
+            <div class="input-group">
+                <input type="text" id="search_kw" class="form-control" th:value="${kw}">
+                <button class="btn btn-warning" type="button" id="btn_search">검색</button>
+            </div>
+            <section class="py-5">
+
+                <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+                <div >
+                    <table class="table">
+                        <thead class="table-danger">
+                        <tr class="tab-content">
+                    <tr>
+                        <th>번호</th>
+                        <td>제목</td>
+                        <th>글쓴이</th>
+                        <th>작성일자</th>
+                    </tr>
+
+                        </thead>
+                        </tr>
+                        <tbody>
+
+                     <tr th:each="mjboard , loop : ${pageing}">
+                         <td th:text="${pageing.getTotalElements -(pageing.number * pageing.size)-loop.index}"></td>
+                         <td><a th:href="@{|/mjboard/detail/${mjboard.mjSeq}|}"
+                            th:text="${mjboard.mjTitle}"></a>
+                       <span class="text-danger small ms-2" th:if="${#lists.size(mjboard.mjAanswerList)>0}"
+                             th:text="${#lists.size(mjboard.mjAanswerList)}"></span></td>
+                         <td><span th:if="${mjboard.userId !=null}"
+                         th:text="${mjboard.userId.nickname}"></span></td>
+                         <td th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd HH:mm')}"></td>
+                         <!--<td th:text="${#lists.size(mjboard.mjRecommend)}"></td>-->
+
+
+                     </tr>
+                        </tbody>
+                    </table>
+
+
+                    <!-- **내용** -->
+                </div>
+
+                <a th:href="@{/mjboard/mjform}" class="btn btn-danger">맛집 등록</a>
+
+                <!--하단 줄 (필요에 따라 사용)-->
+                <hr style="margin-top: 50px">
+                <!--pagination-->
+                <div class="d-flex justify-content-center">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true"> < </span>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true"> > </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+    </main>
+</html>
