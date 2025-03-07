@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>문의 목록</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #FAF3EE; padding: 20px; }
+        .container { max-width: 900px; margin: auto; padding: 20px; background: white; border-radius: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #d4c4b7; padding: 10px; text-align: center; }
+        th { background-color: #EADBC8; }
+        a.detail-link {
+            text-decoration: none; color: #C8A888; font-weight: bold;
+        }
+        a.detail-link:hover { text-decoration: underline; color: #a88c66; }
+        .add-btn {
+            display: block; width: 150px; margin: 15px auto;
+            padding: 10px; background: #C8A888; color: white;
+            text-align: center; font-weight: bold; border-radius: 5px;
+            text-decoration: none;
+        }
+        .add-btn:hover { background: #a88c66; }
+    </style>
+</head>
+
+<main layout:fragment="content">
+    <div class="container">
+        <h2>문의 목록</h2>
+
+
+
+        <table>
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일</th>
+                <th>상태</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="customer : ${customers}">
+                <td th:text="${customer.custSeq}"></td>
+                <!-- 제목을 클릭하면 상세보기 페이지로 이동 -->
+                <td>
+                    <a th:href="@{/customer/detail/{custSeq}(custSeq=${customer.custSeq})}" class="detail-link" th:text="${customer.custTitle}"></a>
+                </td>
+                <td th:text="${customer.user.nickname}"></td>
+                <td th:text="${#temporals.format(customer.custRegTime, 'yyyy-MM-dd')}"></td>
+                <td th:text="${customer.custState.getDisplayName()}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 🔹 문의 작성 버튼 (목록 하단) -->
+        <a href="/customer/add" class="add-btn">문의 작성</a>
+    </div>
+</main>
+
+</html>

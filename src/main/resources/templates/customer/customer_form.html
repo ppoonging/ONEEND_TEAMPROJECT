@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>문의 작성</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #FAF3EE; padding: 20px; }
+        .container { max-width: 700px; margin: auto; padding: 20px; background: white; border-radius: 10px; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; }
+        button { margin-top: 15px; padding: 10px 15px; background: #C8A888; color: white; border: none; cursor: pointer; }
+        button:hover { background: #a88c66; }
+    </style>
+</head>
+
+<main layout:fragment="content">
+    <div class="container">
+        <h2>문의하기</h2>
+        <form th:action="@{add}" method="post">
+            <label for="custTitle">제목</label>
+            <input type="text" id="custTitle" name="custTitle" required>
+
+            <label for="custContent">내용</label>
+            <textarea id="custContent" name="custContent" rows="5" required></textarea>
+
+            <input type="hidden" name="userSeq" th:value="${userSeq}">  <!-- 로그인된 사용자 ID -->
+
+            <button type="submit">등록</button>
+        </form>
+    </div>
+</main>
+
+</html>

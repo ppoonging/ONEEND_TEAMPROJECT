@@ -47,5 +47,8 @@ public class FreeAnswer {
     @OneToMany(mappedBy = "parentAnswer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FreeAnswer> childAnswers = new ArrayList<>();
 
+    @ManyToOne
+    private HUser frboAnsAuthor;
+
 
 }

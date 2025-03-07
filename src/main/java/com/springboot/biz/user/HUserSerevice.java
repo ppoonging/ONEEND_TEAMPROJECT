@@ -48,5 +48,21 @@ public class HUserSerevice {
     }
 
 
+    /*추가 사용자 정보조회*/
+    public HUser getUserById(Integer userSeq) {
+        return userRepository.findById(userSeq)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. ID: " + userSeq));
+
+    }
+
+    public Integer getLoggedInUserSeq() {
+        return 1; // seq번호 나중에 바꿔줘야함
+    }
+
+    public HUser getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    }
+
 
 }

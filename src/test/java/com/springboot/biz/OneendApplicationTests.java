@@ -1,9 +1,12 @@
 package com.springboot.biz;
 
 
+import com.springboot.biz.free.board.FreeQuestion;
 import com.springboot.biz.free.board.FreeQuestionRepository;
+import com.springboot.biz.free.board.FreeQuestionService;
 import com.springboot.biz.notion.MgNotion;
 import com.springboot.biz.notion.MgRepository;
+import com.springboot.biz.user.HUserSerevice;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,19 +20,16 @@ class OneendApplicationTests {
 
     @Autowired
 
-    private MgRepository mgRepository;
-
+    private FreeQuestionService freeQuestionService;
+    private HUserSerevice hUserSerevice;
 
 
     @Test
     void contextLoads() {
 
-        MgNotion m = new MgNotion();
+        FreeQuestion q = new FreeQuestion();
 
-        m.setNotionTitle("제목");
-        m.setNotionContent("내용");
-        m.setNotionRegDate(LocalDateTime.now());
-        this.mgRepository.save(m);
+        q.setFreeAuthor(hUserSerevice.getUser(String username));
 
 
 
