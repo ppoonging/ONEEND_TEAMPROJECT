@@ -13,17 +13,22 @@
             text-decoration: none; color: #C8A888; font-weight: bold;
         }
         a.detail-link:hover { text-decoration: underline; color: #a88c66; }
-        button {
-            padding: 5px 10px; border: none; background-color: #C8A888;
-            color: white; cursor: pointer; border-radius: 5px;
+        .add-btn {
+            display: block; width: 150px; margin: 15px auto;
+            padding: 10px; background: #C8A888; color: white;
+            text-align: center; font-weight: bold; border-radius: 5px;
+            text-decoration: none;
         }
-        button:hover { background-color: #a88c66; }
+        .add-btn:hover { background: #a88c66; }
     </style>
 </head>
 
 <main layout:fragment="content">
     <div class="container">
         <h2>문의 목록</h2>
+
+
+
         <table>
             <thead>
             <tr>
@@ -32,8 +37,6 @@
                 <th>작성자</th>
                 <th>작성일</th>
                 <th>상태</th>
-                <!-- 관리자만 "변경" 칸을 볼 수 있도록 설정 -->
-                <th th:if="${#authorization.expression('hasRole(''ADMIN'')')}">변경</th>
             </tr>
             </thead>
             <tbody>
@@ -46,21 +49,12 @@
                 <td th:text="${customer.user.nickname}"></td>
                 <td th:text="${#temporals.format(customer.custRegTime, 'yyyy-MM-dd')}"></td>
                 <td th:text="${customer.custState.getDisplayName()}"></td>
-
-                <!-- 관리자만 상태 변경 가능 -->
-                <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
-                    <form th:action="@{/customer/update/{custSeq}(custSeq=${customer.custSeq})}" method="post">
-                        <select name="state">
-                            <option value="PENDING" th:selected="${customer.custState.name() == 'PENDING'}">대기중</option>
-                            <option value="IN_PROGRESS" th:selected="${customer.custState.name() == 'IN_PROGRESS'}">처리중</option>
-                            <option value="COMPLETED" th:selected="${customer.custState.name() == 'COMPLETED'}">처리완료</option>
-                        </select>
-                        <button type="submit">변경</button>
-                    </form>
-                </td>
             </tr>
             </tbody>
         </table>
+
+        <!-- 🔹 문의 작성 버튼 (목록 하단) -->
+        <a href="/customer/add" class="add-btn">문의 작성</a>
     </div>
 </main>
 

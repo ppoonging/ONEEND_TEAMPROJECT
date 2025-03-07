@@ -59,7 +59,10 @@ public class HUserSerevice {
         return 1; // seq번호 나중에 바꿔줘야함
     }
 
-
+    public HUser getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    }
 
 
 }

@@ -24,9 +24,9 @@ public class Replay {
     private HUser user; // 답변 작성자 (관리자)
 
 
-    private String replyContent; // 답변 내용
+    private String replayContent; // 답변 내용
 
-    private LocalDateTime replyRegTime = LocalDateTime.now(); // 답변 작성일
+    private LocalDateTime replayRegTime = LocalDateTime.now(); // 답변 작성일
 
 
 
