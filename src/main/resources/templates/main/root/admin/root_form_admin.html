@@ -30,8 +30,8 @@
                             <div class="col-sm-11">
                                 <input type="text" id="title" name="title" class="form-control">
                             </div>
-
                         </div>
+
                         <div class="mb-3 row">
                             <label for="query" class="col-sm-1 col-form-label">주소 검색</label>
                             <div class="col-sm-10">
@@ -114,15 +114,15 @@
                 setMap(37.5666805, 126.9784147);
                 checkboxState();
 
-                if (localStorage.getItem("savedCheckRoot")) {
-                    localStorage.setItem("checkRoot", localStorage.getItem("savedCheckRoot"));
-                    localStorage.removeItem("savedCheckRoot");  // 임시 저장한 데이터 제거
+                if (sessionStorage.getItem("savedCheckRoot")) {
+                    sessionStorage.setItem("checkRoot", sessionStorage.getItem("savedCheckRoot"));
+                    sessionStorage.removeItem("savedCheckRoot");  // 임시 저장한 데이터 제거
                     checkboxState();  // 체크박스 다시 적용
                     updateSavedList();  // 리스트 다시 업데이트
                     drawPolyline();  // 경로 다시 그리기
                 }
 
-                const savedTitle = localStorage.getItem("savedTitle");
+                const savedTitle = sessionStorage.getItem("savedTitle");
                 if (savedTitle) {
                     document.getElementById("title").value = savedTitle;
                 }
@@ -137,7 +137,7 @@
                     alert("검색 결과가 없습니다. 정확한 키워드를 입력해주세요.")
                 }
 
-                localStorage.setItem("savedCheckRoot", localStorage.getItem("checkRoot"));
+                sessionStorage.setItem("savedCheckRoot", sessionStorage.getItem("checkRoot"));
                 document.getElementById("hiddenQuery").value = query;
                 document.getElementById("searchForm").submit();
 
@@ -145,7 +145,7 @@
 
             // 검색 시 타이틀 초기화 방지
             document.getElementById("title").addEventListener("input", function () {
-                localStorage.setItem("savedTitle", this.value);
+                sessionStorage.setItem("savedTitle", this.value);
             });
 
 
@@ -178,8 +178,8 @@
                         position: new naver.maps.LatLng(lat, lng),
                         map: map,
                         icon: {
-                            content: `<img width="25" height="25" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
-                            anchor: new naver.maps.Point(15, 18)
+                            content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
+                            anchor: new naver.maps.Point(10, 40)
                         },
                         animation: naver.maps.Animation.BOUNCE
                     });
@@ -226,7 +226,7 @@
 
 
             // 체크박스 이벤트 처리
-            document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
+            document.querySelectorAll('input[name="checkbox"]').forEach((checkbox, index) => {
                 checkbox.addEventListener("change", function () {
                     const obj = {
                         title: checkbox.dataset.title,
@@ -236,26 +236,29 @@
                         longitude: checkbox.dataset.longitude,
                         link: checkbox.dataset.link,
                         category: checkbox.dataset.category,
-
                     }
                     // console.log(typeof obj);
-                    let localChkData = JSON.parse(localStorage.getItem("checkRoot")) || [];
-                    // console.log(typeof localChkData);
+                    let sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
+                    // console.log(typeof sessionChkData);
                     if (this.checked) {
                         // some 하나라도
-                        if (!localChkData.some(item => item.title === obj.title)) {
-                            localChkData.push(obj);
+                        if (!sessionChkData.some(item => item.title === obj.title)) {
+                            sessionChkData.push(obj);
 
                         }
+
+                        map.setCenter(new naver.maps.LatLng(obj.latitude, obj.longitude))
+
                     } else {
                         // 체크되지 않았으면 지우기
-                        localChkData = localChkData.filter(item => item.title !== obj.title);
+                        sessionChkData = sessionChkData.filter(item => item.title !== obj.title);
                         // removeFromLocalStorage(obj);
                     }
 
-                    localStorage.setItem("checkRoot", JSON.stringify(localChkData));
+                    sessionStorage.setItem("checkRoot", JSON.stringify(sessionChkData));
                     updateSavedList();
                     drawPolyline();
+
 
                 });
             });
@@ -263,10 +266,10 @@
             // 체크박스 상태
             function checkboxState() {
 
-                let localChkData = JSON.parse(localStorage.getItem("checkRoot")) || [];
+                let sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
 
                 document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
-                    checkbox.checked = localChkData.some(item => item.title === checkbox.dataset.title);
+                    checkbox.checked = sessionChkData.some(item => item.title === checkbox.dataset.title);
                 });
             }
 
@@ -275,14 +278,14 @@
             function updateSavedList() {
                 const rootSaveList = document.getElementById("rootSaveList");
                 rootSaveList.innerHTML = "";
-                const localChkData = JSON.parse(localStorage.getItem("checkRoot")) || [];
+                const sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
 
-                if (localChkData.length === 0) {
+                if (sessionChkData.length === 0) {
                     rootSaveList.innerHTML = "<li> 위치를 추가하세요 </li>";
                     return;
                 }
 
-                localChkData.forEach((item) => {
+                sessionChkData.forEach((item) => {
                     const li = document.createElement("li");
 
                     const cleanTitle = item.title.replace(/<b>/g, '').replace(/<\/b>/g, '');
@@ -349,8 +352,8 @@
                         //     anchor: new naver.maps.Point(12, 34)
                         // },
                         icon: {
-                            content: `<img width="25" height="25" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="standing-man-skin-type-1"/>`,
-                            anchor: new naver.maps.Point(15, 18)
+                            content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
+                            anchor: new naver.maps.Point(10, 40)
                         },
                         animation: naver.maps.Animation.BOUNCE
                     });
@@ -361,9 +364,9 @@
 
         // 로컬스토리지에서 값 삭제하는 함수
         function removeFromLocalStorage(value) {
-            let localChkData = JSON.parse(localStorage.getItem("checkRoot")) || [];
-            localChkData = localChkData.filter(item => item.title !== value.title);
-            localStorage.setItem("checkRoot", JSON.stringify(localChkData));
+            let sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
+            sessionChkData = sessionChkData.filter(item => item.title !== value.title);
+            sessionStorage.setItem("checkRoot", JSON.stringify(sessionChkData));
 
             document.querySelectorAll('input[name="checkbox"]').forEach((chk)=>{
                 if(chk.dataset.title === value.title) chk.checked = false;
@@ -374,9 +377,9 @@
 
         // 라인 그리기
         function drawPolyline() {
-            const localChkData = JSON.parse(localStorage.getItem("checkRoot")) || [];
+            const sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
 
-            const path = localChkData.map(data => new naver.maps.LatLng(data.latitude, data.longitude))
+            const path = sessionChkData.map(data => new naver.maps.LatLng(data.latitude, data.longitude))
 
             if(polyline) polyline.setMap(null);
 
@@ -392,13 +395,13 @@
             window.markers = [];
 
             // 순서대로 마커 추가
-            localChkData.forEach(data => {
+            sessionChkData.forEach(data => {
 
                 const marker = new naver.maps.Marker({
                     position: new naver.maps.LatLng(data.latitude, data.longitude),
                     map: map,
                     icon: {
-                        content: `<img width="24" height="24" src="https://img.icons8.com/tiny-color/32/map-pin.png" alt="map-pin"/>`,
+                        content: `<img width="30" height="30" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
                         anchor: new naver.maps.Point(14, 20)
                     }
                 });
@@ -411,15 +414,15 @@
         // 루트 중앙 이동
         document.getElementById("map-button").addEventListener("click", function (){
             console.log("click")
-            const localChkData = JSON.parse(localStorage.getItem("checkRoot")) || [];
+            const sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
 
-            const path = localChkData.map((data)=>{
+            const path = sessionChkData.map((data)=>{
                 console.log(data)
                 return new naver.maps.LatLng(data.latitude, data.longitude)
             })
 
             // list 의 중앙값
-            const center = getCenter(localChkData);
+            const center = getCenter(sessionChkData);
 
             // 중심 이동
             map.setCenter(center);
@@ -431,12 +434,12 @@
         })
 
         // 중앙 값 구해서 설정
-        function getCenter(localChkData) {
+        function getCenter(value) {
             let latSum = 0;
             let lngSum = 0;
-            let cnt = localChkData.length;
+            let cnt = value.length;
 
-            localChkData.forEach(data => {
+            value.forEach(data => {
                 latSum += data.latitude;
                 lngSum += data.longitude;
             });
@@ -447,10 +450,10 @@
         // 저장
         document.getElementById("form-submit").addEventListener("click", function () {
             console.log("click");
-            let rootList = JSON.parse(localStorage.getItem("checkRoot")) || [];
+            let rootList = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
             document.getElementById("rootListData").value = JSON.stringify(rootList);
-            localStorage.removeItem("checkRoot");
-            localStorage.removeItem("savedTitle")
+            sessionStorage.removeItem("checkRoot");
+            sessionStorage.removeItem("savedTitle")
             document.getElementById("registerForm").submit();
 
         });
@@ -458,7 +461,7 @@
         // fetch 로 처리
         // document.getElementById("form-submit").addEventListener("click", function () {
         //     let title = document.getElementById("title").value;
-        //     let rootList = JSON.parse(localStorage.getItem("checkRoot")) || [];
+        //     let rootList = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
         //     console.log(rootList);
         //
         //     fetch("/root/register/form/save", {
@@ -475,8 +478,8 @@
         //         .then(response => response.json())
         //         .then(data => {
         //             console.log("성공fe", data);
-        //             localStorage.removeItem("checkRoot");
-        //             localStorage.removeItem("savedTitle")
+        //             sessionStorage.removeItem("checkRoot");
+        //             sessionStorage.removeItem("savedTitle")
         //
         //             window.location.href = "/root/register/save";
         //         })

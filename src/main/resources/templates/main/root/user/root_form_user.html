@@ -21,20 +21,23 @@
         <section class="py-5">
 
             <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
-            <div style="height: 700px">
-                <form id="select-form" th:action="@{/root/form}" method="get">
-                    <label for="select-root">루트 선택</label>
-                    <select id="select-root" name="rootSeq" class="form-select">
-                        <option value="">선택</option>
-                        <option th:each="root : ${root}"
-                                th:value="${root.rootSeq}"
-                                th:text="${root.rootTitle}"
-                                th:selected="${selRoot != null and selRoot.rootSeq == root.rootSeq}">
-                        </option>
-                    </select>
+            <div>
+                <form id="select-form" th:action="@{/root/form}" method="get" class="row mb-3">
+                    <label for="select-root" class="col-sm-1 col-form-label">루트 선택</label>
+                    <div class="col-sm-11">
+                        <select id="select-root" name="rootSeq" class="form-select">
+                            <option value="">선택</option>
+                            <option th:each="root : ${root}"
+                                    th:value="${root.rootSeq}"
+                                    th:text="${root.rootTitle}"
+                                    th:selected="${selRoot != null and selRoot.rootSeq == root.rootSeq}">
+                            </option>
+                        </select>
+                    </div>
+
                 </form>
 
-                <form th:action="@{/root/form/save}" method="post">
+                <form th:action="@{/root/form/save}" id="registerForm"  enctype="multipart/form-data" method="post">
                     <div class="mb-2 row">
                         <label for="title" class="col-sm-1 col-form-label">제목</label>
                         <div class="col-sm-11">
@@ -46,13 +49,13 @@
 
                     </div>
 
-                    <div class="d-flex justify-content-between h-100">
+                    <div class="d-flex justify-content-between" style=" height: 580px;">
 
                         <!--left-->
                         <div class="d-flex flex-column justify-content-between" style="width: 60%;">
                             <!--top-->
-                            <div id="map" style="width: 100%; min-height: 500px; flex-grow: 1;"></div>
-                            <!--bottom-->
+                            <div id="map" style="width: 100%; flex-grow: 1;"></div>
+
                             <div style="background-color: #E8DCD4; width: 100%;" class="py-2 ">
                                 <ul class="d-flex mb-0 flex-wrap" id="rootSaveList">
                                     <li></li>
@@ -61,25 +64,54 @@
                         </div>
 
                         <!--right-->
-                        <div class="h-100" style="width: 35%;">
-                            <ul th:if="${selRootList}" style="background-color: #E8DCD4;" class="p-3 h-100 mb-0">
-                                <li id="restaurant" th:each="selRootList : ${selRootList}" class="d-flex flex-row p-2 h-100" >
-                                    <div class="my-2" style="width: 90%;">
-                                        <h6 th:utext="${selRootList.rootListTitle}" style="font-weight: bold " name="click-address" th:data-lat="${selRootList.rootListLatitude}" th:data-lng="${selRootList.rootListLongitude}"></h6>
-                                        <p th:text="'카테고리: ' + ${selRootList.rootListCategory}" class="mb-2" style="font-size: 14px; color: #777"></p>
-                                        <p th:text="'지번: ' + ${selRootList.rootListAddress}" class="mb-2" style="font-size: 14px; color: #444"></p>
-                                        <p th:text="'도로명: ' + ${selRootList.rootListRodeAddress}" class="mb-0" style="font-size: 14px; color: #444"></p>
-                                        <input type="hidden" id="latitude" th:value = "${selRootList.rootListLatitude}" />
-                                        <input type="hidden"  id="longitude" th:value = "${selRootList.rootListLongitude}"/>
-                                    </div>
-                                    <div class="d-flex justify-content-center align-items-center" style="width: 10%">
-                                        <div class="checkbox-form">
-
+                        <div class="h-100 overflow-y-auto" style="width: 35%;">
+                            <ul th:if="${selRootList}" style="background-color: #E8DCD4;" class="p-3 mb-0">
+                                <li id="restaurant" th:each="selRootList : ${selRootList}" class="" >
+                                    <div class="d-flex flex-row p-2">
+                                        <div class="my-2" style="width: 90%;">
+                                            <h6 th:utext="${selRootList.rootListIndex} + '. ' + ${selRootList.rootListTitle}" style="font-weight: bold " name="click-address" th:data-lat="${selRootList.rootListLatitude}" th:data-lng="${selRootList.rootListLongitude}"></h6>
+                                            <p th:text="'카테고리: ' + ${selRootList.rootListCategory}" class="mb-2" style="font-size: 14px; color: #777"></p>
+                                            <p th:text="'지번: ' + ${selRootList.rootListAddress}" class="mb-2" style="font-size: 14px; color: #444"></p>
+                                            <p th:text="'도로명: ' + ${selRootList.rootListRodeAddress}" class="mb-0" style="font-size: 14px; color: #444"></p>
+                                            <input type="hidden" id="latitude" th:value = "${selRootList.rootListLatitude}" />
+                                            <input type="hidden"  id="longitude" th:value = "${selRootList.rootListLongitude}"/>
+                                        </div>
+                                        <div class="d-flex justify-content-center align-items-center" style="width: 10%">
+                                            <div class="checkbox-form">
+                                                <input type="checkbox" id="checkbox" name="checkbox" class="root-checkbox-input"
+                                                       th:data-title="${selRootList.rootListTitle}"
+                                                       th:data-address="${selRootList.rootListAddress}"
+                                                       th:data-roadaddress="${selRootList.rootListRodeAddress}"
+                                                       th:data-latitude="${selRootList.rootListLatitude}"
+                                                       th:data-longitude="${selRootList.rootListLongitude}"
+                                                       th:data-link="${selRootList.rootListLink}"
+                                                       th:data-category="${selRootList.rootListCategory}"
+                                                />
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <div class="mb-3">
+<!--                                        <label for="formFileSm" class="form-label">Small file input example</label>-->
+                                        <input class="form-control form-control-sm" id="file" name="file" type="file">
+                                    </div>
+
                                 </li>
                             </ul>
                         </div>
+                    </div>
+                    <div class="mt-3">
+                        <input type="button" id="map-button" class="btn btn-sm btn-outline-secondary" value="루트 확인">
+                        <input type="button" id="map-root-remove-button" class="btn btn-sm btn-outline-secondary" value="루트 지우기">
+                        <input type="button" id="map-marker-remove-button" class="btn btn-sm btn-outline-secondary" value="마커 지우기">
+                    </div>
+                    <div class="mt-3">
+                        <div>
+                            <label for="content" class="form-label">후기</label>
+                            <textarea class="form-control" id="content" name="content" rows="5"></textarea>
+                        </div>
+                        <input type="hidden" id="rootListData" name="rootList">
+                        <input type="hidden" id="rootSeq" name="rootSeq">
                     </div>
                     <div class="d-flex justify-content-end mt-3">
                         <input type="button" id="form-submit" name="form-submit" value="저장" class="btn btn-primary">
@@ -95,54 +127,56 @@
         let marker;
         let polyline;
         let rootList = /*[[${selRootList}]]*/ [];
+        let selPolyline;
+
+        let initMaker = [];
+        let selMaker = [];
 
         // 페이지 로드 시 동작
         document.addEventListener("DOMContentLoaded", ()=>{
-            setMap(37.5666805, 126.9784147);
-            displayMap(rootList);
-
+            setMap();
+            drawPolyline(rootList);
+            updateSavedList();
         });
 
         // 초기 map 설정
-        function setMap(lat, lng) {
+        function setMap() {
+
+            let center;
+
+            if(!rootList) {
+                center = new naver.maps.LatLng(37.5666805, 126.9784147);
+            } else {
+                center = getCenter(rootList);
+
+            }
+
             map = new naver.maps.Map("map", {
-                center: new naver.maps.LatLng(lat, lng),
-                zoom: 12, // 값이 클수록 확대
+                center: center,
+                zoom: 15, // 기본 줌 설정
                 zoomControl: true,
                 mapTypeControl: true
             });
-        }
 
-        // select 선택 시
-        document.getElementById("select-root").addEventListener("change", function () {
-
-            document.getElementById("select-form").submit();
-        });
-
-        // map 에 표시
-        function displayMap(rootList) {
-            rootList.forEach(data => {
-                map.setCenter(new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude));
-
-                if (marker) {
-                    marker.setMap(null);
-                }
-
-                drawPolyline(rootList);
-
-            });
+            if(rootList.length > 0){
+                const bounds = new naver.maps.LatLngBounds();
+                rootList.forEach(data => bounds.extend(new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)));
+                map.fitBounds(bounds);
+            }
 
         }
 
-        // 라인 그리기
-        function drawPolyline(line) {
+        // 초반 경로 라인 그리기
+        function drawPolyline(value) {
 
-            const path = line.map((data)=>{
+            if (!rootList || rootList.length === 0) return;
+
+            const path = value.map((data) => {
                 console.log(data)
                 return new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)
             })
 
-            if(polyline) {
+            if (polyline) {
                 polyline.setMap(null);
             }
 
@@ -150,7 +184,8 @@
                 map: map,
                 path: path,
                 strokeColor: '#FE2E2E',
-                strokeStyle: 'stroke',
+                strokeStyle: 'longdash',
+                strokeOpacity: 0.5,
                 strokeWeight: 2
             });
 
@@ -159,23 +194,236 @@
             }
             window.markers = [];
 
-            // 순서대로 마커 추가
-            line.forEach((data, index) => {
+            // // 순서대로 마커 추가
+            value.forEach((data) => {
                 const marker = new naver.maps.Marker({
                     position: new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude),
                     map: map,
                     icon: {
-                        content: `<img width="24" height="24" src="https://img.icons8.com/tiny-color/32/map-pin.png" alt="map-pin"/>`,
-                        anchor: new naver.maps.Point(14, 20)
+                        content: `<span style="font-size: 10px; color: white; width: 10px; height: 10px; padding: 3px 5px; background-color: #FE2E2E; border-radius: 50%; opacity: 50%">${data.rootListIndex}</span>`,
+                        anchor: new naver.maps.Point(10, 15)
                     }
                 });
 
-                window.markers.push(marker);
+                initMaker.push(marker);
 
             });
 
+        }
+
+        // select 선택 시
+        document.getElementById("select-root").addEventListener("change", function () {
+            sessionStorage.removeItem("checkRootUser");
+            document.getElementById("select-form").submit();
+        });
+
+        // 중앙 값 구해서 설정
+        function getCenter(value) {
+
+            if (value.length === 0) {
+                return new naver.maps.LatLng(37.5666805, 126.9784147); // 기본 위치 (서울 시청)
+            }
+
+            let latSum = 0;
+            let lngSum = 0;
+            let cnt = value.length;
+
+            value.forEach(data => {
+                latSum += data.rootListLatitude;
+                lngSum += data.rootListLongitude;
+            });
+
+            return new naver.maps.LatLng(latSum / cnt, lngSum / cnt);
+        }
+
+        // title 체크 시 지도/마커
+        document.querySelectorAll('h6[name="click-address"]').forEach((data) => {
+            data.addEventListener("click", function () {
+                const lat = parseFloat(data.dataset.lat);
+                const lng = parseFloat(data.dataset.lng);
+
+                map.setCenter(new naver.maps.LatLng(lat, lng));
+                if (marker) marker.setMap(null);
+
+                marker = new naver.maps.Marker({
+                    position: new naver.maps.LatLng(lat, lng),
+                    map: map,
+                    icon: {
+                        content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
+                        anchor: new naver.maps.Point(12, 40)
+                    },
+                    animation: naver.maps.Animation.BOUNCE
+                });
+            });
+        });
+
+        document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
+            checkbox.addEventListener("change", function () {
+
+                const obj = {
+                    title: checkbox.dataset.title,
+                    address: checkbox.dataset.address,
+                    roadaddress: checkbox.dataset.roadaddress,
+                    latitude: checkbox.dataset.latitude,
+                    longitude: checkbox.dataset.longitude,
+                    link: checkbox.dataset.link,
+                    category: checkbox.dataset.category,
+                }
+
+                let sessionChkDataSel = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
+                // console.log(typeof localChkData);
+                if (this.checked) {
+                    // some 하나라도
+                    if (!sessionChkDataSel.some(item => item.title === obj.title)) {
+                        sessionChkDataSel.push(obj);
+
+                    }
+                } else {
+                    // 체크되지 않았으면 지우기
+                    sessionChkDataSel = sessionChkDataSel.filter(item => item.title !== obj.title);
+                    removeFromLocalStorage(obj);
+
+                }
+
+
+                map.setCenter(new naver.maps.LatLng(checkbox.dataset.latitude, checkbox.dataset.longitude));
+
+                sessionStorage.setItem("checkRootUser", JSON.stringify(sessionChkDataSel));
+
+                checkDrawPolyline();
+
+            })
+        })
+
+        function updateSavedList() {
+            const rootSaveList = document.getElementById("rootSaveList");
+            rootSaveList.innerHTML = "";
+            const sessionChkData = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
+
+            if (sessionChkData.length === 0) {
+                rootSaveList.innerHTML = "<li> 위치를 추가하세요 </li>";
+                return;
+            }
+
+            sessionChkData.forEach((item) => {
+                const li = document.createElement("li");
+
+                const cleanTitle = item.title.replace(/<b>/g, '').replace(/<\/b>/g, '');
+                li.textContent = cleanTitle;
+                li.classList.add("root-list-style");
+
+                // 삭제 버튼 추가
+                const removeBtn = document.createElement("button");
+
+                const icon = document.createElement("i");
+                icon.classList.add("bi", "bi-x");
+
+                removeBtn.appendChild(icon);
+                removeBtn.classList.add("root-button-style");
+
+                removeBtn.addEventListener("click", (event) => {
+                    event.stopPropagation(); // 부모 요소(li)의 클릭 이벤트 방지
+                    removeFromLocalStorage(item);
+                });
+
+                li.appendChild(removeBtn);
+
+                li.dataset.title = item.title
+                li.dataset.address = item.address
+                li.dataset.roadaddress = item.roadaddress
+                li.dataset.latitude = item.latitude
+                li.dataset.longitude = item.longitude
+                li.dataset.link = item.link
+                li.dataset.category = item.category
+
+                rootSaveList.appendChild(li);
+            });
+        }
+
+        // 체크하면 라인 그리기
+        function checkDrawPolyline() {
+            const sessionChkData = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
+
+
+            if (sessionChkData.length === 0) return;
+
+            const path = sessionChkData.map(data => new naver.maps.LatLng(data.latitude, data.longitude))
+
+            console.log(path);
+
+            // 기존 폴리라인 제거
+            if (selPolyline) {
+                selPolyline.setMap(null);
+                selPolyline = null; // 기존 폴리라인 객체 초기화
+            }
+
+            if (selMaker) {
+                selMaker.forEach(marker => marker.setMap(null));
+            }
+            selMaker = [];
+
+            if (sessionChkData.length === 0) return;
+
+            selPolyline = new naver.maps.Polyline({
+                map: map,
+                path: path,
+                strokeColor: '#FA5858',
+                strokeStyle: 'stroke',
+                strokeWeight: 2
+            });
+
+            sessionChkData.forEach((data, index) => {
+                const marker = new naver.maps.Marker({
+                    position: new naver.maps.LatLng(data.latitude, data.longitude),
+                    map: map,
+                    icon: {
+                        content: `<img width="30" height="30" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
+                        anchor: new naver.maps.Point(17, 20)
+                    }
+                });
+
+                selMaker.push(marker);
+
+            });
+
+            updateSavedList();
+
+        }
+
+        // 로컬스토리지에서 값 삭제하는 함수
+        function removeFromLocalStorage(value) {
+            let sessionChkData = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
+            sessionChkData = sessionChkData.filter(item => item.title !== value.title);
+            sessionStorage.setItem("checkRootUser", JSON.stringify(sessionChkData));
+
+            document.querySelectorAll('input[name="checkbox"]').forEach((chk)=>{
+                if(chk.dataset.title === value.title) chk.checked = false;
+            })
+
+            selMaker = selMaker.filter(marker => {
+                const position = marker.getPosition();
+                if (position.lat() === parseFloat(value.latitude) && position.lng() === parseFloat(value.longitude)) {
+                    marker.setMap(null);
+                    return false; // 필터에서 제거 (삭제된 마커만 필터링)
+                }
+                return true; // 유지할 마커
+            });
+
+            checkDrawPolyline();
+            updateSavedList();
+        }
+
+        // 루트 중앙 이동
+        document.getElementById("map-button").addEventListener("click", function (){
+            console.log("click")
+
+            const path = rootList.map((data)=>{
+                console.log(data);
+                return new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)
+            })
+
             // list 의 중앙값
-            const center = getCenter(line);
+            const center = getCenter(rootList);
 
             // 중심 이동
             map.setCenter(center);
@@ -184,24 +432,50 @@
             const bounds = new naver.maps.LatLngBounds();
             path.forEach(coord => bounds.extend(coord));
             map.fitBounds(bounds);
+        })
 
-        }
+        // 루트 폴리라인 지우기
+        document.getElementById("map-root-remove-button").addEventListener("click", function (){
+            console.log("click");
 
-        // 중앙 값 구해서 설정
-        function getCenter(line) {
-            let latSum = 0;
-            let lngSum = 0;
-            let cnt = line.length;
+            // 기존 폴리라인 제거
+            if (selPolyline) {
+                selPolyline.setMap(null);
+                selPolyline = null;
+            }
 
-            line.forEach(data => {
-                latSum += data.rootListLatitude;
-                lngSum += data.rootListLongitude;
+            if (selMaker) {
+                selMaker.forEach(marker => marker.setMap(null));
+            }
+            selMaker = [];
+
+            document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
+                checkbox.checked = false;
             });
 
-            return new naver.maps.LatLng(latSum / cnt, lngSum / cnt);
-        }
+            sessionStorage.removeItem("checkRootUser");
+        })
 
+        // 위치 마커 지우기
+        document.getElementById("map-marker-remove-button").addEventListener("click", function (){
+            console.log("click");
 
+            if (marker) marker.setMap(null);
+        })
+
+        // 저장
+        document.getElementById("form-submit").addEventListener("click", function () {
+            console.log("click");
+            let rootList = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
+
+            let rootseq = document.getElementById("select-root").value;
+            document.getElementById("rootSeq").value = rootseq;
+
+            document.getElementById("rootListData").value = JSON.stringify(rootList);
+            sessionStorage.removeItem("checkRootUser");
+            document.getElementById("registerForm").submit();
+
+        });
 
     </script>
 </main>

@@ -109,6 +109,8 @@ public class RootService {
 
         this.rootRepository.save(root);
 
+        Integer index = 1;
+
         for(RootListDTO rel : rootListDTO) {
             RootList list = RootList.builder()
                     .root(root)
@@ -119,10 +121,12 @@ public class RootService {
                     .rootListLongitude(rel.getLongitude())
                     .rootListLink(rel.getLink())
                     .rootListCategory(rel.getCategory())
+                    .rootListIndex(index)
                     .userId(user)
                     .build();
 
             this.rootListRepository.save(list);
+            index++;
         }
 
     }

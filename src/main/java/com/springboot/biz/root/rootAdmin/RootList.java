@@ -39,5 +39,7 @@ public class RootList {
 
     private String rootListCategory; // 장소 분류
 
+    private Integer rootListIndex;
+
 
 }
