@@ -21,44 +21,87 @@
         <!--content-->
         <section class="py-5">
 
-
-
-          <!--  <div class="d-flex flex-wrap gap-3 justify-content-center"> &lt;!&ndash; 가로 정렬 및 간격 추가 &ndash;&gt;
-                <div th:each="fm: ${paging}" class="card custom-card">
-                    <img th:if="${fm.fmrecipeFilePath !=null}"
-                         th:src="@{${fm.fmrecipeFilePath}}" class="card-img-top" alt="이미지 설명">
-                    <hr class="card-divider"> &lt;!&ndash; 이미지 아래 구분선 &ndash;&gt;
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a th:href="@{|/fmRecipe/detail/${fm.fmrecipeSeq}|}" th:text="${fm.fmrecipeTitle}"></a>
-                        </h5>
-                  <p class="card-text" th:text="${fm.fmrecipeContent}"></p>
-                        <p class="card-text" th:text="${fm.fmrecipeReady}"></p>
-                           <p class="card-text" th:text="${fm.fmrecipeIngre}"></p>
-
-                            <h6 th:text=" ${#temporals.format(fm.fmrecipeRegDate,'yyyy-MM-dd HH:mm')}"></h6>
-                    </div>
-                </div>
+            <!-- 카테고리 필터 버튼 -->
+            <div class="d-flex justify-content-center gap-2 my-3">
+                <a th:href="@{/fm/recipe(category='')}" class="btn btn-outline-primary">전체</a>
+                <a th:href="@{/fm/recipe(category='구이')}" class="btn btn-outline-primary">구이</a>
+                <a th:href="@{/fm/recipe(category='밥')}" class="btn btn-outline-primary">밥</a>
+                <a th:href="@{/fm/recipe(category='국')}" class="btn btn-outline-primary">국</a>
+                <a th:href="@{/fm/recipe(category='김치')}" class="btn btn-outline-primary">김치</a>
             </div>
--->
-            <div class="d-flex flex-wrap gap-3 justify-content-center"> <!-- 가로 정렬 및 간격 추가 -->
-                <div th:each="fm: ${paging}" class="card custom-card" style="cursor: pointer;"
-                     th:attr="onclick=|location.href='/fmRecipe/detail/${fm.fmrecipeSeq}'|">
-                    <img th:if="${fm.fmrecipeFilePath !=null}"
-                         th:src="@{${fm.fmrecipeFilePath}}" class="card-img-top" alt="이미지 설명">
-                    <hr class="card-divider"> <!-- 이미지 아래 구분선 -->
+
+
+            <!-- 카드 리스트 (클릭 시 모달 표시) -->
+            <div id="recipe=list" class="d-flex flex-wrap gap-3 justify-content-center mt-4">
+
+                <div th:each="fm: ${paging}" class="card custom-card" style="cursor: pointer; width: 18rem;"
+                     th:attr="data-modal-id='modal' + ${fm.fmrecipeSeq}">
+                    <img th:if="${fm.fmrecipeFilePath !=null}" th:src="@{${fm.fmrecipeFilePath}}" class="card-img-top" alt="이미지">
                     <div class="card-body">
-                        <h5 class="card-title">
-                            <a th:href="@{|/fmRecipe/detail/${fm.fmrecipeSeq}|}" th:text="${fm.fmrecipeTitle}" style="pointer-events: none;"></a>
-                        </h5>
-                        <p class="card-text" th:text="${fm.fmrecipeContent}"></p>
-                        <p class="card-text" th:text="${fm.fmrecipeReady}"></p>
-                        <p class="card-text" th:text="${fm.fmrecipeIngre}"></p>
-                        <h6 th:text="${#temporals.format(fm.fmrecipeRegDate,'yyyy-MM-dd HH:mm')}"></h6>
+                        <h5 class="card-title" th:text="${fm.fmrecipeTitle}"></h5>
                     </div>
                 </div>
             </div>
 
+            <!-- 모달 창 (기본 숨김) -->
+            <div th:each="fm: ${paging}" th:id="'modal' + ${fm.fmrecipeSeq}" class="custom-modal hidden">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" th:text="${fm.fmrecipeTitle}"></h5>
+                            <span class="custom-close-btn" data-modal-close>&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <img th:if="${fm.fmrecipeFilePath !=null}" th:src="@{${fm.fmrecipeFilePath}}" class="img-fluid mb-3" alt="이미지">
+                            <p><strong>설명:</strong> <span th:text="${fm.fmrecipeContent}"></span></p>
+                            <p><strong>준비 과정:</strong> <span th:text="${fm.fmrecipeReady}"></span></p>
+                            <p><strong>재료:</strong> <span th:text="${fm.fmrecipeIngre}"></span></p>
+                            <p><strong>등록일:</strong> <span th:text="${#temporals.format(fm.fmrecipeRegDate,'yyyy-MM-dd HH:mm')}"></span></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary custom-close-btn" data-modal-close>닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
+            <script th:src="@{/fmRecipeModal.js}"></script>
+
+
+    </body>
+            <script>
+                function fetchRecipes(category = '') {
+                    console.log("📢 Fetching category:", category); // ✅ 카테고리 값 확인용 로그 추가
+
+                    fetch(`/fm/recipe?page=0&category=${category}`)
+                        .then(response => {
+                            console.log("📢 Response status:", response.status); // ✅ 응답 상태 코드 확인
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log("📢 Fetched data:", data); // ✅ 받은 데이터 확인
+                            let recipeList = document.getElementById("recipe-list");
+                            recipeList.innerHTML = ""; // 기존 목록 초기화
+
+                            data.content.forEach(recipe => {
+                                let listItem = document.createElement("div");
+                                listItem.classList.add("card", "custom-card");
+                                listItem.style.width = "18rem";
+                                listItem.style.cursor = "pointer";
+                                listItem.innerHTML = `
+                    <img src="${recipe.fmrecipeFilePath}" class="card-img-top" alt="이미지">
+                    <div class="card-body">
+                        <h5 class="card-title">${recipe.fmrecipeTitle}</h5>
+                    </div>
+                `;
+                                recipeList.appendChild(listItem);
+                            });
+                        })
+                        .catch(error => console.error("❌ Fetch error:", error));
+                }
+
+            </script>
 
 
 
@@ -70,23 +113,21 @@
                     <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
                         <a class="page-link" th:href="@{|?page=${paging.number-1}|}" aria-label="Previous">〈</a>
                     </li>
-
                     <li th:each="i : ${#numbers.sequence(0, paging.totalPages - 1)}"
                         class="page-item"
                         th:classappend="${paging.number == i} ? 'active'">
                         <a class="page-link" th:href="@{|?page=${i}|}" th:text="${i + 1}"></a>
                     </li>
-
                     <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
                         <a class="page-link" th:href="@{|?page=${paging.number+1}|}" aria-label="Next">〉</a>
                     </li>
                 </ul>
             </nav>
-
         </section>
     </div>
-
 </main>
+
+
 </html>
 
 

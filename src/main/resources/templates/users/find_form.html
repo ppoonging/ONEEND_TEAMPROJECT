@@ -1,31 +1,60 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>아이디 찾기</title>
+    <meta charset="UTF-8">
+    <title>아이디 및 비밀번호 찾기</title>
+
 </head>
 <body>
 
-<h1>아이디 찾기</h1>
+<!-- 아이디 찾기 -->
+<div class="container-id">
+    <h2>아이디 찾기</h2>
+    <form th:action="@{/users/findLoginId}" method="get">
+        <div class="form-group">
+            <label for="email">이메일</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <button type="submit" class="btn">아이디 찾기</button>
+    </form>
 
-<form th:action="@{/users/findLoginId}" method="get">
-<label for="email">이메일</label>
-    <input type="email" id="email" name="email" required>
-    <button type="submit">아이디 찾기</button>
-</form>
+    <div th:if="${user}" class="message success">
+        <p>아이디: <span th:text="${user.username}"></span></p>
+        <a href="/users/login">로그인</a>
+    </div>
 
-<!-- 사용자 정보가 있을 때 -->
-<div th:if="${user != null}">
-    <p>아이디: <span th:text="${user.username}"></span></p>
-    <a href="/users/login" class="btn btn-primary">로그인 하러가기</a>
+    <div th:if="${error}" class="message error">
+        <p th:text="${error}"></p>
+    </div>
 
+
+<!-- 비밀번호 찾기 -->
+
+    <h2>비밀번호 찾기</h2>
+    <form th:action="@{/findPassword}" method="post">
+        <div class="form-group">
+            <label for="password-email">이메일 주소</label>
+            <input type="email" id="password-email" name="email" required th:value="@{Huser.email}">
+        </div>
+        <button type="submit" class="btn">이메일 전송</button>
+    </form>
+
+    <div class="message success">
+        <p th:text="${message}"></p>
+    </div>
+
+    <div class="message error">
+        <p th:text="${error}"></p>
+    </div>
+
+    <div class="link-menu">
+        <a href="/users/signup">회원가입</a> |
+        <a href="/users/login">로그인</a>
+    </div>
 </div>
 
-<!-- 사용자 정보가 없을 때 -->
-<div th:if="${error != null}">
-    <p th:text="${error}"></p>
-</div>
+<!-- 하단 링크 -->
 
-
-
+<link rel="stylesheet" type="text/css" th:href="@{/loginUsers.css}">
 </body>
 </html>

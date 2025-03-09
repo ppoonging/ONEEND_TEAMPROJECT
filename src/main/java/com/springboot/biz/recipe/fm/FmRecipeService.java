@@ -52,11 +52,18 @@ public class FmRecipeService {
         fmRecipeRepository.save(fR);
     }
     //페이지 네이션하고, 검색어 (키워드, 카테고리 뭘로하지....?
-    public Page<FmRecipe> getList(int page, String kw){
+    public Page<FmRecipe> getList( String kw, String category,int page) {
         List<Sort.Order> sorts =new ArrayList<>();
         sorts.add(Sort.Order.desc("fmrecipeRegDate"));//정렬.내림차순(기준이될 놈)
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        return this.fmRecipeRepository.findAllBykeyword(pageable,kw);
+        if((kw ==null|| kw.isEmpty()) &&(category ==null || category.isEmpty())){
+            return fmRecipeRepository.findAll(pageable);
+        }
+        if(category ==null || category.isEmpty()){
+            return fmRecipeRepository.findAllByKeyword(kw,pageable);
+        }
+
+        return this.fmRecipeRepository.findByKeywordAndCategory(kw,category,pageable);
     }
 
 }

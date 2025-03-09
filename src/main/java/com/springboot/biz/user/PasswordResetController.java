@@ -13,7 +13,7 @@ public class PasswordResetController {
     //비밀번호 찾기 페이지 (이메일 입력)
     @GetMapping("/findPassword")
     public String showForgotPasswordPage() {
-        return "users/findPassword";
+        return "users/findEnd";
     }
     // 비밀번호 찾기 요청 처리
     @PostMapping("/findPassword")
@@ -22,10 +22,11 @@ public class PasswordResetController {
 
         if (!emailSent) {
             model.addAttribute("error", "해당 이메일을 사용하는 회원이 존재하지 않거나 이메일 전송 중 오류가 발생했습니다.");
+            return "users/find_form";
         } else {
             model.addAttribute("message", "비밀번호 재설정 이메일을 전송했습니다.");
         }
-        return "users/findPassword";
+        return "redirect:/";
     }
     //비밀번호 재설정 페이지
     @GetMapping("/resetPassword")
@@ -55,6 +56,6 @@ public class PasswordResetController {
             return "users/resetPassword_form";
         }
         model.addAttribute("message", "비밀번호가 성공적으로 변경되었습니다.");
-        return "users/login_form";
+        return "users/findEnd";
     }
 }

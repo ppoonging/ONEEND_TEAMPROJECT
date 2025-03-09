@@ -246,10 +246,11 @@ a {
 
 .container-1 {
     display: flex;
-    justify-content: center; /* 가운데 정렬 */
+    justify-content: space-evenly; /* 가운데 정렬 */
+    margin: 0 50px;
     align-items: center;
-    height: 5vh; /* 전체 화면 높이에서 가운데 정렬 */
-    margin-top: 100px;
+    height: 2vh; /* 전체 화면 높이에서 가운데 정렬 */
+    margin-top: 50px;
 }
 .link-menu {
     display: flex;
