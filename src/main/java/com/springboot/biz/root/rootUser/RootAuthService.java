@@ -2,6 +2,7 @@ package com.springboot.biz.root.rootUser;
 
 import com.springboot.biz.DataNotFoundException;
 import com.springboot.biz.root.rootAdmin.Root;
+import com.springboot.biz.root.rootAdmin.RootList;
 import com.springboot.biz.root.rootAdmin.RootRepository;
 import com.springboot.biz.user.HUser;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +34,13 @@ public class RootAuthService {
         return this.rootRepository.findAll();
     }
 
+    public List<RootAuthList> getRootList(Long rootAuthSeq) {
+        return rootAuthListRepository.findByRootAuthId(rootAuthSeq);
+    }
+
+
     // rootAuth list 가져오기
-    public Page<RootAuth> getList(int page) {
+    public Page<RootAuth> getAll(int page) {
         Pageable pageable = PageRequest.of(page, 2, Sort.by(Sort.Order.desc("rootAuthDate")));
 
         return this.rootAuthRepository.findAll(pageable);
@@ -51,84 +57,63 @@ public class RootAuthService {
     }
 
     // list + category
-    public Page<RootAuth> getListCategory(int page, String category) {
+    public Page<RootAuth> getAllCategory(int page, String category) {
         Pageable pageable = PageRequest.of(page, 2, Sort.by(Sort.Order.desc("rootAuthDate")));
         return rootAuthRepository.findByRoot_RootTitle(category, pageable);
     }
 
     // 저장
-    public void save(MultipartFile multipartFile, String title, String content,
+    public void save(List<MultipartFile> files, String title, String content,
                      List<RootAuthListDTO> rootAuthListDTO, HUser user, Root root) throws IOException {
-        String os = System.getProperty("os.name").toLowerCase();
-        String originalImgName = multipartFile.getOriginalFilename();
-        String imgName = "";
-
-        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/rootauth";
-
-        UUID uuid = UUID.randomUUID();
-
-
-        imgName = uuid + "_" + originalImgName;
-
-        File saveFile = new File(projectPath, imgName);
-
-        multipartFile.transferTo(saveFile);
-
-
         RootAuth rootAuth = new RootAuth();
         rootAuth.setRootAuthTitle(title);
         rootAuth.setRootAuthContent(content);
         rootAuth.setUserId(user);
-
-        List<RootAuthList> rootAuthList = new ArrayList<>();
-
         rootAuth.setRoot(root);
-        rootAuth.setRootAuthList(rootAuthList);
+        rootAuth.setRootAuthList(new ArrayList<>());
         rootAuth.setRootAuthDate(LocalDateTime.now());
 
         this.rootAuthRepository.save(rootAuth);
 
+        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/rootauth/";
         Integer index = 1;
 
-        if(!multipartFile.isEmpty()) {
-            for(RootAuthListDTO rel : rootAuthListDTO){
-                RootAuthList list = RootAuthList.builder()
-                        .rootAuth(rootAuth)
-                        .rootAuthListTitle(rel.getTitle())
-                        .rootAuthListAddress(rel.getAddress())
-                        .rootAuthListRodeAddress(rel.getRoadaddress())
-                        .rootAuthListLatitude(rel.getLatitude())
-                        .rootAuthListLongitude(rel.getLongitude())
-                        .rootAuthListLink(rel.getLink())
-                        .rootAuthListCategory(rel.getCategory())
-                        .rootAuthListIndex(index)
-                        .rootAuthListImageName(imgName)
-                        .rootAuthListImagePath("/files/rootauth" + imgName)
-                        .userId(user)
-                        .build();
-                this.rootAuthListRepository.save(list);
-                index++;
+        for (int i = 0; i < rootAuthListDTO.size(); i++) {
+            RootAuthListDTO rel = rootAuthListDTO.get(i);
+
+            // null 이 아니고 list보다 파일 수가 작으면 파일 가져오기
+            MultipartFile file = (files != null && files.size() > i) ? files.get(i) : null;
+
+            String imgName = null;
+            String imgPath = null;
+
+            // 파일 있으면
+            if (file != null && !file.isEmpty()) {
+                String originalImgName = file.getOriginalFilename();
+                UUID uuid = UUID.randomUUID();
+                imgName = uuid + "_" + originalImgName;
+                imgPath = "/files/rootauth/" + imgName;
+                File saveFile = new File(projectPath, imgName);
+                file.transferTo(saveFile);
             }
 
-        }else {
-            for(RootAuthListDTO rel : rootAuthListDTO){
-                RootAuthList list = RootAuthList.builder()
-                        .rootAuth(rootAuth)
-                        .rootAuthListTitle(rel.getTitle())
-                        .rootAuthListAddress(rel.getAddress())
-                        .rootAuthListRodeAddress(rel.getRoadaddress())
-                        .rootAuthListLatitude(rel.getLatitude())
-                        .rootAuthListLongitude(rel.getLongitude())
-                        .rootAuthListLink(rel.getLink())
-                        .rootAuthListCategory(rel.getCategory())
-                        .rootAuthListIndex(index)
-                        .rootAuthListImageName(null)
-                        .rootAuthListImagePath(null)
-                        .userId(user)
-                        .build();
-                this.rootAuthListRepository.save(list);
-                index++;
-            }
+            RootAuthList list = RootAuthList.builder()
+                    .rootAuth(rootAuth)
+                    .rootAuthListTitle(rel.getTitle())
+                    .rootAuthListAddress(rel.getAddress())
+                    .rootAuthListRodeAddress(rel.getRoadaddress())
+                    .rootAuthListLatitude(rel.getLatitude())
+                    .rootAuthListLongitude(rel.getLongitude())
+                    .rootAuthListLink(rel.getLink())
+                    .rootAuthListCategory(rel.getCategory())
+                    .rootAuthListIndex(index)
+                    .rootAuthListImageName(imgName)
+                    .rootAuthListImagePath(imgPath)
+                    .userId(user)
+                    .build();
+
+            this.rootAuthListRepository.save(list);
+            index++;
         }
     }
 

@@ -16,7 +16,7 @@ public class RootAuthList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer rootAuthListSeq;
+    private Long rootAuthListSeq;
 
     private String rootAuthListImagePath;
 

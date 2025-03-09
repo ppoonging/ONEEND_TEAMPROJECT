@@ -108,11 +108,11 @@ a {
     background-color: #857761;
 }
 
-#restaurant {
+#search-data-list {
     border-bottom: 1px solid #fff
 }
 
-#restaurant:last-child {
+#search-data-list:last-child {
     border-bottom: 0;
 }
 
@@ -120,6 +120,7 @@ a {
     font-size: 14px;
     margin-right: 5px;
     color: #555;
+    cursor: pointer;
 }
 
 .root-remove-btn-style {
@@ -143,6 +144,33 @@ a {
 .root-btn-style:hover {
     background-color: #D5C9C1 !important;
     border: 1px solid #B8A89E !important;
+}
+
+#root-image-modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+}
+
+#root-image-modal .close {
+    position: absolute;
+    top: 15px;
+    right: 30px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+#root-modal-image {
+    max-width: 30%; /* 최대 너비 */
+    max-height: 50vh; /* 최대 높이 */
+    border-radius: 10px;
+    display: block;
 }
 
 

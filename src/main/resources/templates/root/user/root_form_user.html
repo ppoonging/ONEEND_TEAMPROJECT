@@ -23,6 +23,7 @@
             <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
             <div>
                 <form id="select-form" th:action="@{/root/form}" method="get" class="row mb-3">
+
                     <label for="select-root" class="col-sm-1 col-form-label">루트 선택</label>
                     <div class="col-sm-11">
                         <select id="select-root" name="rootSeq" class="form-select">
@@ -37,7 +38,9 @@
 
                 </form>
 
-                <form th:action="@{/root/form/save}" id="registerForm"  enctype="multipart/form-data" method="post">
+                <form th:action="@{/root/form/save}" th:object="${rootAuthDTO}" id="registerForm"  enctype="multipart/form-data" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:vale="${_csrf.token}">
+
                     <div class="mb-2 row">
                         <label for="title" class="col-sm-1 col-form-label">제목</label>
                         <div class="col-sm-11">
@@ -57,7 +60,7 @@
                             <div id="map" style="width: 100%; flex-grow: 1;"></div>
 
                             <div style="background-color: #E8DCD4; width: 100%;" class="py-2 ">
-                                <ul class="d-flex mb-0 flex-wrap" id="rootSaveList">
+                                <ul class="d-flex mb-0 flex-wrap" id="rootSelectList">
                                     <li></li>
                                 </ul>
                             </div>
@@ -66,10 +69,12 @@
                         <!--right-->
                         <div class="h-100 overflow-y-auto" style="width: 35%;">
                             <ul th:if="${selRootList}" style="background-color: #E8DCD4;" class="p-3 mb-0">
-                                <li id="restaurant" th:each="selRootList : ${selRootList}" class="" >
+                                <li id="search-data-list" th:each="selRootList : ${selRootList}" class="" >
                                     <div class="d-flex flex-row p-2">
                                         <div class="my-2" style="width: 90%;">
-                                            <h6 th:utext="${selRootList.rootListIndex} + '. ' + ${selRootList.rootListTitle}" style="font-weight: bold " name="click-address" th:data-lat="${selRootList.rootListLatitude}" th:data-lng="${selRootList.rootListLongitude}"></h6>
+                                            <h6 th:utext="${selRootList.rootListIndex} + '. ' + ${selRootList.rootListTitle}"
+                                                style="font-weight: bold; cursor: pointer;" name="click-address"
+                                                th:data-lat="${selRootList.rootListLatitude}" th:data-lng="${selRootList.rootListLongitude}"></h6>
                                             <p th:text="'카테고리: ' + ${selRootList.rootListCategory}" class="mb-2" style="font-size: 14px; color: #777"></p>
                                             <p th:text="'지번: ' + ${selRootList.rootListAddress}" class="mb-2" style="font-size: 14px; color: #444"></p>
                                             <p th:text="'도로명: ' + ${selRootList.rootListRodeAddress}" class="mb-0" style="font-size: 14px; color: #444"></p>
@@ -92,10 +97,8 @@
                                     </div>
 
                                     <div class="mb-3">
-<!--                                        <label for="formFileSm" class="form-label">Small file input example</label>-->
-                                        <input class="form-control form-control-sm" id="file" name="file" type="file">
+                                        <input class="form-control form-control-sm" id="files" name="files" type="file">
                                     </div>
-
                                 </li>
                             </ul>
                         </div>
@@ -136,7 +139,7 @@
         document.addEventListener("DOMContentLoaded", ()=>{
             setMap();
             drawPolyline(rootList);
-            updateSavedList();
+            updateSelectList();
         });
 
         // 초기 map 설정
@@ -148,7 +151,6 @@
                 center = new naver.maps.LatLng(37.5666805, 126.9784147);
             } else {
                 center = getCenter(rootList);
-
             }
 
             map = new naver.maps.Map("map", {
@@ -290,7 +292,7 @@
                 } else {
                     // 체크되지 않았으면 지우기
                     sessionChkDataSel = sessionChkDataSel.filter(item => item.title !== obj.title);
-                    removeFromLocalStorage(obj);
+                    removeSelectStorage(obj);
 
                 }
 
@@ -304,13 +306,13 @@
             })
         })
 
-        function updateSavedList() {
-            const rootSaveList = document.getElementById("rootSaveList");
-            rootSaveList.innerHTML = "";
+        function updateSelectList() {
+            const rootSelectList = document.getElementById("rootSelectList");
+            rootSelectList.innerHTML = "";
             const sessionChkData = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
 
             if (sessionChkData.length === 0) {
-                rootSaveList.innerHTML = "<li> 위치를 추가하세요 </li>";
+                rootSelectList.innerHTML = "<li> 위치를 추가하세요 </li>";
                 return;
             }
 
@@ -332,7 +334,7 @@
 
                 removeBtn.addEventListener("click", (event) => {
                     event.stopPropagation(); // 부모 요소(li)의 클릭 이벤트 방지
-                    removeFromLocalStorage(item);
+                    removeSelectStorage(item);
                 });
 
                 li.appendChild(removeBtn);
@@ -345,7 +347,7 @@
                 li.dataset.link = item.link
                 li.dataset.category = item.category
 
-                rootSaveList.appendChild(li);
+                rootSelectList.appendChild(li);
             });
         }
 
@@ -395,12 +397,12 @@
 
             });
 
-            updateSavedList();
+            updateSelectList();
 
         }
 
         // 로컬스토리지에서 값 삭제하는 함수
-        function removeFromLocalStorage(value) {
+        function removeSelectStorage(value) {
             let sessionChkData = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
             sessionChkData = sessionChkData.filter(item => item.title !== value.title);
             sessionStorage.setItem("checkRootUser", JSON.stringify(sessionChkData));
@@ -419,7 +421,7 @@
             });
 
             checkDrawPolyline();
-            updateSavedList();
+            updateSelectList();
         }
 
         // 루트 중앙 이동

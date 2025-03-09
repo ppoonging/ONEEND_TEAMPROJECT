@@ -50,7 +50,7 @@
                                 <div id="map" style="width: 100%; min-height: 500px; flex-grow: 1;"></div>
                                 <!--bottom-->
                                 <div style="background-color: #E8DCD4; width: 100%;" class="py-2 ">
-                                    <ul class="d-flex mb-0 flex-wrap" id="rootSaveList">
+                                    <ul class="d-flex mb-0 flex-wrap" id="rootSelectList">
                                         <li></li>
                                     </ul>
                                 </div>
@@ -59,9 +59,10 @@
                             <!--right-->
                             <div class="h-100" style="width: 35%;">
                                 <ul th:if="${searchData}" style="background-color: #E8DCD4;" class="p-3 h-100 mb-0">
-                                    <li id="restaurant" th:each="searchData : ${searchData}" class="d-flex flex-row p-2 h-100" >
+                                    <li id="search-data-list" th:each="searchData : ${searchData}" class="d-flex flex-row p-2 h-100" >
                                         <div class="my-2" style="width: 90%;">
-                                            <h6 th:utext="${searchData.title}" style="font-weight: bold " name="click-address" th:data-lat="${searchData.latitude}" th:data-lng="${searchData.longitude}"></h6>
+                                            <h6 th:utext="${searchData.title}" style="font-weight: bold; cursor: pointer; " name="click-address"
+                                                th:data-lat="${searchData.latitude}" th:data-lng="${searchData.longitude}"></h6>
                                             <p th:text="'카테고리: ' + ${searchData.category}" class="mb-2" style="font-size: 14px; color: #777"></p>
                                             <p th:text="'지번: ' + ${searchData.address}" class="mb-2" style="font-size: 14px; color: #444"></p>
                                             <p th:text="'도로명: ' + ${searchData.roadAddress}" class="mb-0" style="font-size: 14px; color: #444"></p>
@@ -110,7 +111,7 @@
 
             // 페이지 로드 시 동작
             document.addEventListener("DOMContentLoaded", () => {
-                updateSavedList();
+                updateSelectList();
                 setMap(37.5666805, 126.9784147);
                 checkboxState();
 
@@ -118,7 +119,7 @@
                     sessionStorage.setItem("checkRoot", sessionStorage.getItem("savedCheckRoot"));
                     sessionStorage.removeItem("savedCheckRoot");  // 임시 저장한 데이터 제거
                     checkboxState();  // 체크박스 다시 적용
-                    updateSavedList();  // 리스트 다시 업데이트
+                    updateSelectList();  // 리스트 다시 업데이트
                     drawPolyline();  // 경로 다시 그리기
                 }
 
@@ -170,12 +171,15 @@
                 data.addEventListener("click", function () {
                     const lat = parseFloat(data.dataset.lat);
                     const lng = parseFloat(data.dataset.lng);
+                    const position = new naver.maps.LatLng(lat, lng);
 
-                    map.setCenter(new naver.maps.LatLng(lat, lng));
+                    map.setCenter(position);
+                    map.setZoom(17);
+
                     if (marker) marker.setMap(null);
 
                     marker = new naver.maps.Marker({
-                        position: new naver.maps.LatLng(lat, lng),
+                        position: position,
                         map: map,
                         icon: {
                             content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
@@ -183,6 +187,8 @@
                         },
                         animation: naver.maps.Animation.BOUNCE
                     });
+
+
                 });
             });
 
@@ -213,11 +219,11 @@
                     } else {
                         // 체크되지 않았으면 지우기
                         sessionChkData = sessionChkData.filter(item => item.title !== obj.title);
-                        // removeFromLocalStorage(obj);
+                        // removeSelectStorage(obj);
                     }
 
                     sessionStorage.setItem("checkRoot", JSON.stringify(sessionChkData));
-                    updateSavedList();
+                    updateSelectList();
                     drawPolyline();
 
 
@@ -236,13 +242,13 @@
 
 
             // 리스트에 값 넣기
-            function updateSavedList() {
-                const rootSaveList = document.getElementById("rootSaveList");
-                rootSaveList.innerHTML = "";
+            function updateSelectList() {
+                const rootSelectList = document.getElementById("rootSelectList");
+                rootSelectList.innerHTML = "";
                 const sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
 
                 if (sessionChkData.length === 0) {
-                    rootSaveList.innerHTML = "<li> 위치를 추가하세요 </li>";
+                    rootSelectList.innerHTML = "<li> 위치를 추가하세요 </li>";
                     return;
                 }
 
@@ -264,7 +270,7 @@
 
                     removeBtn.addEventListener("click", (event) => {
                         event.stopPropagation(); // 부모 요소(li)의 클릭 이벤트 방지
-                        removeFromLocalStorage(item);
+                        removeSelectStorage(item);
                     });
 
                 li.appendChild(removeBtn);
@@ -277,33 +283,33 @@
                 li.dataset.link = item.link
                 li.dataset.category = item.category
 
-                rootSaveList.appendChild(li);
+                rootSelectList.appendChild(li);
             });
         }
 
 
-            document.getElementById("rootSaveList").addEventListener("click", function (event) {
+            document.getElementById("rootSelectList").addEventListener("click", function (event) {
 
                 // contains : 지정한 문자열 포함하는 요소 선택 / closest : 선택한 요소 포함하면서 가장 가까운 상위 요소 선택
                 if (event.target.classList.contains("root-list-style") || event.target.closest(".root-list-style")) {
                     const ele = event.target.closest(".root-list-style");
-
                     const lat = parseFloat(ele.dataset.latitude);
                     const lng = parseFloat(ele.dataset.longitude);
+                    const position = new naver.maps.LatLng(lat, lng);
 
-                    console.log(lat);
-                    console.log(lng);
+                    // console.log(lat);
+                    // console.log(lng);
 
-                    // 체크 시 map 새로 초기화
-                    map.setCenter(new naver.maps.LatLng(lat, lng));
+                    map.setCenter(position);
+                    map.setZoom(17);
 
                     if (marker) {
                         marker.setMap(null);
                     }
-
+                    
                     // 체크 시 해당 좌표 마커
                     marker = new naver.maps.Marker({
-                        position: new naver.maps.LatLng(lat, lng),
+                        position:position,
                         map: map,
                         icon: {
                             content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
@@ -311,13 +317,15 @@
                         },
                         animation: naver.maps.Animation.BOUNCE
                     });
+
+
                 }
 
             })
 
 
         // 로컬스토리지에서 값 삭제하는 함수
-        function removeFromLocalStorage(value) {
+        function removeSelectStorage(value) {
             let sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
             sessionChkData = sessionChkData.filter(item => item.title !== value.title);
             sessionStorage.setItem("checkRoot", JSON.stringify(sessionChkData));
@@ -325,7 +333,7 @@
             document.querySelectorAll('input[name="checkbox"]').forEach((chk)=>{
                 if(chk.dataset.title === value.title) chk.checked = false;
             })
-            updateSavedList();
+            updateSelectList();
             drawPolyline();
         }
 

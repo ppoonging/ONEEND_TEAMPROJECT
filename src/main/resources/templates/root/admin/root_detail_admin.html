@@ -29,8 +29,9 @@
                     <div class="card-body">
                         <div id="map" style="width: 100%; min-height: 500px; flex-grow: 1;"></div>
                         <div style="background-color: #E8DCD4; width: 100%;" class="py-2 ">
-                            <ul class="d-flex mb-0 flex-wrap" id="rootSaveList">
-                                <li th:each="rootList : ${rootList}" th:text="${rootList.rootListIndex} + '. ' + ${rootList.rootListTitle} + '&nbsp;&nbsp;' "></li>
+                            <ul class="d-flex mb-0 flex-wrap" id="rootSelectList">
+                                <li th:each="rootList : ${rootList}" th:text="${rootList.rootListIndex} + '. '
+                                    + ${rootList.rootListTitle} + '&nbsp;&nbsp;' "></li>
                             </ul>
                         </div>
                         <div class="d-flex justify-content-end mt-2">
@@ -46,7 +47,9 @@
                 <input type="button" id="map-button" class="btn btn-outline-secondary me-2" value="루트 확인">
 
 
-                <button type="button" class="btn btn-outline-secondary"><a th:href="@{/root/register/list}" style="text-decoration: none; color: #6c757d">목록으로</a></button>
+                <button type="button" class="btn btn-outline-secondary">
+                    <a th:href="@{/root/register/list}" style="text-decoration: none; color: #6c757d">목록으로</a>
+                </button>
             </div>
         </section>
     </div>
