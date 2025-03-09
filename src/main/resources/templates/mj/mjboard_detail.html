@@ -1,11 +1,11 @@
-<html layout:decorate="~{layout}" xmlns:sec="http://www.w3.org/1999/xhtml">`
+<html layout:decorate="~{layout}">
     <main layout:fragment="content">
         <!--상단-->
         <div style="background-color: #F4E9E3">
             <div class="container py-2">
 
                 <!--수정해야할 부분-->
-                <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px"> 한 끝 > 맛집 소개 </span>
+                <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">한끝 커뮤니티 > 맛집소개 </span>
 
             </div>
         </div>
@@ -16,74 +16,118 @@
 
             <!--수정해야할 부분-->
             <!--title-->
-            <h2 class="text-center py-2">맛집 소개</h2>
+            <h2 class="text-center py-2">맛집소개</h2>
             <!--content-->
+            <h2 class="border-bottom py-2" th:text="${mjboard.mjTitle}"></h2>
             <section class="py-5">
-
-                <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+                <div class="card my-3">
                     <div class="card-body">
-                        <div class="card-text" style="white-space: pre-line;"
-                             th:text="${mjboard.mjTitle}"></div>
-                        <div class="d-flex justify-content-end"> <!--justify-content-end끝단으로맞추기-->
+                        <div class="card-text" style="white-space: pre-line" th:utext="${mjboard.mjContent}"></div>
+                        <div class="d-flex justify-content-end">
                             <div class="badge bg-light text-dark p-2 text-start">
-                                <div class="mb-2">
-							<span th:if="${mjboard.userId!=null}"
-                                  th:text="${mjboard.userid.username}"></span>
-                                </div>
                                 <div th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd HH:mm')}"></div>
                             </div>
                         </div>
-                        <div class="my-3">
-                            <div th:text ="${#temporals.format(mjboard.mjModifyDate,'yyyy-MM-dd HH:mm')}">
-                            </div>
-                            <a th:href="@{|/mjboard/modify/${mjboard.mjSeq}|}"
-                            >맛집 수정</a>
-                            <!--답변 갯수 표시-->
-                            <h7 class="border-bottom py-2" th:text="|${#lists.size(mjboard.mjAanswerList)} 개의 답변이 있습니다.|"></h7>
-                            <!--답변 반복 시작-->
-                            <div class="card-my-3" th:each="mjanswer : ${mjboard.mjAanswerList}">
-                                <div class="card-body">
-                                    <div class="card-text" style="white-space: pre-line" th:text="${mjanswer.mjcontent}"></div>
-                                    <div class="d-flex justify-content-end">
-                                        <div class="badge bg-light text-dark p-2 text-start">
-                                            <div th:text="${#temporals.format(mjanswer.mjAnsRegDate, 'yyyy-MM-dd HH:mm')}"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--답변 작성-->
-                            <form th: action="@{|/mjanswer/mjregdate/${mjboard.userid}|}" method="post" th:object="${mjAnswerForm}">
+                    </div>
+                </div>
+                <!--modify-->
+                <div class="my-3">
+                    <div th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd HH:mm')}"></div>
 
-                                <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-                                    <div th:each="err:${#fields.allErrors()}" th:text="${err}"></div>
-                                </div>
-                                <textarea class="form-control" name="mjcontent" userid="mjcontent" rows="15"></textarea>
-                                <input class="btn btn-primary my-2" type="submit" value="답변등록">
+                <a th:href="@{|/mjboard/modify/${mjboard.mjSeq}|}"
+                   class="btn btn-sm btn-outline-secondary" th:text="수정"></a>
+        </div>
+                <!--delete-->
+                <a href="javascript:void(0);"
+                   th:data-uri="@{|/mjboard/delete/${mjboard.mjSeq}|}"
+                   class="delete btn btn-sm btn-outline-secondary"
+                   th:text="삭제">
+                </a>
+                <!--mjRecommend-->
+                <div class="my-3">
+                    <a href="javascript:void(0);" th:data-uri="@{|/mjboard/mjRecommend/${mjboard.mjSeq}|}"
+                       class="recommend btn btn-sm btn-outline-secondary">추천</a>
+                    <!--<span class="badge rounded-pill bg-success" th:text="${#lists.size(mjboard.mjRecommend)}"></span>-->
+                </div>
 
-                            </form>
+
+
+                <!--답변 갯수-->
+                <h6 class="border-bottom py-2" th:text="|${#lists.size(mjboard.mjAanswerList)} 개의 답변이 있어요.|"></h6>
+                <!--답변 반복-->
+                <div class="card my-3" th:each="mjanswer : ${mjboard.mjAanswerList}">
+                    <div class="card-body">
+                        <div class="card-text" style="white-space: pre-line" th:text="${mjanswer.mjAnsContent}"></div>
+                        <div class="d-flex justify-content-end">
+                            <div class="badge bg-light text-dark p-2 text-start">
+                                <div th:text="${#temporals.format(mjanswer.mjAnsRegDate, 'yyyy-MM-dd HH:mm')}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--앵커 기능-->
+                <a th:href="@{|/mjanswer/modify/${mjanswer.mjSeq}|}"
+                   class="btn btn-sm btn-outline-secondary">수정</a>
+
+                <a href="javascript:void(0);"
+                   th:data-uri="@{|/mjanswer/delete/${mjanswer.mjSeq}|}"
+                   class="delete btn btn-sm btn-outline-secondary">삭제</a>
+
+
+                <a href="javascript:void(0);"
+                   th:data-uri="@{|/mjanswer/mjRecommend/${mjanswer.mjSeq}|}"
+                   class="recommend btn btn-sm btn-outline-secondary">추천</a>
+
+                <span class="badge rounded-pill bg-success"
+                      th:text="${#lists.size(mjanswer.mjAnsRecommend)}"></span>
+
+
+                <!--답변-->
+                <form th:action="@{|/mjanswer/create/${mjboard.mjSeq}|}" method="post" th:object="${mjanswerForm}">
+                    <!--<div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+                        <div th:each="err:${#fields.allErrors()}" th:text="${err}"></div>
+                    </div>-->
+                    <textarea class="form-control" name="mjAnsContent" id="mjAnsContent" rows="15"></textarea>
+                    <input class="btn btn-primary my-2" type="submit" value="댓글">
+                    <a th:href="@{/mjboard/list}" class="btn btn-danger">맛집 게시판</a>
+                </form>
 
                 <!--하단 줄 (필요에 따라 사용)-->
                 <hr style="margin-top: 50px">
-                <!--pagination-->
-                <div class="d-flex justify-content-center">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true"> < </span>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true"> > </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
             </section>
         </div>
+        <script layout:fragment="script" type="text/javascript">
+            const delete_elements = document.getElementsByClassName("delete");
+            Array.from(delete_elements).forEach(function(element){
+                element.addEventListener('click', function(){
+                    if(confirm("정말로 삭제하시겠습니까?")){
+                        location.href=this.dataset.uri;
+                    };
+
+                });
+
+            });
+
+
+            const recommend_element = document.getElementsByClassName("mjRecommend")
+
+            Array.from(recommend_element).forEach(function(element){
+                element.addEventListener("click" , function(){
+                    if(confirm("추천하시겠습니까?")){
+                        location.href=this.dataset.uri;
+                    };
+
+
+                });
+
+
+            });
+
+
+
+
+
+        </script>
 
     </main>
 </html>

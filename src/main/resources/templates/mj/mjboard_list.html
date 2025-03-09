@@ -39,8 +39,8 @@
                         </tr>
                         <tbody>
 
-                     <tr th:each="mjboard , loop : ${pageing}">
-                         <td th:text="${pageing.getTotalElements -(pageing.number * pageing.size)-loop.index}"></td>
+                     <tr th:each="mjboard , loop : ${paging}">
+                         <td th:text="${paging.getTotalElements -(paging.number * paging.size)-loop.index}"></td>
                          <td><a th:href="@{|/mjboard/detail/${mjboard.mjSeq}|}"
                             th:text="${mjboard.mjTitle}"></a>
                        <span class="text-danger small ms-2" th:if="${#lists.size(mjboard.mjAanswerList)>0}"
@@ -59,7 +59,7 @@
                     <!-- **내용** -->
                 </div>
 
-                <a th:href="@{/mjboard/mjform}" class="btn btn-danger">맛집 등록</a>
+                <a th:href="@{/mjboard/create}" class="btn btn-danger">맛집 등록</a>
 
                 <!--하단 줄 (필요에 따라 사용)-->
                 <hr style="margin-top: 50px">
