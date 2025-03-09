@@ -28,6 +28,11 @@
                 <div class="card">
                     <div class="card-body">
                         <div id="map" style="width: 100%; min-height: 500px; flex-grow: 1;"></div>
+                        <div style="background-color: #E8DCD4; width: 100%;" class="py-2 ">
+                            <ul class="d-flex mb-0 flex-wrap" id="rootSaveList">
+                                <li th:each="rootList : ${rootList}" th:text="${rootList.rootListIndex} + '. ' + ${rootList.rootListTitle} + '&nbsp;&nbsp;' "></li>
+                            </ul>
+                        </div>
                         <div class="d-flex justify-content-end mt-2">
                             <button type="button" class="btn btn-sm btn-outline-secondary me-2">수정</button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">삭제</button>
@@ -125,7 +130,7 @@
                     position: new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude),
                     map: map,
                     icon: {
-                        content: `<img width="24" height="24" src="https://img.icons8.com/tiny-color/32/map-pin.png" alt="map-pin"/>`,
+                        content: `<img width="30" height="30" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
                         anchor: new naver.maps.Point(14, 20)
                     }
                 });

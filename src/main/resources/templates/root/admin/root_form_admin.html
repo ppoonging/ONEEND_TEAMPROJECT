@@ -186,45 +186,6 @@
                 });
             });
 
-            // const clickAddress = document.getElementsByName('click-address');
-            //
-            // Array.from(clickAddress).forEach((data)=>{
-            //     data.addEventListener('click', function (){
-            //
-            //         const lat = parseFloat(data.dataset.lat);
-            //         const lng = parseFloat(data.dataset.lng);
-            //
-            //         console.log(lat);
-            //         console.log(lng);
-            //
-            //         // 체크 시 map 새로 초기화
-            //         map.setCenter(new naver.maps.LatLng(lat, lng));
-            //
-            //         if (marker) {
-            //             marker.setMap(null);
-            //         }
-            //
-            //         // 체크 시 해당 좌표 마커
-            //         marker = new naver.maps.Marker({
-            //             position: new naver.maps.LatLng(lat, lng),
-            //             map: map,
-            //             // icon: {
-            //             //     url: '/images/root/pin.png', // 50 68
-            //             //     size: new naver.maps.Size(25, 34),
-            //             //     scaledSize: new naver.maps.Size(25, 34),
-            //             //     origin: new naver.maps.Point(0, 0),
-            //             //     anchor: new naver.maps.Point(12, 34)
-            //             // },
-            //             icon: {
-            //                 content: `<img width="25" height="25" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="standing-man-skin-type-1"/>`,
-            //                 anchor: new naver.maps.Point(15, 18)
-            //             },
-            //             animation: naver.maps.Animation.BOUNCE
-            //         });
-            //     })
-            // })
-
-
             // 체크박스 이벤트 처리
             document.querySelectorAll('input[name="checkbox"]').forEach((checkbox, index) => {
                 checkbox.addEventListener("change", function () {
@@ -288,7 +249,7 @@
                 sessionChkData.forEach((item) => {
                     const li = document.createElement("li");
 
-                    const cleanTitle = item.title.replace(/<b>/g, '').replace(/<\/b>/g, '');
+                    const cleanTitle = item.title;
                     li.textContent = cleanTitle;
                     li.classList.add("root-list-style");
 
@@ -299,7 +260,7 @@
                     icon.classList.add("bi", "bi-x");
 
                     removeBtn.appendChild(icon);
-                    removeBtn.classList.add("root-button-style");
+                    removeBtn.classList.add("root-remove-btn-style");
 
                     removeBtn.addEventListener("click", (event) => {
                         event.stopPropagation(); // 부모 요소(li)의 클릭 이벤트 방지
@@ -344,13 +305,6 @@
                     marker = new naver.maps.Marker({
                         position: new naver.maps.LatLng(lat, lng),
                         map: map,
-                        // icon: {
-                        //     url: '/images/root/pin.png', // 50 68
-                        //     size: new naver.maps.Size(25, 34),
-                        //     scaledSize: new naver.maps.Size(25, 34),
-                        //     origin: new naver.maps.Point(0, 0),
-                        //     anchor: new naver.maps.Point(12, 34)
-                        // },
                         icon: {
                             content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
                             anchor: new naver.maps.Point(10, 40)

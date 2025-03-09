@@ -26,7 +26,7 @@ public class RootController {
 
     @GetMapping("/form")
     public String tour() {
-        return "/main/root/admin/root_form_admin";
+        return "/root/admin/root_form_admin";
     }
 
     @GetMapping("/form/search")
@@ -37,14 +37,14 @@ public class RootController {
             model.addAttribute("searchData", searchData);
             model.addAttribute("query", query);
         }
-        return "/main/root/admin/root_form_admin";
+        return "/root/admin/root_form_admin";
     }
 
     @GetMapping("/list")
     public String list(Model model) {
         List<Root> list = this.rootService.getList();
         model.addAttribute("list", list);
-        return "/main/root/admin/root_list_admin";
+        return "/root/admin/root_list_admin";
     }
 
 //    @GetMapping("/form/save")
@@ -80,9 +80,12 @@ public class RootController {
     public String detail(@PathVariable("rootSeq") Integer rootSeq, Model model) {
 
         Root root = this.rootService.get(rootSeq);
+        List<RootList> rootList = this.rootService.getRootList(rootSeq);
+
+        model.addAttribute("rootList", rootList);
         model.addAttribute("root", root);
 
-        return "/main/root/admin/root_detail_admin";
+        return "/root/admin/root_detail_admin";
     }
 
 }

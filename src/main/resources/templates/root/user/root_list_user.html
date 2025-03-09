@@ -1,0 +1,107 @@
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+    <!--상단-->
+    <div style="background-color: #F4E9E3">
+        <div class="container py-2">
+
+            <!--수정해야할 부분-->
+            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">소근소근 > 한식루트 인증</span>
+
+        </div>
+    </div>
+    <div class="container mt-5">
+        <div class="text-center">
+            <img th:src="@{/images/total/bab.png}" width="5%">
+        </div>
+
+        <!--수정해야할 부분-->
+        <!--title-->
+        <h2 class="text-center py-2">한식루트 인증</h2>
+        <!--content-->
+        <section class="py-5">
+            <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+            <div class="col">
+                <div class="input-group mb-3 w-25">
+                    <label class="input-group-text" for="search-chkCategory">루트</label>
+                    <select class="form-select" id="search-chkCategory" name="search-chkCategory" th:value="${chkCategory}">
+                        <option selected>전체</option>
+                        <option th:each="root : ${root}" th:selected="${chkCategory == root.rootTitle}" th:text="${root.rootTitle}"></option>
+                    </select>
+                </div>
+
+                <table class="w-100">
+                    <thead style="height: 45px;">
+                        <tr class="text-center" style="background-color: #D5C9C1;">
+                            <th scope="col" style="width: 10%;">No</th>
+                            <th scope="col" style="width: 20%;" class="text-start">루트</th>
+                            <th scope="col" style="width: 55%;" class="text-start">제목</th>
+                            <th scope="col" style="width: 15%;">등록일</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <tr th:each="rootAuth : ${rootAuthPage}" class="text-center border-bottom" style="height: 45px;">
+                            <td th:text="${rootAuth.rootAuthSeq}"></td>
+                            <td th:text="${rootAuth.root.getRootTitle()}" class="text-start"></td>
+                            <td class="text-start"><a th:href="@{|/root/detail/${rootAuth.rootAuthSeq}|}" th:text="${rootAuth.rootAuthTitle}"></a></td>
+                            <td th:text="${#temporals.format(rootAuth.rootAuthDate,'YYYY-MM-dd HH:mm')} "></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--하단 줄 (필요에 따라 사용)-->
+            <hr style="margin-top: 50px">
+            <!--pagination-->
+                <div class="w-100 d-flex justify-content-end" >
+                    <ul class="pagination d-flex justify-content-center align-items-center flex-grow-1 me-auto" th:if="${rootAuthPage.totalPages > 1}">
+                        <li class="page-item" th:classappend="${!rootAuthPage.hasPrevious} ? 'disabled'">
+                            <a class="page-link" href="javascript:void(0);" th:data-page="${rootAuthPage.number -1}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item" th:each="page : ${#numbers.sequence(0, rootAuthPage.totalPages -1)}"
+                            th:if="${page >= rootAuthPage.number -2 and page <= rootAuthPage.number +2}"
+                            th:classappend="${page==rootAuthPage.number} ? 'active'">
+                            <a class="page-link" href="javascript:void(0);" th:data-page="${page}" th:text="${page +1}"></a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${!rootAuthPage.hasNext} ? 'disabled'">
+                            <a class="page-link" href="javascript:void(0);" th:data-page="${rootAuthPage.number +1}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <a th:href="@{/root/form}" class="btn root-btn-style mb-3">글 작성</a>
+                </div>
+                <form th:action="@{/root/list}" method="get" id="search-form">
+                    <input type="hidden" id="page" name="page" th:value="${rootAuthPage.number}">
+                    <input type="hidden" id="chkCategory" name="chkCategory" th:value="${chkCategory}">
+                </form>
+
+        </section>
+    </div>
+    <script layout:fragment="script" type="text/javascript">
+
+        // 루트 카테고리 선택 시
+        document.getElementById('search-chkCategory').addEventListener('change', function () {
+            document.getElementById("chkCategory").value = this.value;
+            document.getElementById("page").value = 0;
+            document.getElementById('search-form').submit();
+        });
+
+        // 페이지
+        const page_element = document.getElementsByClassName('page-link');
+
+        Array.from(page_element).forEach(function (el){
+            el.addEventListener("click", function (){
+                document.getElementById("page").value = this.dataset.page;
+                document.getElementById('search-form').submit();
+            })
+        })
+
+
+
+    </script>
+
+</main>
+</html>

@@ -242,7 +242,8 @@
                 const lat = parseFloat(data.dataset.lat);
                 const lng = parseFloat(data.dataset.lng);
 
-                map.setCenter(new naver.maps.LatLng(lat, lng));
+                const position = new naver.maps.LatLng(lat, lng);
+
                 if (marker) marker.setMap(null);
 
                 marker = new naver.maps.Marker({
@@ -254,6 +255,14 @@
                     },
                     animation: naver.maps.Animation.BOUNCE
                 });
+
+                map.setCenter(position);
+                map.setZoom(17);
+
+                setTimeout(() => {
+                    map.setZoom(15); // 2초 후 기본 줌으로 다시 조정
+                }, 2000);
+
             });
         });
 
@@ -319,7 +328,7 @@
                 icon.classList.add("bi", "bi-x");
 
                 removeBtn.appendChild(icon);
-                removeBtn.classList.add("root-button-style");
+                removeBtn.classList.add("root-remove-btn-style");
 
                 removeBtn.addEventListener("click", (event) => {
                     event.stopPropagation(); // 부모 요소(li)의 클릭 이벤트 방지

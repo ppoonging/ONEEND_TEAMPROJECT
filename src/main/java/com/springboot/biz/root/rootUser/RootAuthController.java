@@ -10,12 +10,10 @@ import com.springboot.biz.root.rootAdmin.RootService;
 import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -54,12 +52,29 @@ public class RootAuthController {
             model.addAttribute("selRootList", selRoot.getRootList());
         }
 
-        return "/main/root/user/root_form_user";
+        return "/root/user/root_form_user";
     }
 
     @GetMapping("/list")
-    public String list() {
-        return "/main/root/user/root_list_user";
+    public String list(Model model, @RequestParam(name = "page", defaultValue = "0") Integer page, @RequestParam(required = false) String chkCategory) {
+
+        Page<RootAuth> rootAuthPage;
+
+        System.out.println(chkCategory);
+
+        if (chkCategory == null || chkCategory.equals("전체")) {
+            rootAuthPage = this.rootAuthService.getList(page);
+        } else {
+            rootAuthPage = this.rootAuthService.getListCategory(page, chkCategory);
+        }
+
+        List<Root> root = this.rootService.getList();
+
+        model.addAttribute("root", root);
+        model.addAttribute("rootAuthPage", rootAuthPage);
+        model.addAttribute("chkCategory", chkCategory); // 선택한 값 유지
+
+        return "/root/user/root_list_user";
     }
 
     @PostMapping("/form/save")
@@ -87,10 +102,17 @@ public class RootAuthController {
 
         Root root = rootService.get(rootSeq);
 
-
-
         rootAuthService.save(file, title, content, rootList, user, root);
 
         return "redirect:/root/list";
+    }
+
+    @GetMapping("/detail/{rootAuthSeq}")
+    public String get(@PathVariable("rootAuthSeq") Long rootAuthSeq, Model model) {
+
+        RootAuth rootAuth = this.rootAuthService.get(rootAuthSeq);
+        model.addAttribute("rootAuth", rootAuth);
+
+        return "/root/user/root_detail_user";
     }
 }

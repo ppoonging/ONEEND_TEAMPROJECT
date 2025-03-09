@@ -1,0 +1,55 @@
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+    <!--상단-->
+    <div style="background-color: #F4E9E3">
+        <div class="container py-2">
+
+            <!--수정해야할 부분-->
+            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">소근소근 > 한식루트 인증</span>
+
+        </div>
+    </div>
+    <div class="container mt-5">
+        <div class="text-center">
+            <img th:src="@{/images/total/bab.png}" width="5%">
+        </div>
+
+        <!--수정해야할 부분-->
+        <!--title-->
+        <h2 class="text-center py-2">한식루트 보기</h2>
+        <!--content-->
+        <section class="py-5">
+
+            <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+            <div>
+                <!-- **내용** -->
+                <h3 th:text="${rootAuth.rootAuthTitle}"></h3>
+                <input type="hidden" id="select-value" th:value="${rootAuth.rootAuthSeq}">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="map" style="width: 100%; min-height: 500px; flex-grow: 1;"></div>
+                        <div class="d-flex justify-content-end mt-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary me-2">수정</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">삭제</button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+                <input type="button" id="map-button" class="btn btn-outline-secondary me-2" value="루트 확인">
+
+
+                <button type="button" class="btn btn-outline-secondary"><a th:href="@{/root/register/list}" style="text-decoration: none; color: #6c757d">목록으로</a></button>
+            </div>
+        </section>
+    </div>
+
+ <script th:inline="javascript" layout:fragment="script">
+
+
+</script>
+
+</main>
+</html>

@@ -30,7 +30,7 @@ public class RootAuth {
     @Column(columnDefinition = "TEXT")
     private String rootAuthContent;
 
-    @OneToOne
+    @ManyToOne
     private Root root;
 
     private LocalDateTime rootAuthDate;

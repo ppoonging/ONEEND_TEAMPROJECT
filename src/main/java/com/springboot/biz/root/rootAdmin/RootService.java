@@ -67,7 +67,7 @@ public class RootService {
             JsonNode itemsNode = rootNode.path("items");
             for (JsonNode itemNode : itemsNode) {
                 Map<String, String> restaurant = new HashMap<>();
-                restaurant.put("title", itemNode.path("title").asText()); // 장소 이름
+                restaurant.put("title", itemNode.path("title").asText().replaceAll("<b>|</b>", "").replaceAll("&amp;", "&")); // 장소 이름
                 restaurant.put("address", itemNode.path("address").asText());
                 restaurant.put("roadAddress", itemNode.path("roadAddress").asText());// 장소 주소
                 restaurant.put("link", itemNode.path("link").asText());// 장소 상세 정보 url
