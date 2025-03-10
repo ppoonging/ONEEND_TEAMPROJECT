@@ -25,7 +25,7 @@
 .custom-close-btn {
     cursor: pointer;
     font-size: 24px;
-    color: #333;
+    color: #ffffff;
 }
 /* 배경을 흐릿하게 만들기 위한 오버레이 */
 .modal-overlay {
@@ -44,3 +44,16 @@
 .modal-open .modal-overlay {
     display: block;
 }
+.custom-btn123 {
+    font-size: 15px;
+    background-color: #b5a89e;
+    border: 2px solid #b5a89e;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.custom-btn123:hover {
+    background-color: #865136; /* 조금 더 진하게 */
+    border-color: #865136;
+}
+

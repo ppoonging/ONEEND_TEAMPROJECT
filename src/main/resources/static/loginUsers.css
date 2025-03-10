@@ -165,7 +165,7 @@ h2 {
 .btn {
     width: 60%;
     padding: 10px;
-    background-color: #6c757d; /* 팥죽색 */
+    background-color: #D5C9C1; /* 팥죽색 */
     border: none;
     border-radius: 5px;
     color: white;
@@ -175,7 +175,7 @@ h2 {
 }
 
 .btn:hover {
-    background-color: #5A1F00; /* 조금 더 어두운 팥죽색 */
+    background-color: #D5C9C1; /* 조금 더 어두운 팥죽색 */
 }
 
 /* 결과 메시지 */
@@ -207,3 +207,17 @@ h2 {
 .link-menu a:hover {
     text-decoration: underline;
 }
+
+.custom-btn123 {
+    font-size: 13px;
+    background-color: #D5C9C1;
+    border: 1px solid #D5C9C1;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.custom-btn123:hover {
+    background-color: #b5a89e; /* 조금 더 진하게 */
+    border-color: #b5a89e;
+}
+

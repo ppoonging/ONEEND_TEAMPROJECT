@@ -22,7 +22,6 @@
                 <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
 
 
-
                 <!-- 일반 로그인 -->
                 <form th:action="@{/users/login}" method="post">
 
@@ -40,22 +39,22 @@
                     </head>
                     <body>
 
-                        <label for="username" class="form-label">
-                        <input class="input" type="text" name="username" id="username" placeholder="          를 입력하세요" required>
-                            <span>아이디</span>
-                        </label>
+                    <label for="username" class="form-label">
+                        <input class="input" type="text" name="username" id="username" placeholder="          를 입력하세요"
+                               required>
+                        <span>아이디</span>
+                    </label>
 
 
-                        <label for="password" class="form-label">
+                    <label for="password" class="form-label">
                         <input class="input" type="text" name="password" id="password" placeholder="             를 입력하세요" required>
-                            <span>비밀번호</span>
-                        </label>
+                        <span>비밀번호</span>
+                    </label>
 
-                        <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn btn-outline-secondary " style="font-size: 13px;">
-                                로그인
-                            </button>
-                        </div>
+
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn custom-btn123">로그인</button>
+                    </div>
                 </form>
 
                 <!-- 소셜 로그인 -->
@@ -72,7 +71,7 @@
                         <img src="/images/apple_logo.png" alt="애플" width="20" class="me-2"> 로그인
                     </a>
                 </div>
-     <!--아이디 칮기 비밀번호 찾기 회원가입하기-->
+                <!--아이디 칮기 비밀번호 찾기 회원가입하기-->
 
                 <html lang="ko">
                 <head>
@@ -85,25 +84,24 @@
 
                 <div class="container-1">
 
-                <div class="link-menu ">
+                    <div class="link-menu ">
 
-                    <a href="/users/signup">회원가입</a>
+                        <a href="/users/signup">회원가입</a>
 
-                    <span class="divider">|</span>
+                        <span class="divider">|</span>
 
-                    <a href="/users/findLoginId">아이디*비밀번호 찾기</a>
+                        <a href="/users/findLoginId">아이디*비밀번호 찾기</a>
 
+                    </div>
                 </div>
-
-                </div>
-
-
                 </body>
+
                 </html>
             </div>
 
-                <!--하단 줄 (필요에 따라 사용)-->
-                <hr style="margin-top: 50px">
+            <!--하단 줄 (필요에 따라 사용)-->
+            <hr style="margin-top: 50px">
+
 
         </section>
     </div>
@@ -112,3 +110,22 @@
 </main>
 </html>
 
+<link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
+
+<script>
+    const emailInput = document.getElementById("username");
+
+    emailInput.addEventListener("invalid", function (event) {
+        event.target.setCustomValidity('아이디를 입력해주세요!');
+    });
+
+    emailInput.addEventListener("input", function (event) {
+        event.target.setCustomValidity(''); // 입력하면 다시 초기화
+    });
+    const passwordInput = document.getElementById("password");
+
+    passwordInput.addEventListener("invalid", function (event) {
+        event.target.setCustomValidity('비밀번호를 입력해주세요!');
+    });
+
+</script>

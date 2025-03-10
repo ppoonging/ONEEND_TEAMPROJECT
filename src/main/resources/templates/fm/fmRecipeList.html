@@ -6,7 +6,7 @@
         <div class="container py-2">
 
             <!--수정해야할 부분-->
-            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">맛광 커뮤니티 > 자유게시판</span>
+            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">한끝 커뮤니티 >정석 레시피</span>
 
         </div>
     </div>
@@ -17,18 +17,19 @@
 
         <!--수정해야할 부분-->
         <!--title-->
-        <h2 class="text-center py-2">자유게시판</h2>
+        <h2 class="text-center py-2">정석 레시피</h2>
         <!--content-->
         <section class="py-5">
 
             <!-- 카테고리 필터 버튼 -->
-            <div class="d-flex justify-content-center gap-2 my-3">
-                <a th:href="@{/fm/recipe(category='')}" class="btn btn-outline-primary">전체</a>
-                <a th:href="@{/fm/recipe(category='구이')}" class="btn btn-outline-primary">구이</a>
-                <a th:href="@{/fm/recipe(category='밥')}" class="btn btn-outline-primary">밥</a>
-                <a th:href="@{/fm/recipe(category='국')}" class="btn btn-outline-primary">국</a>
-                <a th:href="@{/fm/recipe(category='김치')}" class="btn btn-outline-primary">김치</a>
+            <div class="category5-menu">
+                <a th:href="@{/fm/recipe(category='')}" class="category5-btn">전체</a>
+                <a th:href="@{/fm/recipe(category='구이')}" class="category5-btn">구이</a>
+                <a th:href="@{/fm/recipe(category='밥')}" class="category5-btn">밥</a>
+                <a th:href="@{/fm/recipe(category='국')}" class="category5-btn">국</a>
+                <a th:href="@{/fm/recipe(category='김치')}" class="category5-btn">김치</a>
             </div>
+
 
 
             <!-- 카드 리스트 (클릭 시 모달 표시) -->
@@ -59,7 +60,7 @@
                             <p><strong>등록일:</strong> <span th:text="${#temporals.format(fm.fmrecipeRegDate,'yyyy-MM-dd HH:mm')}"></span></p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary custom-close-btn" data-modal-close>닫기</button>
+                            <button type="button" class="btn custom-btn123 custom-close-btn" data-modal-close>닫기</button>
                         </div>
                     </div>
                 </div>
@@ -109,7 +110,7 @@
             <hr style="margin-top: 50px">
             <!--pagination-->
             <nav aria-label="Page navigation">
-                <ul class="pagination">
+                <ul class="pagination d-flex justify-content-center align-items-center flex-grow-1 me-auto ">
                     <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
                         <a class="page-link" th:href="@{|?page=${paging.number-1}|}" aria-label="Previous">〈</a>
                     </li>

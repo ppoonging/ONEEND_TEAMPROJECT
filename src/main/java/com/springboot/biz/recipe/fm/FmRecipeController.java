@@ -45,16 +45,14 @@ public class FmRecipeController {
 
         @PostMapping("/create")
         @PreAuthorize("isAuthenticated()")  // 로그인한 사용자만 접근 가능 (OAuth2 포함)
-        public String questionCreate(Principal principal,FmRecipe fmRecipe,@RequestParam("file") MultipartFile file) throws IOException {
+        public String questionCreate(Principal principal,FmRecipe fmRecipe
+                /*,@RequestParam("file") MultipartFile file*/) throws IOException {
 
             HUser mgUser = this.mgUserSerevice.getUser(principal.getName());
 
             this.fmRecipeService.createRecipe(fmRecipe.getFmrecipeCategory(),
                     fmRecipe.getFmrecipeTitle(),fmRecipe.getFmrecipeReady(),fmRecipe.getFmrecipeIngre()
-                    , fmRecipe.getFmrecipeContent(), file);
+                    , fmRecipe.getFmrecipeContent());
             return "redirect:/fm/fmRecipeList";
         }
-
-
-
     }

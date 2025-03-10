@@ -269,3 +269,60 @@ a {
     color: #ccc; /* 구분선 색상 */
     margin: 0 10px;
 }
+
+.pagination .page-item .page-link {
+    color: #888;
+    border: 1px solid #fff;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+
+.pagination .page-item.active .page-link {
+    background-color: transparent;
+    color: #5C4033;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #eee;
+    background-color: transparent;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #D5C9C1;
+    color: #5C4033;
+    border-color: transparent;
+}
+
+.category-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* 버튼 간격 */
+    margin: 20px 0; /* 위아래 여백 */
+}
+
+
+.category5-btn {
+    text-decoration: none;
+    color: #777; /* 기본 색상 */
+    font-size: 18px;
+    font-weight: 500;
+    padding: 10px 15px;
+    border-radius: 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+.category5-btn:hover {
+    color: #E87D3E; /* 오렌지색 강조 */
+}
+
+.category5-btn.active {
+    color: #E87D3E;
+    font-weight: 700;
+    border: 2px solid #E87D3E;
+    padding: 8px 15px;
+    border-radius: 20px;
+}
+
+

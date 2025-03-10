@@ -15,7 +15,7 @@
             <label for="email">이메일</label>
             <input type="email" id="email" name="email" required>
         </div>
-        <button type="submit" class="btn">아이디 찾기</button>
+        <button type="submit" class="btn custom-btn123">아이디 찾기</button>
     </form>
 
     <div th:if="${user}" class="message success">
@@ -34,9 +34,9 @@
     <form th:action="@{/findPassword}" method="post">
         <div class="form-group">
             <label for="password-email">이메일 주소</label>
-            <input type="email" id="password-email" name="email" required th:value="@{Huser.email}">
+            <input type="email" id="password-email" name="email" required >
         </div>
-        <button type="submit" class="btn">이메일 전송</button>
+        <button type="submit" class="btn custom-btn123">이메일 전송</button>
     </form>
 
     <div class="message success">
@@ -56,5 +56,7 @@
 <!-- 하단 링크 -->
 
 <link rel="stylesheet" type="text/css" th:href="@{/loginUsers.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
+
 </body>
 </html>

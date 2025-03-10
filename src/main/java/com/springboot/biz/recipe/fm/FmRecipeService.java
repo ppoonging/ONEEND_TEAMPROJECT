@@ -26,19 +26,19 @@ public class FmRecipeService {
 
     //정형화된 레시피 작성은 admin만 할 수있게 만들아야함
     public void createRecipe(String fmrecipeCategory, String fmrecipeTitle,String fmrecipeIngre
-            , String fmrecipeReady,String fmrecipeContent,
-                              MultipartFile file) throws IOException {
+            , String fmrecipeReady,String fmrecipeContent  /*,
+                             MultipartFile file*/) throws IOException {
 
         /*ㄱ경로*/
-        String imgPath = System.getProperty("user.dir")+"/src/main/resources/static/files";
+      /*  String imgPath = System.getProperty("user.dir")+"/src/main/resources/static/files";
 
         UUID uuid = UUID.randomUUID();
-        /*이미지 이름*/
+        *//*이미지 이름*//*
         String fmrecipeFileName = uuid + "_" + file.getOriginalFilename();
 
         File saveFile = new File(imgPath,fmrecipeFileName);
         file.transferTo(saveFile);
-
+*/
 
         FmRecipe fR = new FmRecipe();
         fR.setFmrecipeCategory(fmrecipeCategory);
@@ -46,8 +46,8 @@ public class FmRecipeService {
         fR.setFmrecipeIngre(fmrecipeIngre);
         fR.setFmrecipeReady(fmrecipeReady);
         fR.setFmrecipeContent(fmrecipeContent);
-        fR.setFmrecipeFilePath("/files/" + fmrecipeFileName );
-        fR.setFmrecipeFileName(fmrecipeFileName);
+        /*fR.setFmrecipeFilePath("/files/" + fmrecipeFileName );
+        fR.setFmrecipeFileName(fmrecipeFileName);*/
         fR.setFmrecipeRegDate(LocalDateTime.now());
         fmRecipeRepository.save(fR);
     }
