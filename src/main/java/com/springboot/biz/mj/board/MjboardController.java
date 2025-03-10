@@ -111,11 +111,18 @@ public class MjboardController {
     }
 
     // 추천 기능
+    // 추천 기능 (로그인 필요)
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/mjRecommend/{mjSeq}")
-    public String mjRecommend(@PathVariable("mjSeq") Integer mjSeq) {
+    public String mjRecommend(@PathVariable("mjSeq") Integer mjSeq, Principal principal) {
         Mjboard mjboard = this.mjboardService.getMjboard(mjSeq);
+        HUser user = this.hUserSerevice.getUser(principal.getName());
         this.mjboardService.mjRecommend(mjboard);
         return String.format("redirect:/mjboard/detail/%s", mjSeq);
+    }
+
+    @GetMapping("test")
+    public String test() {
+        return "mj/test";
     }
 }

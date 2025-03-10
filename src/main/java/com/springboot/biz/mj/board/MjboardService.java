@@ -91,10 +91,16 @@ public class MjboardService {
     }
 
     // 추천
+    // 추천 기능
     public void mjRecommend(Mjboard mjboard) {
-        mjboard.setMjRecommend(mjboard.getMjRecommend() + 1);
-        mjboardRepository.save(mjboard);
+        if (mjboard.getMjRecommend() == null) { // null 일 때 0으로 초기화
+            mjboard.setMjRecommend(0);
+        }
+        mjboard.setMjRecommend(mjboard.getMjRecommend() + 1); // 추천 수 증가
+        this.mjboardRepository.save(mjboard);
     }
+
+
 }
 
 

@@ -54,10 +54,14 @@
                 <!--mjRecommend-->
                 <div class="my-3">
                     <a href="javascript:void(0);"
-                       th:data-uri="@{|/mjboard/delete/${mjboard.mjSeq}|}"
-                       class="delete btn btn-sm btn-outline-secondary"
-                       th:text="'삭제'"></a>
-                    <!--<span class="badge rounded-pill bg-success" th:text="${#lists.size(mjboard.mjRecommend)}"></span>-->
+                       th:data-uri="@{|/mjboard/mjRecommend/${mjboard.mjSeq}|}"
+                       class="mjRecommend btn btn-sm btn-outline-secondary"
+                       th:text="'추천'"></a>
+
+                    <!-- 추천 수 표시 -->
+                    <span class="badge rounded-pill bg-success"
+                          th:text="${mjboard.mjRecommend}"></span>
+
                 </div>
 
 
