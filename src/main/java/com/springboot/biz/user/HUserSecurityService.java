@@ -22,7 +22,7 @@ public class HUserSecurityService implements UserDetailsService {
     private final HUserRepository userRepository;
     //UserDetailssms는 가장 큰 씨큐리티
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<HUser> _hUser = this.userRepository.findByUsername(username);//_안 넣어도 됨
+        Optional<HUser> _hUser = this.userRepository.findByUsernameAndActive(username, true);//_안 넣어도 됨
 
         if (_hUser.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다");

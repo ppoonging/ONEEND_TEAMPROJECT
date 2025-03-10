@@ -4,7 +4,7 @@
     <div style="background-color: #F4E9E3">
         <div class="container py-2">
             <!--수정해야할 부분-->
-            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">고객센터 > 공지사항</span>
+            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">마이페이지 > 회원정보</span>
         </div>
     </div>
     <div class="container mt-5">
@@ -14,11 +14,11 @@
 
         <!--수정해야할 부분-->
         <!--title-->
-        <h2 class="text-center py-2">공지사항</h2>
+        <h2 class="text-center py-2">마이페이지</h2>
         <!--content-->
         <section class="py-5">
 
-            <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애야 할거임) ***-->
+
             <!-- **내용** -->
 
             <html lang="ko">
@@ -140,26 +140,48 @@
                 <div class="flex-container">
                     <!-- Left column for phone and boyfriend -->
                     <div class="left-column">
-                        <div class="profile-card">
+
                             <table class="table">
                                 <tr class="table-white left-align">
-                                    <td><strong>회원정보</strong></td>
+                                    <td>
+                                        <a th:href="@{/users/myPage}"
+                                           style="margin-left: 10px; background-color: #F4E9E3; color: black; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-size: 14px;">
+                                            회원정보
+                                        </a>
+                                    </td>
                                 </tr>
                                 <tr class="table-white left-align">
-                                    <td><strong>내 글 목록</strong></td>
+                                    <td>
+                                        <a th:href="@{|/users/delete/${hUser.username}|}"
+                                           onclick="return confirm('정말로 탈퇴하시겠습니까? 탈퇴 시 복구가 불가능합니다.');"
+                                           style="margin-left: 10px; background-color: #F4E9E3; color: black; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-size: 14px;">
+                                            회원탈퇴
+                                        </a>
+                                    </td>
                                 </tr>
                                 <tr class="table-white left-align">
-                                    <td><strong>회원탈퇴</strong></td>
+                                    <td>
+                                        <a th:href="@{|/users/modify/${hUser.username}|}"
+                                           style="margin-left: 10px; background-color: #F4E9E3; color: black; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-size: 14px;">
+                                            정보수정
+                                        </a>
+                                    </td>
                                 </tr>
+                                <tr class="table-white left-align">
+                                    <td>
+                                         <a  style="margin-left: 10px; background-color: #F4E9E3; color: black; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-size: 14px;">
+                                             내 글 목록
+                                         </a>
+                                    </td>
+                                </tr>
+
                             </table>
-                        </div>
+
                     </div>
 
                     <!-- Right column for profile image and other info -->
                     <div class="right-column">
-                        <div class="text-center">
-                            <img src="https://via.placeholder.com/150" alt="프로필 이미지" class="circle-image">
-                        </div>
+
                         <div class="profile-card">
                             <table class="table">
                                 <tr class="table-white">
@@ -195,15 +217,7 @@
                 </div>
             </div>
 
-            <a th:href="@{|/users/modify/${hUser.username}|}"
-               class="btn btn-lg btn-outline-secondary"
-               style="font-family: 'MapoGoldenPier', serif; font-size: 16px;
-          background-color: #F4E9E3; color: #000;
-          border-color: #F4E9E3;
-          position: fixed; bottom: 20px; right: 20px;
-          padding: 10px 20px; border-radius: 5px; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"
-               th:text="정보수정">
-            </a>
+
 
 
             <!-- Bootstrap JS and dependencies -->

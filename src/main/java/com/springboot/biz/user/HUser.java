@@ -46,4 +46,6 @@ public class HUser {
 
     private String role;  //유저권한
 
+    private boolean active = true;
+
 }

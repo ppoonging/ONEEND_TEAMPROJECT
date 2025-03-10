@@ -6,6 +6,7 @@ import com.springboot.biz.DataNotFoundException;
 import com.springboot.biz.notion.MgNotion;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +17,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HUserSerevice {
     private final HUserRepository userRepository;
-   /* private final PasswordEncoder passwordEncoder;*/
+    private final PasswordEncoder passwordEncoder;
 
 
     public HUser create(String username, String password, String nickname, String email,
                         String phoneNumber,String birthday, String address, String addressDetail,String zipCode){
         HUser hUser= new HUser();
         hUser.setUsername(username);
-      /*  hUser.setPassword(passwordEncoder.encode(password));*/
-        hUser.setPassword(password);
+        hUser.setPassword(passwordEncoder.encode(password));
         hUser.setNickname(nickname);
         hUser.setEmail(email);
         hUser.setPhoneNumber(phoneNumber);
@@ -38,13 +38,11 @@ public class HUserSerevice {
     }
 
     public HUser getUser(String username){
-        Optional<HUser> hUser = this.userRepository.findByUsername(username);
-        if(hUser.isPresent()){
-            return hUser.get();
-        }else{
-            throw new DataNotFoundException("데이터 없음");
-        }
+        return userRepository.findByUsernameAndActive(username, true)
+                .orElseThrow( () -> new UsernameNotFoundException("활성화된 사용자가 아닙니다"));
     }
+
+
     public HUser getUserByEmail(String email){
         return userRepository.findByEmail(email).orElse(null);
     }
@@ -56,6 +54,11 @@ public class HUserSerevice {
         hUser.setPhoneNumber(phoneNumber);
         hUser.setAddress(address);
         this.userRepository.save(hUser);
+    }
+
+    public void delete(HUser hUser) {
+        hUser.setActive(false);
+       this.userRepository.save(hUser);
     }
 
 
