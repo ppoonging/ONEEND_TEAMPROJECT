@@ -43,6 +43,8 @@ public class Mjboard {
     @NonNull
     private Integer mjCnt;  //맛집 조회수
 
+    private String mjthumbnaiurl; //썸네일
+
     private String mjFilePath;  //맛집소개 파일업로드
 
     private String mjFileName;  //맛집소개 파일 이름

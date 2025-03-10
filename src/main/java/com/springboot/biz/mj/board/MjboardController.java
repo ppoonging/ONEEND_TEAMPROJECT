@@ -1,116 +1,121 @@
-package com.springboot.biz.mj.board;
-
+package com.springboot.biz.mj.board;// ✳️ MjboardController.java
 
 import com.springboot.biz.mj.answer.MjAnswerForm;
+import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.security.Principal;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/mjboard")
+@EnableMethodSecurity(prePostEnabled = true)
 public class MjboardController {
-    private  final HUserSerevice hUserSerevice;
+
+    private final HUserSerevice hUserSerevice;
     private final MjboardService mjboardService;
 
-
+    // 게시판 리스트
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(value = "page", defaultValue = "0")int page) {
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
         Page<Mjboard> paging = this.mjboardService.getList(page);
         model.addAttribute("paging", paging);
         return "mj/mjboard_list";
     }
-    //게시글 작성 폼으로 이동
+
+    // 글쓰기 폼 (GET)
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
-    public String mjboardCreate(MjboardForm mjboardForm){
+    public String mjboardCreate(MjboardForm mjboardForm) {
         return "mj/mjboard_form";
     }
 
-    //질문저장
+    // 글쓰기 저장 (POST)
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String mjboaordCreate(@RequestParam(value = "mjTitle")String mjTitle,
-                                 @RequestParam(value = "mjContent")String mjContent,
-                                 @RequestParam(value = "file",required = false)MultipartFile file){
-        try {
-            mjboardService.create(mjTitle, mjContent, file);
-        }catch(IOException e){
-            e.printStackTrace();
-            return  "error"; //파일 업로드 실패 시 오류 페이지로 리디렉션
+    public String mjboardCreate(@Valid MjboardForm mjboardForm,
+                                BindingResult bindingResult,
+                                @RequestParam("file") MultipartFile file,
+                                Principal principal) throws Exception {
+        if (bindingResult.hasErrors()) {
+            return "mj/mjboard_form";
         }
+
+        // 로그인 사용자 정보 가져오기
+        HUser hUser = this.hUserSerevice.getUser(principal.getName());
+        this.mjboardService.create(mjboardForm.getMjTitle(), mjboardForm.getMjContent(), file, hUser);
+
         return "redirect:/mjboard/list";
     }
+
+    // 썸머노트 이미지 업로드
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/uploadImage")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
-        try {
-            // 파일 저장 후 URL 반환
-            String imageUrl = mjboardService.saveFile(file);
-
-            // 썸머노트가 이해할 수 있도록 JSON 응답을 올바르게 수정
-            Map<String, Object> response = new HashMap<>();
-            response.put("url", imageUrl);
-            return ResponseEntity.ok(response);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Collections.singletonMap("error", "이미지 업로드 실패"));
-        }
+    @ResponseBody
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) throws Exception {
+        String imageUrl = this.mjboardService.saveSummernoteImage(file);
+        return ResponseEntity.ok(Collections.singletonMap("url", imageUrl));
     }
 
-
-    //상세 페이지를 요청하면 실행되는 컨트롤 메서드 (상세페이지로 전달하는 역할)
-    @GetMapping("/detail/{mjSeq}") //URL을 매핑( 요청받는 역할)
-    public String detail(Model model, @PathVariable("mjSeq") Integer mjSeq, MjAnswerForm mjAnswerForm){
+    // 상세 페이지
+    @GetMapping("/detail/{mjSeq}")
+    public String detail(Model model, @PathVariable("mjSeq") Integer mjSeq) {
         Mjboard mjboard = this.mjboardService.getMjboard(mjSeq);
         model.addAttribute("mjboard", mjboard);
         return "mj/mjboard_detail";
     }
-    @PostMapping("/modify/{mjSeq}")
-    //@PreAuthorize("isAuthenticated()") 유저 로그인 하면 살리기
-    public String mjboardModify(@Valid MjboardForm mjboardForm, BindingResult bindingResult
-                               /*Principal principal 로그인 하면 살리기*/, @PathVariable("mjSeq")Integer mjSeq){
-        if(bindingResult.hasErrors()){
-            return "mj/mjboard_list";
-        }
-        Mjboard mjboard = this.mjboardService.getMjboard(mjSeq);{
-            //유저 로그인 하면 추가하기.
-        }
-       this.mjboardService.modify(mjboard, mjboardForm.getMjTitle(),mjboardForm.getMjContent());
-        return String.format("redirect:/mjboard/list");
-    }
+
+    // 수정 폼 (GET)
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{mjSeq}")
-    public String mjboardModify(Model model,MjboardForm mjboardForm, @PathVariable("mjSeq")Integer mjSeq){
+    public String mjboardModify(Model model, MjboardForm mjboardForm, @PathVariable("mjSeq") Integer mjSeq) {
         Mjboard mjboard = this.mjboardService.getMjboard(mjSeq);
         model.addAttribute("mjboard", mjboard);
         mjboardForm.setMjTitle(mjboard.getMjTitle());
         mjboardForm.setMjContent(mjboard.getMjContent());
         return "mj/mjboardModify_form";
     }
-    @GetMapping("/delete/{mjSeq}")
-    public String delete(@PathVariable("mjSeq")Integer mjSeq){
-        Mjboard mjboard = this.mjboardService.getMjboard(mjSeq);
 
+    // 게시글 수정 (POST)
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify/{mjSeq}")
+    public String mjboardModify(@Valid MjboardForm mjboardForm, BindingResult bindingResult, @PathVariable("mjSeq") Integer mjSeq) {
+        if (bindingResult.hasErrors()) {
+            return "mj/mjboardModify_form";
+        }
+
+        Mjboard mjboard = this.mjboardService.getMjboard(mjSeq);
+        this.mjboardService.modify(mjboard, mjboardForm.getMjTitle(), mjboardForm.getMjContent());
+        return "redirect:/mjboard/list";
+    }
+
+    // 게시글 삭제
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{mjSeq}")
+    public String delete(@PathVariable("mjSeq") Integer mjSeq) {
+        Mjboard mjboard = this.mjboardService.getMjboard(mjSeq);
         this.mjboardService.delete(mjboard);
         return "redirect:/mjboard/list";
     }
+
+    // 추천 기능
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/mjRecommend/{mjSeq}")
-    public String mjRecommend(@PathVariable("mjSeq") Integer mjSeq){
+    public String mjRecommend(@PathVariable("mjSeq") Integer mjSeq) {
         Mjboard mjboard = this.mjboardService.getMjboard(mjSeq);
         this.mjboardService.mjRecommend(mjboard);
-        return String.format("redirect:/mjboard/detail/%s",mjSeq);
-
+        return String.format("redirect:/mjboard/detail/%s", mjSeq);
     }
 }

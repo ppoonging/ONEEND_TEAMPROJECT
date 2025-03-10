@@ -23,10 +23,13 @@
                 <div class="card my-3">
                     <div class="card-body">
                         <div class="card-text" style="white-space: pre-line" th:utext="${mjboard.mjContent}"></div>
-                        <div th:if="${mjboard.mjFileName != null}">
-                            <img th:src="@{/mjimage/{fileName}(fileName=${mjboard.mjFileName})}" alt="이미지" width="300">
-                        </div>
-
+                        <!--업로드된 파일 있을 때만 이미지 보여주기 -->
+                       <!-- <div th:if="${mjboard.mjFileName != null}">
+                            <img th:src="@{${mjboard.mjFilePath}}"
+                                 class="img-fluid rounded mb-4"
+                                 alt="Uploaded Image"
+                                 style="max-width: 100%; max-height: 400px; object-fit: contain;">
+                        </div>-->
                         <div class="d-flex justify-content-end">
                             <div class="badge bg-light text-dark p-2 text-start">
                                 <div th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd HH:mm')}"></div>
@@ -34,23 +37,26 @@
                         </div>
                     </div>
                 </div>
-                <!--modify-->
-                <div class="my-3">
-                    <div th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd HH:mm')}"></div>
+                <!-- 작성자만 수정/삭제 보이게 -->
+                <div th:if="${#authentication.name == mjboard.userId.username}">
+                    <div class="my-3">
+                        <a th:href="@{|/mjboard/modify/${mjboard.mjSeq}|}"
+                           class="btn btn-sm btn-outline-secondary"
+                           th:text="'수정'"></a>
+                    </div>
 
-                <a th:href="@{|/mjboard/modify/${mjboard.mjSeq}|}"
-                   class="btn btn-sm btn-outline-secondary" th:text="수정"></a>
-        </div>
-                <!--delete-->
-                <a href="javascript:void(0);"
-                   th:data-uri="@{|/mjboard/delete/${mjboard.mjSeq}|}"
-                   class="delete btn btn-sm btn-outline-secondary"
-                   th:text="삭제">
-                </a>
+                    <a href="javascript:void(0);"
+                       th:data-uri="@{|/mjboard/delete/${mjboard.mjSeq}|}"
+                       class="delete btn btn-sm btn-outline-secondary"
+                       th:text="'삭제'"></a>
+                </div>
+
                 <!--mjRecommend-->
                 <div class="my-3">
-                    <a href="javascript:void(0);" th:data-uri="@{|/mjboard/mjRecommend/${mjboard.mjSeq}|}"
-                       class="recommend btn btn-sm btn-outline-secondary">추천</a>
+                    <a href="javascript:void(0);"
+                       th:data-uri="@{|/mjboard/delete/${mjboard.mjSeq}|}"
+                       class="delete btn btn-sm btn-outline-secondary"
+                       th:text="'삭제'"></a>
                     <!--<span class="badge rounded-pill bg-success" th:text="${#lists.size(mjboard.mjRecommend)}"></span>-->
                 </div>
 
