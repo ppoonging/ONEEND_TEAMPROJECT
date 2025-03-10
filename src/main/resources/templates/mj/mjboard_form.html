@@ -2,26 +2,39 @@
 <main layout:fragment="content">
     <!-- Summernote CSS 추가 -->
     <link rel="stylesheet" href="/summernote/summernote-lite.css">
+    <!-- jQuery & Summernote JS 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/summernote/summernote-lite.js"></script>
 
     <div class="container mt-5">
         <section class="py-5">
             <div>
-                <form th:action="@{/mjboard/create}" method="post" th:object="${mjboardForm}">
+                <form th:action="@{/mjboard/create}" method="post" th:object="${mjboardForm}" enctype="multipart/form-data">
                     <div class="alert alert-danger" role="alert"
                          th:if="${#fields.hasAnyErrors()}">
                         <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
                     </div>
 
+                    <!-- 제목 입력 -->
                     <label for="mjTitle" class="form-label">제목</label>
                     <input type="text" name="mjTitle" id="mjTitle" class="form-control">
 
                     <div class="mb-3">
+                        <!-- 내용 입력 -->
                         <label for="mjContent" class="form-label">내용</label>
                         <textarea id="mjContent" name="mjContent" class="form-control"></textarea>
                     </div>
 
+                    <div class="mb-3">
+                        <!-- 파일 업로드 추가 -->
+                        <label for="file" class="form-label">파일 업로드</label>
+                        <input type="file" name="file" id="file" class="form-control">
+                    </div>
+
+                    <!-- 저장 버튼 -->
                     <input type="submit" value="저장" class="btn btn-danger my-3">
                 </form>
+
             </div>
         </section>
     </div>
@@ -44,10 +57,65 @@
                     ['fontsize', ['fontsize']],
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],
-                    ['height', ['height']]
-                ]
+                    ['height', ['height']],
+                    ['insert', ['picture', 'link']]
+                ],
+                callbacks: {
+                    // 이미지 업로드 시 서버로 전송
+                    onImageUpload: function(files) {
+                        uploadImage(files[0]);
+                    }
+                }
+            });
+
+            function uploadImage(file) {
+                let data = new FormData();
+                data.append("file", file);
+
+                $.ajax({
+                    url: "/uploadImage",
+                    type: "POST",
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        $('#mjContent').summernote('insertImage', response.url); // 에디터에 이미지 삽입
+                    },
+                    error: function() {
+                        alert("이미지 업로드 실패!");
+                    }
+                });
+            }
+        });$(document).ready(function() {
+            $('#mjContent').summernote({
+                placeholder: '내용을 입력하세요...',
+                tabsize: 2,
+                height: 300,
+                lang: 'ko-KR',
+                callbacks: {
+                    onImageUpload: function(files) {
+                        let formData = new FormData();
+                        formData.append("file", files[0]);
+
+                        $.ajax({
+                            url: "/uploadImage",  // 서버에서 파일을 처리할 API 경로
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function(response) {
+                                console.log("이미지 업로드 성공:", response.url);
+                                $('#mjContent').summernote('insertImage', response.url);
+                            },
+                            error: function() {
+                                alert("이미지 업로드 실패");
+                            }
+                        });
+                    }
+                }
             });
         });
+
     </script>
 </main>
 </html>

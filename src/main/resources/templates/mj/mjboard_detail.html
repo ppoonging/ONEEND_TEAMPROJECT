@@ -23,6 +23,10 @@
                 <div class="card my-3">
                     <div class="card-body">
                         <div class="card-text" style="white-space: pre-line" th:utext="${mjboard.mjContent}"></div>
+                        <div th:if="${mjboard.mjFileName != null}">
+                            <img th:src="@{/mjimage/{fileName}(fileName=${mjboard.mjFileName})}" alt="이미지" width="300">
+                        </div>
+
                         <div class="d-flex justify-content-end">
                             <div class="badge bg-light text-dark p-2 text-start">
                                 <div th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd HH:mm')}"></div>
@@ -66,7 +70,7 @@
                     </div>
                 </div>
                 <!--앵커 기능-->
-                <a th:href="@{|/mjanswer/modify/${mjanswer.mjSeq}|}"
+              <!--  <a th:href="@{|/mjanswer/modify/${mjanswer.mjSeq}|}"
                    class="btn btn-sm btn-outline-secondary">수정</a>
 
                 <a href="javascript:void(0);"
@@ -79,7 +83,7 @@
                    class="recommend btn btn-sm btn-outline-secondary">추천</a>
 
                 <span class="badge rounded-pill bg-success"
-                      th:text="${#lists.size(mjanswer.mjAnsRecommend)}"></span>
+                      th:text="${#lists.size(mjanswer.mjAnsRecommend)}"></span>-->
 
 
                 <!--답변-->

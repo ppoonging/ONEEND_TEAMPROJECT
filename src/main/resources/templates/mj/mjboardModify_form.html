@@ -1,0 +1,51 @@
+<html layout:decorate="~{layout}">
+    <main layout:fragment="content">
+        <!--상단-->
+        <div style="background-color: #F4E9E3">
+            <div class="container py-2">
+
+                <!--수정해야할 부분-->
+                <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">한끝 커뮤니티 > 맛집소개 </span>
+
+            </div>
+        </div>
+        <div class="container mt-5">
+            <div class="text-center">
+                <img th:src="@{/images/total/밥그릇.png}" width="5%">
+            </div>
+
+            <!--수정해야할 부분-->
+            <!--title-->
+            <h2 class="text-center py-2">맛집소개 수정하기</h2>
+            <!--content-->
+            <section class="py-5">
+
+                <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+                <div>
+                    <form th:action="@{/mjboard/modify/{id}(id=${mjboard.mjSeq})}" method="post" th:object="${mjboardForm}">
+                    <div class="alert alert-danger" role="alert"
+                             th:if="${#fields.hasAnyErrors()}">
+                            <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
+                        </div>
+
+                        <label for="mjTitle" class="form-label">제목</label>
+                        <input type="text" name="mjTitle" id="mjTitle"   class="form-control">
+
+                        <div class="mb-3">
+                            <label for="mjContent" class="form-label">내용</label>
+                            <textarea rows="15" name="mjContent" id="mjContent" class="form-control"></textarea>
+                        </div>
+
+                        <input type="submit" value="저장" class="btn btn-danger my-3">
+
+                    </form>
+                    <!-- **내용** -->
+                </div>
+
+                <!--하단 줄 (필요에 따라 사용)-->
+                <hr style="margin-top: 50px">
+            </section>
+        </div>
+
+    </main>
+</html>
