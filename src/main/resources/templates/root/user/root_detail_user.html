@@ -72,14 +72,14 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="button" class="btn btn-sm btn-outline-secondary me-2">수정</button>
+                            <a th:href="@{|/root/form/modify/${rootAuth.rootAuthSeq}|}" type="button" class="btn btn-sm btn-outline-secondary me-2">수정</a>
                             <a th:href="@{|/root/delete/${rootAuth.rootAuthSeq}|}" class="btn btn-sm btn-outline-secondary">삭제</a>
                         </div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-end mt-3">
                     <input type="button" id="map-button" class="btn btn-outline-secondary me-2" value="루트 확인">
-                    <button type="button" class="btn btn-outline-secondary"><a th:href="@{/root/register/list}" style="text-decoration: none; color: #6c757d">목록으로</a></button>
+                    <button type="button" class="btn btn-outline-secondary"><a th:href="@{/root/list}" style="text-decoration: none; color: #6c757d">목록으로</a></button>
                 </div>
                 <!-- 모달 창 -->
                 <div id="root-image-modal" class="root-modal">
@@ -241,8 +241,8 @@
          let cnt = value.length;
 
          value.forEach(data => {
-             latSum += data.rootListLatitude;
-             lngSum += data.rootListLongitude;
+             latSum += data.rootAuthListLatitude;
+             lngSum += data.rootAuthListLongitude;
          });
 
          return new naver.maps.LatLng(latSum / cnt, lngSum / cnt);

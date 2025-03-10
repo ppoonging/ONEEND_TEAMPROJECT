@@ -1,28 +1,29 @@
 package com.springboot.biz.root.rootUser;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.biz.root.rootAdmin.Root;
 import com.springboot.biz.root.rootAdmin.RootList;
-import com.springboot.biz.root.rootAdmin.RootListDTO;
 import com.springboot.biz.root.rootAdmin.RootService;
 import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -78,93 +79,56 @@ public class RootAuthController {
         List<Root> root = rootService.getList();
         model.addAttribute("root", root);
 
+
         if(rootSeq != null) {
             Root selRoot = rootService.get(rootSeq);
             model.addAttribute("selRoot", selRoot);
             model.addAttribute("selRootList", selRoot.getRootList());
+            rootAuthDTO.setRootSeq(rootSeq);
         }
 
-        return "/root/user/root_form_user";
+        return "root/user/root_form_user";
     }
 
-//    @GetMapping("/form/save")
-//    public String formSave(Principal principal, RootAuthDTO rootAuthDTO, Model model) {
-//
-//        HUser user = hUserSerevice.getUser(principal.getName());
-//        model.addAttribute("user", user);
-//        model.addAttribute("rootAuthDTO", new RootAuthDTO());
-//
-//        return "/root/user/root_form_user";
-//    }
-//
-//    @PostMapping("/form/save")
-//    public String formSave(Principal principal, @Valid @ModelAttribute RootAuthDTO rootAuthDTO, BindingResult bindingResult, Model model) throws IOException {
-//
-//        if(bindingResult.hasErrors()){
-//            List<Root> root = rootService.getList();
-//            model.addAttribute("root", root);
-//            model.addAttribute("rootAuthDTO", rootAuthDTO);
-//
-//            return "/root/user/root_form_user";
-//        }
-//
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        List<RootAuthListDTO> rootList = new ArrayList<>();
-//
-//        try {
-//            rootList = objectMapper.readValue(rootAuthDTO.getRootList(), new TypeReference<List<RootAuthListDTO>>() {});
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
-//
-//        // 현재 로그인한 사용자 정보 가져오기
-//        HUser user = hUserSerevice.getUser(principal.getName());
-//
-//        // 루트 정보 가져오기
-//        Root root = rootService.get(Integer.parseInt(rootAuthDTO.getRootSeq()));
-//
-//        // 서비스 로직 호출
-//        rootAuthService.save(rootAuthDTO.getFiles(), rootAuthDTO.getTitle(), rootAuthDTO.getContent(), rootList, user, root);
-//
-//        return "redirect:/root/list";
-//    }
-
-//    @GetMapping("/form")
-//    public String form(RootAuthDTO rootAuthDTO, Model model) {
-//
-//        return "/root/user/root_form_user";
-//    }
-
     @PostMapping("/form/save")
-    public String formSave(@RequestParam("files") List<MultipartFile> files, @RequestParam("title") String title,
-                           @RequestParam("content") String content, @RequestParam("rootList") String rootListJson,
-                           @RequestParam("rootSeq") Integer rootSeq,
-                           Principal principal, @Valid RootAuthDTO rootAuthDTO, BindingResult bindingResult) throws IOException {
+    public String formSave(Principal principal, @Valid @ModelAttribute RootAuthDTO rootAuthDTO, BindingResult bindingResult, Model model) throws IOException {
 
-        if(bindingResult.hasErrors()) {
-            return "/root/user/root_form_user";
+        List<Root> root = rootService.getList();
+        model.addAttribute("root", root); // 루트 목록 (select 용)
+
+        Integer rootSeq = rootAuthDTO.getRootSeq();
+
+        if (rootSeq != null) {
+            Root selRoot = rootService.get(rootSeq);
+            model.addAttribute("selRoot", selRoot);
+            model.addAttribute("selRootList", selRoot.getRootList());
+            rootAuthDTO.setRootSeq(rootSeq);
         }
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<RootAuthListDTO> rootList = new ArrayList<>();
+        System.out.println("test" + rootAuthDTO.getRootAuthList());
 
-        try {
-            rootList = objectMapper.readValue(rootListJson, new TypeReference<List<RootAuthListDTO>>() {});
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        List<RootAuthListDTO> rootAuthList = new ArrayList<>();
+        if (rootAuthDTO.getRootAuthList() != null && !rootAuthDTO.getRootAuthList().isEmpty()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                rootAuthList = objectMapper.readValue(rootAuthDTO.getRootAuthList(), new TypeReference<List<RootAuthListDTO>>() {});
+            } catch (JsonProcessingException e) {
+                e.printStackTrace(); // 에러 처리
+            }
+        }
+        model.addAttribute("selRootUserList", rootAuthList);
+
+        if (bindingResult.hasErrors()) {
+            return "root/user/root_form_user"; // 실패 시 원래 화면으로
         }
 
+        System.out.println("가지나?" + rootAuthList);
+
+        // 정상 로직
         HUser user = this.hUserSerevice.getUser(principal.getName());
+        Root rootEntity = rootService.get(rootAuthDTO.getRootSeq());
 
-        for (RootAuthListDTO list : rootList) {
-            System.out.println(list.getAddress());
-            System.out.println(list.getCategory());
-
-        }
-
-        Root root = rootService.get(rootSeq);
-
-        rootAuthService.save(files, rootAuthDTO.getTitle(), rootAuthDTO.getContent(), rootList, user, root);
+        rootAuthService.save(rootAuthDTO.getFiles(), rootAuthDTO.getTitle(), rootAuthDTO.getContent(), rootAuthList, user, rootEntity);
 
         return "redirect:/root/list";
     }
@@ -188,6 +152,41 @@ public class RootAuthController {
         model.addAttribute("rootList", rootList);
 
         return "/root/user/root_detail_user";
+    }
+
+
+    @GetMapping("/form/modify/{rootAuthSeq}")
+    public String modifyRootAuthForm(@PathVariable("rootAuthSeq") Long rootAuthSeq, Model model, RootAuthDTO rootAuthDTO, Principal principal) {
+
+        HUser user = this.hUserSerevice.getUser(principal.getName());
+
+        RootAuth rootAuth = this.rootAuthService.get(rootAuthSeq);
+
+        if(!rootAuth.getUserId().getUsername().equals(principal.getName())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
+        }
+
+        rootAuthDTO.setRootSeq(rootAuth.getRoot().getRootSeq());
+        rootAuthDTO.setTitle(rootAuth.getRootAuthTitle());
+        rootAuthDTO.setContent(rootAuth.getRootAuthContent());
+        rootAuthDTO.setRootAuthLists(rootAuth.getRootAuthList());
+
+        System.out.println("test: " + rootAuth.getRootAuthList().get(0).getRootAuthListAddress());
+
+        Integer rootSeq = rootAuthDTO.getRootSeq();
+
+        if (rootSeq != null) {
+            Root selRoot = rootService.get(rootSeq);
+            model.addAttribute("selRoot", selRoot);
+            model.addAttribute("selRootList", selRoot.getRootList());
+            rootAuthDTO.setRootSeq(rootSeq);
+        }
+
+        model.addAttribute("rootAuthList", rootAuthDTO.getRootAuthLists());
+        model.addAttribute("root", rootService.getList());
+        model.addAttribute("rootAuthSeq", rootAuthSeq);
+
+        return "/root/user/root_form_user";
     }
 
     @PostMapping("/form/modify/{rootAuthSeq}")

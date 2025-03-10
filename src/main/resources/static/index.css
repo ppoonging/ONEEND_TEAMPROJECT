@@ -192,25 +192,25 @@ a {
 
 
 .pagination .page-item .page-link {
-    color: #888; /* 기본 글자색 (짙은 브라운 계열) */
-    border: 1px solid #fff; /* 테두리 */
-    padding: 6px 12px; /* 크기 조정 */
-    font-size: 14px; /* 글자 크기 */
+    color: #888;
+    border: 1px solid #fff;
+    padding: 6px 12px;
+    font-size: 14px;
 }
 
 
 .pagination .page-item.active .page-link {
-    background-color: transparent; /* 현재 페이지 배경색 */
-    color: #5C4033; /* 활성화된 글자색 */
+    background-color: transparent;
+    color: #5C4033;
 }
 
 .pagination .page-item.disabled .page-link {
-    color: #eee; /* 비활성화된 색상 */
+    color: #eee;
     background-color: transparent;
 }
 
 .pagination .page-item .page-link:hover {
-    background-color: #D5C9C1; /* 호버 시 배경색 */
+    background-color: #D5C9C1;
     color: #5C4033;
     border-color: transparent;
 }

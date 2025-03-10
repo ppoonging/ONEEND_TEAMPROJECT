@@ -7,22 +7,22 @@ import lombok.Setter;
 @Setter
 public class RootAuthListDTO {
 
-    private String title;  //목적지명
+    private String rootAuthListTitle;  //목적지명
 
-    private String address;  //주소
+    private String rootAuthListAddress;  //주소
 
-    private String roadaddress; //도로명
+    private String rootAuthListRoadAddress; //도로명
 
-    private Double latitude;  //위도
+    private Double rootAuthListLatitude;  //위도
 
-    private Double longitude;  //경도
+    private Double rootAuthListLongitude;  //경도
 
-    private String link; // 장소 정보 url
+    private String rootAuthListLink; // 장소 정보 url
 
-    private String category; // 장소 분류
+    private String rootAuthListCategory; // 장소 분류
 
-    private String imgName;
+    private String rootAuthListImageName;
 
-    private String imgPath;
+    private String rootAuthListImagePath;
 
 }
