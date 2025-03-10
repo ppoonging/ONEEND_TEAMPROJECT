@@ -1,5 +1,6 @@
 package com.springboot.biz.sns;
 
+import com.springboot.biz.user.HUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +16,7 @@ public class SnsService {
 
     private final SnsRepository snsRepository;
 
-    public void save (MultipartFile multipartFile, String link) throws IOException {
+    public void save (MultipartFile multipartFile, String link, String tag, HUser user) throws IOException {
 
         String os = System.getProperty("os.name").toLowerCase();
         String originalImgName = multipartFile.getOriginalFilename();
@@ -35,6 +36,8 @@ public class SnsService {
                 .snsImageName(imgName)
                 .snsImagePath("/files/sns/" + imgName)
                 .snsLink(link)
+                .snsTag(tag)
+                .userId(user)
                 .build();
 
         this.snsRepository.save(sns);

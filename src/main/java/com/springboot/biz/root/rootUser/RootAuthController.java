@@ -46,7 +46,7 @@ public class RootAuthController {
 
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(name = "page", defaultValue = "0") Integer page, @RequestParam(required = false) String chkCategory) {
+    public String list(Model model, @RequestParam(name = "page", defaultValue = "0") Integer page, @RequestParam(name = "chkCategory", defaultValue = "전체", required = false) String chkCategory) {
 
         Page<RootAuth> rootAuthPage;
 
@@ -67,8 +67,14 @@ public class RootAuthController {
         return "/root/user/root_list_user";
     }
 
+    @GetMapping("/delete/{rootAuthSeq}")
+    public String delete(@PathVariable("rootAuthSeq") Long rootAuthSeq){
+        this.rootAuthService.delete(rootAuthSeq);
+        return "redirect:/root/list";
+    }
+
     @GetMapping("/form")
-    public String getRootForm(@RequestParam(value = "rootSeq", required = false) Integer rootSeq, Model model) {
+    public String getRootForm(@RequestParam(value = "rootSeq", required = false) Integer rootSeq, Model model, RootAuthDTO rootAuthDTO) {
         List<Root> root = rootService.getList();
         model.addAttribute("root", root);
 
@@ -123,13 +129,19 @@ public class RootAuthController {
 //        return "redirect:/root/list";
 //    }
 
+//    @GetMapping("/form")
+//    public String form(RootAuthDTO rootAuthDTO, Model model) {
+//
+//        return "/root/user/root_form_user";
+//    }
+
     @PostMapping("/form/save")
     public String formSave(@RequestParam("files") List<MultipartFile> files, @RequestParam("title") String title,
                            @RequestParam("content") String content, @RequestParam("rootList") String rootListJson,
                            @RequestParam("rootSeq") Integer rootSeq,
-                           Principal principal, @Valid @ModelAttribute RootAuthDTO rootAuthDTO, BindingResult bindingResult) throws IOException {
+                           Principal principal, @Valid RootAuthDTO rootAuthDTO, BindingResult bindingResult) throws IOException {
 
-        if(bindingResult.hasErrors()){
+        if(bindingResult.hasErrors()) {
             return "/root/user/root_form_user";
         }
 
@@ -152,7 +164,7 @@ public class RootAuthController {
 
         Root root = rootService.get(rootSeq);
 
-        rootAuthService.save(files, title, content, rootList, user, root);
+        rootAuthService.save(files, rootAuthDTO.getTitle(), rootAuthDTO.getContent(), rootList, user, root);
 
         return "redirect:/root/list";
     }

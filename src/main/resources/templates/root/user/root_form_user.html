@@ -39,12 +39,14 @@
                 </form>
 
                 <form th:action="@{/root/form/save}" th:object="${rootAuthDTO}" id="registerForm"  enctype="multipart/form-data" method="post">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:vale="${_csrf.token}">
+<!--                    <input type="hidden" th:name="${_csrf.parameterName}" th:vale="${_csrf.token}">-->
+<!--                    <input type="hidden" id="rootAuthSeq" name="rootAuthSeq" th:value="${rootAuthDTO.rootAuthSeq}">-->
 
+                    <div th:replace="~{form_errors :: formErrorsFragment}"></div>
                     <div class="mb-2 row">
                         <label for="title" class="col-sm-1 col-form-label">제목</label>
                         <div class="col-sm-11">
-                            <input type="text" id="title" name="title" class="form-control">
+                            <input type="text" id="title" name="title" th:field="*{title}" class="form-control">
                         </div>
 
                     </div>
@@ -111,7 +113,7 @@
                     <div class="mt-3">
                         <div>
                             <label for="content" class="form-label">후기</label>
-                            <textarea class="form-control" id="content" name="content" rows="5"></textarea>
+                            <textarea class="form-control" id="content" name="content" th:field="*{content}" rows="5"></textarea>
                         </div>
                         <input type="hidden" id="rootListData" name="rootList">
                         <input type="hidden" id="rootSeq" name="rootSeq">

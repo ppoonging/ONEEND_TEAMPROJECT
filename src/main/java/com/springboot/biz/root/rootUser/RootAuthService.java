@@ -16,10 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -60,6 +57,17 @@ public class RootAuthService {
     public Page<RootAuth> getAllCategory(int page, String category) {
         Pageable pageable = PageRequest.of(page, 2, Sort.by(Sort.Order.desc("rootAuthDate")));
         return rootAuthRepository.findByRoot_RootTitle(category, pageable);
+    }
+
+    public void delete(Long rootAuthSeq) {
+        List<RootAuthList> rootAuthList = this.rootAuthListRepository.findByRootAuthId(rootAuthSeq);
+        for(RootAuthList rel : rootAuthList) {
+            Long seq = rel.getRootAuth().getRootAuthSeq();
+           if(Objects.equals(seq, rootAuthSeq)){
+               this.rootAuthListRepository.deleteById(seq);
+           }
+        }
+        this.rootAuthRepository.deleteById(rootAuthSeq);
     }
 
     // 저장
