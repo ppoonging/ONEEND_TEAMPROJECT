@@ -33,7 +33,7 @@
                 </head>
                 <body>
 
-                <form class="form needs-validation" th:action="@{/users/signup}" method="post" th:object="${HUserForm}" id="HUserForm" novalidate>
+                < class="form needs-validation" th:action="@{/users/signup}" method="post" th:object="${HUserForm}" id="HUserForm" novalidate>
                     <p class="title">회원가입</p>
                     <p class="message">한 끝에 오신 것을 환영합니다.</p>
 
@@ -93,6 +93,9 @@
                         <div class="invalid-feedback">주소를 입력하세요.</div>
                     </div>
 
+
+
+
                     <!-- 상세 주소 -->
                     <div class="form-group">
                         <label for="addressDetail" class="form-label">상세 주소</label>
@@ -149,4 +152,17 @@
     emailInput.addEventListener("input", function (event) {
         event.target.setCustomValidity(''); // 입력하면 다시 초기화
     });*/
+
+    const execDaumPostcode = () => {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                document.getElementById('address').value = data.roadAddress; // 주소 입력
+            }
+        }).open();
+    };
+
 </script>
+
+
+
+

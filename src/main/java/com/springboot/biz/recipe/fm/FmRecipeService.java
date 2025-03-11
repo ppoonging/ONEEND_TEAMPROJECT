@@ -1,6 +1,6 @@
 package com.springboot.biz.recipe.fm;
 
-import com.springboot.biz.sns.Sns;
+import com.springboot.biz.user.HUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,24 +21,25 @@ import java.util.UUID;
 public class FmRecipeService {
 
     private final FmRecipeRepository fmRecipeRepository;
-    private final FmReThumbnailService fmReThumbnailService;
+
 
 
     //정형화된 레시피 작성은 admin만 할 수있게 만들아야함
-    public void createRecipe(String fmrecipeCategory, String fmrecipeTitle,String fmrecipeIngre
-            , String fmrecipeReady,String fmrecipeContent  /*,
-                             MultipartFile file*/) throws IOException {
+    public void createRecipe(String fmrecipeCategory, String fmrecipeTitle, String fmrecipeIngre
+            , String fmrecipeReady, String fmrecipeContent,
+                             MultipartFile file) throws IOException {
 
         /*ㄱ경로*/
-      /*  String imgPath = System.getProperty("user.dir")+"/src/main/resources/static/files";
+       String imgPath = System.getProperty("user.dir")+"/src/main/resources/static/files";
 
         UUID uuid = UUID.randomUUID();
-        *//*이미지 이름*//*
+
         String fmrecipeFileName = uuid + "_" + file.getOriginalFilename();
 
         File saveFile = new File(imgPath,fmrecipeFileName);
         file.transferTo(saveFile);
-*/
+
+
 
         FmRecipe fR = new FmRecipe();
         fR.setFmrecipeCategory(fmrecipeCategory);
@@ -46,9 +47,10 @@ public class FmRecipeService {
         fR.setFmrecipeIngre(fmrecipeIngre);
         fR.setFmrecipeReady(fmrecipeReady);
         fR.setFmrecipeContent(fmrecipeContent);
-        /*fR.setFmrecipeFilePath("/files/" + fmrecipeFileName );
-        fR.setFmrecipeFileName(fmrecipeFileName);*/
+        fR.setFmrecipeFilePath("/files/" + fmrecipeFileName );
+        fR.setFmrecipeFileName(fmrecipeFileName);
         fR.setFmrecipeRegDate(LocalDateTime.now());
+
         fmRecipeRepository.save(fR);
     }
     //페이지 네이션하고, 검색어 (키워드, 카테고리 뭘로하지....?
@@ -67,17 +69,7 @@ public class FmRecipeService {
     }
 
 }
-  /* String thumbImgName = "thumb_" + fmrecipeFileName;
-
-        File thumnailFile = new File(imgPath, thumbImgName);
 
 
-        try {
-            fmReThumbnailService.createThumbnail(saveFile, thumnailFile);
-        }catch (IOException e) {
-            throw new Exception("섬네일 실패", e);
-        }
-            fmrecipeFilePath = "/files/" + thumbImgName;
-*/
 
 

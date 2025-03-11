@@ -19,7 +19,16 @@
         <!--title-->
         <h2 class="text-center py-2">정석 레시피</h2>
         <!--content-->
+
         <section class="py-5">
+
+
+            <!--<form th:action="@{/favorite/toggle}" method="post">
+                <input type="hidden" name="recipeId" th:value="${fm.fmrecipeSeq}">
+                <button type="submit" class="btn btn-outline-warning"
+                        th:text="${favoriteMap[fm.fmrecipeSeq]} ? '★ 찜 해제' : '☆ 찜하기'">
+                </button>
+            </form>-->
 
             <!-- 카테고리 필터 버튼 -->
             <div class="category5-menu">
@@ -31,7 +40,6 @@
             </div>
 
 
-
             <!-- 카드 리스트 (클릭 시 모달 표시) -->
             <div id="recipe=list" class="d-flex flex-wrap gap-3 justify-content-center mt-4">
 
@@ -40,11 +48,18 @@
                     <img th:if="${fm.fmrecipeFilePath !=null}" th:src="@{${fm.fmrecipeFilePath}}" class="card-img-top" alt="이미지">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${fm.fmrecipeTitle}"></h5>
+
                     </div>
                 </div>
             </div>
 
-            <!-- 모달 창 (기본 숨김) -->
+            <!--권한있을때만 작성할수 있게-->
+            <div class="d-flex justify-content-end">
+                <a class="btn btn-primary btn-lg ml-auto" sec:authorize="hasRole('ADMIN')" th:href="@{/fm/create}">등록</a>
+            </div>
+
+
+            <!-- 모달 창 누르면 나오지롱 -->
             <div th:each="fm: ${paging}" th:id="'modal' + ${fm.fmrecipeSeq}" class="custom-modal hidden">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -59,7 +74,20 @@
                             <p><strong>재료:</strong> <span th:text="${fm.fmrecipeIngre}"></span></p>
                             <p><strong>등록일:</strong> <span th:text="${#temporals.format(fm.fmrecipeRegDate,'yyyy-MM-dd HH:mm')}"></span></p>
                         </div>
-                        <div class="modal-footer">
+
+
+                        <div class="modal-footer d-flex justify-content-between">
+                            <!-- 찜하기 버튼 -->
+                            <form th:action="@{/favorite/toggle}" method="post">
+                                <input type="hidden" name="recipeId" th:value="${fm.fmrecipeSeq}">
+                                <!-- 찜 버튼 (모달 안) -->
+                                <button type="button" class="btn btn-outline-warning favorite-btn"
+                                        th:attr="data-recipe-id=${fm.fmrecipeSeq}">
+                                    찜하기/해제
+                                </button>
+
+                            </form>
+                            <!-- 닫기 버튼 -->
                             <button type="button" class="btn custom-btn123 custom-close-btn" data-modal-close>닫기</button>
                         </div>
                     </div>
@@ -103,6 +131,38 @@
                 }
 
             </script>
+
+            <!--@@@@@@@즐겨찾기 버튼에 js코드@@@@@@-->
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const favoriteButtons = document.querySelectorAll(".favorite-btn");
+
+                    favoriteButtons.forEach(button => {
+                        button.addEventListener("click", function () {
+                            const recipeId = this.dataset.recipeId;
+                            const btn = this;
+
+                            fetch("/api/favorite/toggle", {  // ✅ API로 변경
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                body: "recipeId=" + recipeId
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.isFavorite) {
+                                        btn.textContent = "★ 찜 해제";
+                                    } else {
+                                        btn.textContent = "☆ 찜하기";
+                                    }
+                                })
+                                .catch(error => console.error("찜하기 실패:", error));
+                        });
+                    });
+                });
+            </script>
+
 
 
 

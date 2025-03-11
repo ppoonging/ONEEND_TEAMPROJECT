@@ -1,0 +1,71 @@
+
+<link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
+
+<h2 class="text-center">내가 찜한 레시피</h2>
+<div class="d-flex flex-wrap gap-3 justify-content-center mt-4">
+    <div th:each="recipe : ${favoriteRecipes}" class="card custom-card" style="width: 18rem;">
+        <img th:src="@{${recipe.fmrecipeFilePath}}" class="card-img-top" alt="레시피 이미지">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${recipe.fmrecipeTitle}"></h5>
+            <!-- 레시피 보기 버튼 (모달 오픈 AJAX) -->
+            <button type="button" class="btn custom-btn123"
+                    th:attr="data-recipe-id=${recipe.fmrecipeSeq}"
+                    onclick="openRecipeModal(this)">레시피 보기</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- 모달과 오버레이 (배경 흐림) -->
+<div class="modal-overlay"></div> <!-- 오버레이 -->
+
+<div id="recipeModal" class="custom-modal hidden">
+    <div class="modal-header">
+        <h5 id="modalTitle" class="modal-title">레시피 제목</h5>
+        <span class="custom-close-btn" onclick="closeModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+        <img id="modalImage" class="img-fluid mb-3" alt="레시피 이미지" style="width:100%; height:auto;">
+        <p><strong>준비 과정:</strong> <span id="modalReady"></span></p>
+        <p><strong>재료:</strong> <span id="modalIngredients"></span></p>
+        <p><strong>설명:</strong> <span id="modalContent"></span></p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn custom-btn123" onclick="closeModal()">닫기</button>
+    </div>
+</div>
+<script>
+    function openRecipeModal(button) {
+        const recipeId = button.dataset.recipeId;
+
+        fetch('/fm/api/detail/' + recipeId)
+            .then(response => response.json())
+            .then(data => {
+                // 모달 데이터 채우기
+                document.getElementById('modalTitle').innerText = data.title;
+                document.getElementById('modalContent').innerText = data.content;
+                document.getElementById('modalIngredients').innerText = data.ingredients;
+                document.getElementById('modalReady').innerText = data.ready;
+
+                const imageElement = document.getElementById('modalImage');
+                if (data.image) {
+                    imageElement.src = data.image;
+                    imageElement.style.display = 'block';
+                } else {
+                    imageElement.style.display = 'none';
+                }
+
+                // 모달 + 오버레이 열기
+                document.getElementById('recipeModal').classList.remove('hidden');
+                document.body.classList.add('modal-open'); // 배경 흐림
+            })
+            .catch(error => console.error('레시피 불러오기 실패:', error));
+    }
+
+    function closeModal() {
+        document.getElementById('recipeModal').classList.add('hidden');
+        document.body.classList.remove('modal-open'); // 배경 흐림 해제
+    }
+</script>
+
+

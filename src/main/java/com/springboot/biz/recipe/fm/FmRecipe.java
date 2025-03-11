@@ -18,7 +18,6 @@ public class FmRecipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer fmrecipeSeq;   //fm레시피 (PK)
 
-
     @ManyToOne
     private HUser userId;  //유저번호(FK)
 
@@ -35,7 +34,6 @@ public class FmRecipe {
 
     @Column(columnDefinition = "TEXT")
     private String fmrecipeContent;   //fm레시피 레시피
-
 
 
     private LocalDateTime fmrecipeRegDate;  //작성일
