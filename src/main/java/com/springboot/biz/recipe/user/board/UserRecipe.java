@@ -21,7 +21,6 @@ public class UserRecipe {
     @ManyToOne
     private HUser userId; // 유저 번호 (FK)
 
-
     @Column(length = 100 )
     private String userRecipeTitle;  //유저 레시피 제목
 

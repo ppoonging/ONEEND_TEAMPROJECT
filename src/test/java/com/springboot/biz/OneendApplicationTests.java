@@ -27,9 +27,6 @@ class OneendApplicationTests {
     @Test
     void contextLoads() {
 
-        FreeQuestion q = new FreeQuestion();
-
-        q.setFreeAuthor(hUserSerevice.getUser(String username));
 
 
 
