@@ -4,7 +4,7 @@
 <h2 class="text-center">내가 찜한 레시피</h2>
 <div class="d-flex flex-wrap gap-3 justify-content-center mt-4">
     <div th:each="recipe : ${favoriteRecipes}" class="card custom-card" style="width: 18rem;">
-        <img th:src="@{${recipe.fmrecipeFilePath}}" class="card-img-top" alt="레시피 이미지">
+        <img th:src="@{${recipe.fmrecipeFilePath}}" class="card-img-top" alt="레시피 이미지" style="width:100%; height: 170px; object-fit: cover;">
         <div class="card-body">
             <h5 class="card-title" th:text="${recipe.fmrecipeTitle}"></h5>
             <!-- 레시피 보기 버튼 (모달 오픈 AJAX) -->
