@@ -5,6 +5,7 @@ import com.springboot.biz.root.rootAdmin.Root;
 import com.springboot.biz.root.rootAdmin.RootList;
 import com.springboot.biz.root.rootAdmin.RootRepository;
 import com.springboot.biz.user.HUser;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -75,7 +76,7 @@ public class RootAuthService {
                      List<RootAuthListDTO> rootAuthListDTO, HUser user, Root root) throws IOException {
         RootAuth rootAuth = new RootAuth();
         rootAuth.setRootAuthTitle(title);
-        rootAuth.setRootAuthContent(content);
+        rootAuth.setRootAuthContent(content.replace("\n", "<br/>"));
         rootAuth.setUserId(user);
         rootAuth.setRoot(root);
         rootAuth.setRootAuthList(new ArrayList<>());
@@ -124,5 +125,69 @@ public class RootAuthService {
             index++;
         }
     }
+
+    @Transactional
+    public void modify(List<MultipartFile> files, String title, String content,
+                       List<RootAuthListDTO> rootAuthListDTO, HUser user, Root root, Long rootAuthSeq) throws IOException {
+
+        RootAuth rootAuth = rootAuthRepository.findById(rootAuthSeq)
+                .orElseThrow(() -> new IllegalArgumentException("수정할 데이터가 없습니다."));
+
+        rootAuth.setRootAuthTitle(title);
+        rootAuth.setRootAuthContent(content.replace("\n", "<br/>"));
+        rootAuth.setRoot(root);
+
+        rootAuth.setRootAuthModifyDate(LocalDateTime.now());
+
+        rootAuthListRepository.deleteByRootAuth(rootAuth);
+
+
+        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/rootauth/";
+        Integer index = 1;
+
+
+        for (int i = 0; i < rootAuthListDTO.size(); i++) {
+            RootAuthListDTO rel = rootAuthListDTO.get(i);
+
+            // 파일 처리
+            MultipartFile file = (files != null && files.size() > i) ? files.get(i) : null;
+
+            String imgName = rel.getRootAuthListImageName();
+            String imgPath = rel.getRootAuthListImagePath();
+
+            // 파일이 존재할 때만 새로 저장
+            if (file != null && !file.isEmpty()) {
+                String originalImgName = file.getOriginalFilename();
+                UUID uuid = UUID.randomUUID();
+                imgName = uuid + "_" + originalImgName;
+                imgPath = "/files/rootauth/" + imgName;
+                File saveFile = new File(projectPath, imgName);
+                file.transferTo(saveFile);
+            }
+
+            // 루트 리스트 저장
+            RootAuthList list = RootAuthList.builder()
+                    .rootAuth(rootAuth)
+                    .rootAuthListTitle(rel.getRootAuthListTitle())
+                    .rootAuthListAddress(rel.getRootAuthListAddress())
+                    .rootAuthListRodeAddress(rel.getRootAuthListRoadAddress())
+                    .rootAuthListLatitude(rel.getRootAuthListLatitude())
+                    .rootAuthListLongitude(rel.getRootAuthListLongitude())
+                    .rootAuthListLink(rel.getRootAuthListLink())
+                    .rootAuthListCategory(rel.getRootAuthListCategory())
+                    .rootAuthListIndex(index)
+                    .rootAuthListImageName(imgName)
+                    .rootAuthListImagePath(imgPath)
+                    .userId(user)
+                    .build();
+
+            this.rootAuthListRepository.save(list);
+            index++;
+
+            rootAuthRepository.save(rootAuth);
+        }
+
+    }
+
 
 }

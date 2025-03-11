@@ -1,11 +1,24 @@
 package com.springboot.biz.root.rootUser;
 
+import com.springboot.biz.user.HUser;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class RootAuthListDTO {
+
+//    private Long rootAuthListSeq;
+
+//    private Long userId;
+//
+//    private Integer rootAuthListIndex;
 
     private String rootAuthListTitle;  //목적지명
 

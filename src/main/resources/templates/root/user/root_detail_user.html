@@ -30,7 +30,13 @@
                         <i class="bi bi-person-fill me-2 mt-1"></i>
                         <span th:text="${user.username}" class="me-4"></span>
                         <i class="bi bi-clock-fill me-2 mt-1" style="font-size: 12px"></i>
-                        <span th:text="${#temporals.format(rootAuth.rootAuthDate, 'YYYY-MM-DD HH:mm')}"></span>
+                        <span
+                                th:text="${#temporals.format(rootAuth.rootAuthDate, 'yyyy-MM-dd HH:mm')}"
+                                th:attr="data-bs-title='수정: ' + ${#temporals.format(rootAuth.rootAuthModifyDate, 'yyyy-MM-dd HH:mm')}"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                style="cursor: pointer;">
+</span>
                     </div>
                 </div>
                 <input type="hidden" id="select-value" th:value="${rootAuth.rootAuthSeq}">
@@ -44,7 +50,7 @@
                             </div>
                             <!--right-->
                             <div class="h-100 overflow-y-auto" style="width: 35%;">
-                                <ul th:if="${rootAuthList}" style="background-color: #E8DCD4;" class="p-3 mb-0">
+                                <ul th:if="${rootAuthList}" class="p-3 mb-0 root-li">
                                     <li id="search-data-list" th:each="rootAuthList : ${rootAuthList}" class="" >
                                         <div class="d-flex flex-row p-2">
                                             <div class="my-2" style="width: 90%;">
@@ -73,13 +79,19 @@
                         </div>
                         <div class="d-flex justify-content-end mt-4">
                             <a th:href="@{|/root/form/modify/${rootAuth.rootAuthSeq}|}" type="button" class="btn btn-sm btn-outline-secondary me-2">수정</a>
-                            <a th:href="@{|/root/delete/${rootAuth.rootAuthSeq}|}" class="btn btn-sm btn-outline-secondary">삭제</a>
+                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary"
+                               id="delete-btn"
+                               th:data-url="@{|/root/form/delete/${rootAuth.rootAuthSeq}|}">
+                                삭제
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="d-flex justify-content-end mt-3">
                     <input type="button" id="map-button" class="btn btn-outline-secondary me-2" value="루트 확인">
-                    <button type="button" class="btn btn-outline-secondary"><a th:href="@{/root/list}" style="text-decoration: none; color: #6c757d">목록으로</a></button>
+                    <button type="button" class="btn btn-outline-secondary">
+                        <a th:href="@{/root/list}" class="root-a-outline-se">목록으로</a>
+                    </button>
                 </div>
                 <!-- 모달 창 -->
                 <div id="root-image-modal" class="root-modal">
@@ -111,6 +123,10 @@
          setMap();
          drawPolyline(rootList);
          drawAuthPolyline(rootAuthList);
+
+         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
      });
 
      // 초기 map 설정
@@ -228,7 +244,6 @@
          });
      }
 
-
      // 중앙 값 구해서 설정
      function getCenter(value) {
 
@@ -313,6 +328,15 @@
      document.getElementById("root-image-modal").addEventListener("click", function(event) {
              this.style.display = "none";
      });
+
+
+     document.getElementById("delete-btn").addEventListener("click", function () {
+        if(confirm("삭제하시겠습니까?")) {
+            window.location.href = this.dataset.url;
+        }else {
+            console.log("취소");
+        }
+     })
 
  </script>
 

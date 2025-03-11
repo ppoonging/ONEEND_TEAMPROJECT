@@ -105,11 +105,11 @@ a {
     background-size: 100% 100%;
     background-position: 50%;
     background-repeat: no-repeat;
-    background-color: #857761;
+    background-color: #a89f94;
 }
 
 #search-data-list {
-    border-bottom: 1px solid #fff
+    border-bottom: 1px solid #ddd
 }
 
 #search-data-list:last-child {
@@ -146,6 +146,16 @@ a {
     border: 1px solid #B8A89E !important;
 }
 
+.root-a-outline-se {
+    text-decoration: none;
+    color: #6c757d;
+}
+.root-a-outline-se:hover {
+    text-decoration: none;
+    color: #fff;
+}
+
+
 #root-image-modal {
     display: none;
     position: fixed;
@@ -173,6 +183,10 @@ a {
     display: block;
 }
 
+.root-li {
+        background: rgb(246, 246, 246);
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
 
 
 .custom-card {

@@ -22,18 +22,18 @@
 
                 <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
                 <div>
-                    <form th:action="@{/sns/form/save}" method="post" enctype="multipart/form-data">
+                    <form th:action="@{/sns/form/save}" th:object="${snsDTO}" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="file" class="form-label">이미지 등록</label>
                             <input type="file" id="file" name="file" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label for="link" class="form-label">링크 등록</label>
-                            <input type="text" id="link" name="link" class="form-control" >
+                            <input type="text" id="link" name="link" th:field="*{link}" class="form-control" >
                         </div>
                         <div class="mb-3">
                             <label for="link" class="form-label">태그</label>
-                            <input type="text" id="tag" name="tag" class="form-control">
+                            <input type="text" id="tag" name="tag" th:field="*{tag}" class="form-control">
                         </div>
                         <button type="submit" class="btn btn-outline-secondary float-end">업로드</button>
                     </form>

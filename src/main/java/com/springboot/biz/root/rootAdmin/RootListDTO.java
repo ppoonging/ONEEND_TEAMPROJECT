@@ -1,10 +1,14 @@
 package com.springboot.biz.root.rootAdmin;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class RootListDTO {
 
     private String title;  //목적지명

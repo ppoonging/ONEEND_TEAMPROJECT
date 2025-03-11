@@ -22,9 +22,9 @@
 
             <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
             <div th:object="${rootAuthDTO}">
-<!--                <div th:replace="~{form_errors :: formErrorsFragment}"></div>-->
+                <div th:replace="~{form_errors :: formErrorsFragment}"></div>
                 <form id="select-form" th:action="@{/root/form}" method="get" class="row mb-3 needs-validation" novalidate>
-                    <span class="blockquote-footer mb-1">루트 선택을 먼저해주세요, 루트 선택 시 입력한 내용이 초기화됩니다.</span>
+
                     <label for="select-root" class="col-sm-1 col-form-label">루트 선택</label>
                     <div class="col-sm-11">
                         <select id="select-root" th:field="*{rootSeq}" class="form-select" required>
@@ -68,8 +68,8 @@
                             <!--top-->
                             <div id="map" style="width: 100%; flex-grow: 1;"></div>
 
-                            <div style="width: 100%;" class="py-1 root-li">
-                                <ul class="d-flex mb-0 flex-wrap px-4 py-1" id="rootSelectList">
+                            <div style="background-color: #E8DCD4; width: 100%;" class="py-2 ">
+                                <ul class="d-flex mb-0 flex-wrap" id="rootSelectList">
                                     <li></li>
                                 </ul>
                             </div>
@@ -77,9 +77,9 @@
 
                         <!--right-->
                         <div class="h-100 overflow-y-auto" style="width: 35%;">
-                            <ul th:if="${selRootList}" class="p-3 mb-0">
-                                <li id="search-data-list" th:each="selRootList : ${selRootList}" class="root-li" >
-                                    <div class="d-flex flex-row p-2 ">
+                            <ul th:if="${selRootList}" style="background-color: #E8DCD4;" class="p-3 mb-0">
+                                <li id="search-data-list" th:each="selRootList : ${selRootList}" class="" >
+                                    <div class="d-flex flex-row p-2">
                                         <div class="my-2" style="width: 90%;">
                                             <h6 th:utext="${selRootList.rootListIndex} + '. ' + ${selRootList.rootListTitle}"
                                                 style="font-weight: bold; cursor: pointer;" name="click-address"
@@ -105,7 +105,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="mb-3 p-2 file-container" style="display:none;">
+                                    <div class="mb-3 file-container p-2" style="display:none;">
                                         <input class="form-control form-control-sm file-input" type="file" name="files">
                                     </div>
                                 </li>
@@ -128,16 +128,11 @@
                                 내용을 입력해주세요.
                             </div>
                         </div>
-                        <input type="hidden" id="rootListData" name="rootList" th:field="*{rootAuthList}">
+                        <input type="hidden" id="rootListData" name="rootList">
                         <input type="hidden" id="rootSeq" name="rootSeq">
-                        <input type="hidden" id="form-mod" name="formMod" th:value="${rootAuthSeq != null ? 'modify' : 'save'}">
-                        <input type="hidden" id="rootAuthSeq" name="rootAuthSeq" th:value="${rootAuthSeq}">
                     </div>
                     <div class="d-flex justify-content-end mt-3">
-                        <button type="button" class="btn btn-outline-secondary mb-3 me-2">
-                            <a th:href="@{/root/list}" class="root-a-outline-se d-inline">목록으로</a>
-                        </button>
-                        <button type="button" id="form-submit" name="form-submit" class="btn btn-outline-secondary mb-3">저장</button>
+                        <input type="button" id="form-submit" name="form-submit" value="저장" class="btn btn-primary">
                     </div>
 
                 </form>
@@ -150,10 +145,7 @@
         let marker;
         let polyline;
         let rootList = /*[[${selRootList}]]*/ [];
-        let rootAuthList = /*[[${rootAuthList}]]*/ [];
         let selPolyline;
-
-        console.log(rootAuthList);
 
         let initMaker = [];
         let selMaker = [];
@@ -164,30 +156,21 @@
             drawPolyline(rootList);
             updateSelectList();
 
-            let isModify = rootAuthList && rootAuthList.length > 0;
-
-            console.log("확인 " + rootAuthList)
-
-            if(isModify){
-                drawAuthPolyline(rootAuthList);
-                sessionStorage.setItem("checkRootUser", JSON.stringify(rootAuthList));
-            }
-
-            if (!isModify) {
-                document.querySelectorAll('.mb-3 .form-control').forEach(div => {
-                    div.parentElement.style.display = 'none';
-                });
-            }
-
-            if (isModify) {
-                modifySaveCheckList();
-            }
+            document.querySelectorAll('.mb-3 .form-control').forEach(div => {
+                div.parentElement.style.display = 'none';
+            });
         });
 
         // 초기 map 설정
         function setMap() {
 
-            let center = rootAuthList != null ? getCenter(rootAuthList) : new naver.maps.LatLng(37.5666805, 126.9784147);
+            let center;
+
+            if(!rootList) {
+                center = new naver.maps.LatLng(37.5666805, 126.9784147);
+            } else {
+                center = getCenter(rootList);
+            }
 
             map = new naver.maps.Map("map", {
                 center: center,
@@ -210,7 +193,7 @@
             if (!rootList || rootList.length === 0) return;
 
             const path = value.map((data) => {
-                // console.log(data)
+                console.log(data)
                 return new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)
             })
 
@@ -232,7 +215,7 @@
             }
             window.markers = [];
 
-            // 순서대로 마커 추가
+            // // 순서대로 마커 추가
             value.forEach((data) => {
                 const marker = new naver.maps.Marker({
                     position: new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude),
@@ -247,50 +230,6 @@
 
             });
 
-        }
-
-        // rootAuthList를 기반으로 폴리라인 그리기
-        function drawAuthPolyline(value) {
-            if (!value || value.length === 0) return;
-
-            const path = value.map((data) => {
-                return new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude);
-            });
-
-            if (selPolyline) {
-                selPolyline.setMap(null);
-            }
-
-            selPolyline = new naver.maps.Polyline({
-                map: map,
-                path: path,
-                strokeColor: '#FA5858',
-                strokeStyle: 'solid',
-                strokeWeight: 3
-            });
-
-            addAuthMarkers(value);
-        }
-
-        // rootAuthList 위치에 마커 추가
-        function addAuthMarkers(value) {
-            if (selMaker.length > 0) {
-                selMaker.forEach(marker => marker.setMap(null));
-                selMaker = [];
-            }
-
-            value.forEach(data => {
-                const marker = new naver.maps.Marker({
-                    position: new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude),
-                    map: map,
-                    icon: {
-                        content: `<img width="30" height="30" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
-                        anchor: new naver.maps.Point(17, 20)
-                    }
-                });
-
-                selMaker.push(marker);
-            });
         }
 
         // select 선택 시
@@ -346,73 +285,35 @@
             });
         });
 
-        // 수정 -> 체크 및 이미지 업로드 검토
-        function modifySaveCheckList() {
-            const savedList = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
-
-            document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
-                const dataTitle = checkbox.dataset.title; // 체크박스의 data-title
-                const matched = savedList.find(item => item.rootAuthListTitle === dataTitle); // 일치하는 데이터 가져오기
-
-                if (matched) {
-                    checkbox.checked = true; // 일치하면 체크
-
-                    const checkLi = checkbox.closest('li'); // li 찾기
-                    const fileContainer = checkLi.querySelector('.file-container'); // 해당 li 안의 파일 영역
-
-                    if(fileContainer) {
-                        fileContainer.style.display = 'block';
-                    }
-
-                    if (matched.rootAuthListImagePath && matched.rootAuthListImageName) {
-                        const existingPreview = fileContainer.querySelector('.image-preview');
-                        const fullImagePath = matched.rootAuthListImagePath;
-
-                        if (!existingPreview) {
-                            const img = document.createElement('img');
-                            img.src = fullImagePath;
-                            img.classList.add('image-preview');
-                            img.style.width = '80px';
-                            img.style.height = '80px';
-                            img.style.objectFit = 'cover';
-                            img.style.marginBottom = '10px';
-                            fileContainer.insertBefore(img, fileContainer.firstChild); // 파일 input 위에 삽입
-                        }
-                    }
-                }
-            });
-        }
-
-        // 체크 시 동작
         document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
             checkbox.addEventListener("change", function () {
 
                 const checkVaild = document.getElementById("checkVaild");
                 checkVaild.style.display = 'none';
 
-                const checkLi = checkbox.closest('li'); // li 찾기
-                const fileContainer = checkLi.querySelector('.file-container'); // 해당 li 안의 파일 영역
+                const parentLi = this.closest('li');
+                const fileInputDiv = parentLi.querySelector('.mb-3');
 
                 const obj = {
-                    rootAuthListTitle: checkbox.dataset.title,
-                    rootAuthListAddress: checkbox.dataset.address,
-                    rootAuthListRoadAddress: checkbox.dataset.roadaddress,
-                    rootAuthListLatitude: checkbox.dataset.latitude,
-                    rootAuthListLongitude: checkbox.dataset.longitude,
-                    rootAuthListLink: checkbox.dataset.link,
-                    rootAuthListCategory: checkbox.dataset.category
+                    title: checkbox.dataset.title,
+                    address: checkbox.dataset.address,
+                    roadaddress: checkbox.dataset.roadaddress,
+                    latitude: checkbox.dataset.latitude,
+                    longitude: checkbox.dataset.longitude,
+                    link: checkbox.dataset.link,
+                    category: checkbox.dataset.category
                 };
 
                 let sessionChkDataSel = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
 
                 if (this.checked) {
-                    if (!sessionChkDataSel.some(item => item.rootAuthListTitle === obj.rootAuthListTitle)) {
+                    if (!sessionChkDataSel.some(item => item.title === obj.title)) {
                         sessionChkDataSel.push(obj);
                     }
-                    fileContainer.style.display = 'block'; // 파일 업로드 보이기
+                    fileInputDiv.style.display = 'block'; // 파일 업로드 보이기
                 } else {
-                    sessionChkDataSel = sessionChkDataSel.filter(item => item.rootAuthListTitle !== obj.rootAuthListTitle);
-                    fileContainer.style.display = 'none'; // 파일 업로드 숨기기
+                    sessionChkDataSel = sessionChkDataSel.filter(item => item.title !== obj.title);
+                    fileInputDiv.style.display = 'none'; // 파일 업로드 숨기기
                 }
 
                 sessionStorage.setItem("checkRootUser", JSON.stringify(sessionChkDataSel));
@@ -422,7 +323,6 @@
             })
         })
 
-        // list 업데이트
         function updateSelectList() {
             const rootSelectList = document.getElementById("rootSelectList");
             rootSelectList.innerHTML = "";
@@ -436,8 +336,6 @@
             sessionChkData.forEach((item) => {
                 const li = document.createElement("li");
 
-                const cleanTitle = item.rootAuthListTitle;
-                li.textContent = cleanTitle;
                 li.classList.add("root-list-style");
 
                 // 삭제 버튼 추가
@@ -456,13 +354,13 @@
 
                 li.appendChild(removeBtn);
 
-                li.dataset.rootAuthListTitle = item.rootAuthListTitle
-                li.dataset.rootAuthListAddress = item.rootAuthListAddress
-                li.dataset.rootAuthListRoadAddress = item.rootAuthListRoadAddress
-                li.dataset.rootAuthListLatitude = item.rootAuthListLatitude
-                li.dataset.rootAuthListLongitude = item.rootAuthListLongitude
-                li.dataset.rootAuthListLink = item.rootAuthListLink
-                li.dataset.rootAuthListCategory = item.rootAuthListCategory
+                li.dataset.title = item.title
+                li.dataset.address = item.address
+                li.dataset.roadaddress = item.roadaddress
+                li.dataset.latitude = item.latitude
+                li.dataset.longitude = item.longitude
+                li.dataset.link = item.link
+                li.dataset.category = item.category
 
                 rootSelectList.appendChild(li);
             });
@@ -475,9 +373,9 @@
 
             if (sessionChkData.length === 0) return;
 
-            const path = sessionChkData.map(data => new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude))
+            const path = sessionChkData.map(data => new naver.maps.LatLng(data.latitude, data.longitude))
 
-            // console.log(path);
+            console.log(path);
 
             // 기존 폴리라인 제거
             if (selPolyline) {
@@ -502,7 +400,7 @@
 
             sessionChkData.forEach((data, index) => {
                 const marker = new naver.maps.Marker({
-                    position: new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude),
+                    position: new naver.maps.LatLng(data.latitude, data.longitude),
                     map: map,
                     icon: {
                         content: `<img width="30" height="30" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
@@ -518,7 +416,6 @@
 
         }
 
-        // 파일 미리보기
         document.querySelectorAll('.file-input').forEach(input => {
             input.addEventListener('change', function(event) {
                 const file = event.target.files[0];
@@ -553,11 +450,11 @@
         // 로컬스토리지에서 값 삭제하는 함수
         function removeSelectStorage(value) {
             let sessionChkData = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
-            sessionChkData = sessionChkData.filter(item => item.rootAuthListTitle !== value.rootAuthListTitle);
+            sessionChkData = sessionChkData.filter(item => item.title !== value.title);
             sessionStorage.setItem("checkRootUser", JSON.stringify(sessionChkData));
 
             document.querySelectorAll('input[name="checkbox"]').forEach((chk) => {
-                if(chk.dataset.rootAuthListTitle === value.rootAuthListTitle) {
+                if(chk.dataset.title === value.title) {
                     chk.checked = false;
                     const parentLi = chk.closest('li');
                     const fileInputDiv = parentLi.querySelector('.mb-3');
@@ -568,7 +465,7 @@
 
             selMaker = selMaker.filter(marker => {
                 const position = marker.getPosition();
-                if (position.lat() === parseFloat(value.rootAuthListLatitude) && position.lng() === parseFloat(value.rootAuthListLongitude)) {
+                if (position.lat() === parseFloat(value.latitude) && position.lng() === parseFloat(value.longitude)) {
                     marker.setMap(null);
                     return false; // 필터에서 제거 (삭제된 마커만 필터링)
                 }
@@ -581,11 +478,11 @@
 
         // 루트 중앙 이동
         document.getElementById("map-button").addEventListener("click", function (){
-            // console.log("click")
+            console.log("click")
 
             const path = rootList.map((data)=>{
-                // console.log(data);
-                return new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude)
+                console.log(data);
+                return new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)
             })
 
             // list 의 중앙값
@@ -636,16 +533,11 @@
             const saveForm = document.getElementById("register-form");
             const selForm = document.getElementById("select-form");
 
-            let list = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
-            document.getElementById("rootListData").value = JSON.stringify(list);
-
-            const formMode = document.getElementById("form-mod").value;
-            const rootAuthSeq = document.getElementById("rootAuthSeq").value;
-
             let check = document.querySelectorAll('input[name="checkbox"]:checked');
-            const checkVaild = document.getElementById("checkVaild");
-            let checkSel = check.length > 0;
 
+            const checkVaild = document.getElementById("checkVaild");
+
+            let checkSel = check.length > 0;
             checkVaild.style.display = `none`;
 
             let hasError = false;
@@ -661,17 +553,12 @@
                 event.stopPropagation();
 
             }else {
-
+                let rootList = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
                 let rootseq = document.getElementById("select-root").value;
+
                 document.getElementById("rootSeq").value = rootseq;
+                document.getElementById("rootListData").value = JSON.stringify(rootList);
                 sessionStorage.removeItem("checkRootUser");
-
-                if (formMode === 'save') {
-                    saveForm.action = "/root/form/save"; // 저장
-                } else if (formMode === 'modify') {
-                    saveForm.action = `/root/form/modify/${rootAuthSeq}`; // 수정
-                }
-
                 saveForm.submit();
             }
             saveForm.classList.add('was-validated');

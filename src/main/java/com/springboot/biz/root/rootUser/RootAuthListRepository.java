@@ -10,4 +10,6 @@ import java.util.List;
 public interface RootAuthListRepository extends JpaRepository<RootAuthList, Long> {
     @Query("SELECT r FROM RootAuthList r WHERE r.rootAuth.rootAuthSeq = :rootAuthSeq")
     List<RootAuthList> findByRootAuthId(@Param("rootAuthSeq") Long rootAuthSeq);
+
+    void deleteByRootAuth(RootAuth rootAuth);
 }

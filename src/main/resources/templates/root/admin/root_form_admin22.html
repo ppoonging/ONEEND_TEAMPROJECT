@@ -52,8 +52,8 @@
                                 <!--top-->
                                 <div id="map" style="width: 100%; min-height: 500px; flex-grow: 1;"></div>
                                 <!--bottom-->
-                                <div style="width: 100%;" class="pt-1 root-li">
-                                    <ul class="d-flex mb-0 flex-wrap px-4 py-1" id="rootSelectList">
+                                <div style="background-color: #E8DCD4; width: 100%;" class="py-2 ">
+                                    <ul class="d-flex mb-0 flex-wrap" id="rootSelectList">
                                         <li></li>
                                     </ul>
                                 </div>
@@ -61,10 +61,31 @@
 
                             <!--right-->
                             <div class="h-100" style="width: 35%;">
-                                <h6>검색 리스트</h6>
-                                <ul id="searchResultList" class="h-100 p-0 mb-0">
-                                    <li id="search-data-list" th:each="searchData : ${searchData}" >
-                                    <!--검색 리스트 공간-->
+                                <ul th:if="${searchData}" style="background-color: #E8DCD4;" class="p-3 h-100 mb-0">
+                                    <li id="search-data-list" th:each="searchData : ${searchData}" class="d-flex flex-row p-2 h-100" >
+                                        <div class="my-2" style="width: 90%;">
+                                            <h6 th:utext="${searchData.title}" style="font-weight: bold; cursor: pointer; " name="click-address"
+                                                th:data-lat="${searchData.latitude}" th:data-lng="${searchData.longitude}"></h6>
+                                            <p th:text="'카테고리: ' + ${searchData.category}" class="mb-2" style="font-size: 14px; color: #777"></p>
+                                            <p th:text="'지번: ' + ${searchData.address}" class="mb-2" style="font-size: 14px; color: #444"></p>
+                                            <p th:text="'도로명: ' + ${searchData.roadAddress}" class="mb-0" style="font-size: 14px; color: #444"></p>
+                                            <input type="hidden" id="latitude" th:value = "${searchData.latitude}" />
+                                            <input type="hidden"  id="longitude" th:value = "${searchData.longitude}"/>
+                                        </div>
+                                        <div class="d-flex justify-content-center align-items-center" style="width: 10%">
+                                            <div class="checkbox-form">
+                                                <input type="checkbox" name="checkbox" class="root-checkbox-input"
+                                                       th:data-title="${searchData.title}"
+                                                       th:data-address="${searchData.address}"
+                                                       th:data-roadaddress="${searchData.roadAddress}"
+                                                       th:data-latitude="${searchData.latitude}"
+                                                       th:data-longitude="${searchData.longitude}"
+                                                       th:data-link="${searchData.link}"
+                                                       th:data-category="${searchData.category}"
+
+                                                />
+                                            </div>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
@@ -146,154 +167,23 @@
 
             // 주소 검색 동작
             document.getElementById("search-submit").addEventListener("click", function () {
-                // const query = document.getElementById("query").value;
-                //
-                // // 검색 시 결과가 없을 경우
-                // if(query.length === 0) {
-                //     alert("검색 결과가 없습니다. 정확한 키워드를 입력해주세요.")
-                // }
-                //
-                // const center = map.getCenter();
-                // sessionStorage.setItem("mapCenterLat", center.lat());
-                // sessionStorage.setItem("mapCenterLng", center.lng());
-                //
-                // sessionStorage.setItem("savedCheckRoot", sessionStorage.getItem("checkRoot"));
-                // document.getElementById("hiddenQuery").value = query;
-                // document.getElementById("searchForm").submit();
-
                 const query = document.getElementById("query").value;
 
-                if(query.trim().length === 0) {
-                    alert("검색어를 입력하세요.");
-                    return;
+                // 검색 시 결과가 없을 경우
+                if(query.length === 0) {
+                    alert("검색 결과가 없습니다. 정확한 키워드를 입력해주세요.")
                 }
 
-                fetch(`/root/register/form/search?query=${encodeURIComponent(query)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("검색결과", data);
-                        updateSearchResult(data); // 받아온 데이터로 화면 갱신
-                    })
-                    .catch(error => {
-                        console.error("검색 실패:", error);
-                        alert("검색 중 오류가 발생했습니다.");
-                    });
+                const center = map.getCenter();
+                sessionStorage.setItem("mapCenterLat", center.lat());
+                sessionStorage.setItem("mapCenterLng", center.lng());
+
+                sessionStorage.setItem("savedCheckRoot", sessionStorage.getItem("checkRoot"));
+                document.getElementById("hiddenQuery").value = query;
+                document.getElementById("searchForm").submit();
 
 
             });
-
-            function updateSearchResult(searchData) {
-                const listContainer = document.getElementById("searchResultList");
-                listContainer.innerHTML = ""; // 초기화
-
-                if (searchData.length === 0) {
-                    listContainer.innerHTML = "<li>검색 결과가 없습니다.</li>";
-                    return;
-                }
-
-                searchData.forEach(data => {
-                    const li = document.createElement('li');
-                    li.classList.add('d-flex', 'flex-row', 'p-2', 'h-100', 'root-li');
-
-                    li.innerHTML = `
-                            <div class="my-2 p-2" style="width: 90%;">
-                                <h6 style="font-weight: bold; cursor: pointer;" name="click-address"
-                                    data-lat="${data.latitude}" data-lng="${data.longitude}">${data.title}</h6>
-                                <p class="mb-2" style="font-size: 14px; color: #777">카테고리: ${data.category}</p>
-                                <p class="mb-2" style="font-size: 14px; color: #444">지번: ${data.address}</p>
-                                <p class="mb-0" style="font-size: 14px; color: #444">도로명: ${data.roadAddress}</p>
-                                <input type="hidden" value="${data.latitude}" />
-                                <input type="hidden" value="${data.longitude}" />
-                            </div>
-                            <div class="d-flex justify-content-center align-items-center" style="width: 10%">
-                                <div class="checkbox-form">
-                                    <input type="checkbox" name="checkbox" class="root-checkbox-input"
-                                        data-title="${data.title}"
-                                        data-address="${data.address}"
-                                        data-roadaddress="${data.roadAddress}"
-                                        data-latitude="${data.latitude}"
-                                        data-longitude="${data.longitude}"
-                                        data-link="${data.link}"
-                                        data-category="${data.category}"
-                                    />
-                                </div>
-                            </div>
-                    `;
-
-                    listContainer.appendChild(li);
-                });
-
-                // 새로 그린 요소에 다시 이벤트 등록
-                attachCheckboxEvents();
-                attachClickAddressEvents();
-            }
-
-            function attachCheckboxEvents() {
-                document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
-                    checkbox.addEventListener("change", function () {
-                        const obj = {
-                            title: checkbox.dataset.title,
-                            address: checkbox.dataset.address,
-                            roadaddress: checkbox.dataset.roadaddress,
-                            latitude: checkbox.dataset.latitude,
-                            longitude: checkbox.dataset.longitude,
-                            link: checkbox.dataset.link,
-                            category: checkbox.dataset.category,
-                        };
-                        let sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
-                        if (this.checked) {
-                            if (!sessionChkData.some(item => item.title === obj.title)) sessionChkData.push(obj);
-
-                            // ✅ 체크 시 지도 중심 이동
-                            const lat = parseFloat(obj.latitude);
-                            const lng = parseFloat(obj.longitude);
-                            const position = new naver.maps.LatLng(lat, lng);
-                            map.setCenter(position);
-                            map.setZoom(17); // 필요 시 확대
-
-                            // ✅ 마커도 표시 (선택)
-                            if (marker) marker.setMap(null); // 기존 마커 제거
-                            marker = new naver.maps.Marker({
-                                position: position,
-                                map: map,
-                                icon: {
-                                    content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
-                                    anchor: new naver.maps.Point(10, 40)
-                                },
-                                animation: naver.maps.Animation.BOUNCE
-                            });
-
-                        } else {
-                            sessionChkData = sessionChkData.filter(item => item.title !== obj.title);
-                        }
-                        sessionStorage.setItem("checkRoot", JSON.stringify(sessionChkData));
-                        updateSelectList();
-                        drawPolyline();
-                    });
-                });
-            }
-
-            function attachClickAddressEvents() {
-                document.querySelectorAll('h6[name="click-address"]').forEach((data) => {
-                    data.addEventListener("click", function () {
-                        const lat = parseFloat(data.dataset.lat);
-                        const lng = parseFloat(data.dataset.lng);
-                        const position = new naver.maps.LatLng(lat, lng);
-                        map.setCenter(position);
-                        map.setZoom(17);
-                        if (marker) marker.setMap(null);
-                        marker = new naver.maps.Marker({
-                            position: position,
-                            map: map,
-                            icon: { content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`, anchor: new naver.maps.Point(10, 40) },
-                            animation: naver.maps.Animation.BOUNCE
-                        });
-                    });
-                });
-            }
-
-
-
 
             // 검색 시 타이틀 초기화 방지
             document.getElementById("title").addEventListener("input", function () {
@@ -322,68 +212,68 @@
             }
 
             // title 체크 시 지도/마커
-            // document.querySelectorAll('h6[name="click-address"]').forEach((data) => {
-            //     data.addEventListener("click", function () {
-            //         const lat = parseFloat(data.dataset.lat);
-            //         const lng = parseFloat(data.dataset.lng);
-            //         const position = new naver.maps.LatLng(lat, lng);
-            //
-            //         map.setCenter(position);
-            //         map.setZoom(17);
-            //
-            //         if (marker) marker.setMap(null);
-            //
-            //         marker = new naver.maps.Marker({
-            //             position: position,
-            //             map: map,
-            //             icon: {
-            //                 content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
-            //                 anchor: new naver.maps.Point(10, 40)
-            //             },
-            //             animation: naver.maps.Animation.BOUNCE
-            //         });
-            //
-            //
-            //     });
-            // });
+            document.querySelectorAll('h6[name="click-address"]').forEach((data) => {
+                data.addEventListener("click", function () {
+                    const lat = parseFloat(data.dataset.lat);
+                    const lng = parseFloat(data.dataset.lng);
+                    const position = new naver.maps.LatLng(lat, lng);
+
+                    map.setCenter(position);
+                    map.setZoom(17);
+
+                    if (marker) marker.setMap(null);
+
+                    marker = new naver.maps.Marker({
+                        position: position,
+                        map: map,
+                        icon: {
+                            content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
+                            anchor: new naver.maps.Point(10, 40)
+                        },
+                        animation: naver.maps.Animation.BOUNCE
+                    });
+
+
+                });
+            });
 
             // 체크박스 이벤트 처리
-            // document.querySelectorAll('input[name="checkbox"]').forEach((checkbox, index) => {
-            //     checkbox.addEventListener("change", function () {
-            //         const obj = {
-            //             title: checkbox.dataset.title,
-            //             address: checkbox.dataset.address,
-            //             roadaddress: checkbox.dataset.roadaddress,
-            //             latitude: checkbox.dataset.latitude,
-            //             longitude: checkbox.dataset.longitude,
-            //             link: checkbox.dataset.link,
-            //             category: checkbox.dataset.category,
-            //         }
-            //         // console.log(typeof obj);
-            //         let sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
-            //         // console.log(typeof sessionChkData);
-            //         if (this.checked) {
-            //             // some 하나라도
-            //             if (!sessionChkData.some(item => item.title === obj.title)) {
-            //                 sessionChkData.push(obj);
-            //
-            //             }
-            //
-            //             map.setCenter(new naver.maps.LatLng(obj.latitude, obj.longitude))
-            //
-            //         } else {
-            //             // 체크되지 않았으면 지우기
-            //             sessionChkData = sessionChkData.filter(item => item.title !== obj.title);
-            //             // removeSelectStorage(obj);
-            //         }
-            //
-            //         sessionStorage.setItem("checkRoot", JSON.stringify(sessionChkData));
-            //         updateSelectList();
-            //         drawPolyline();
-            //
-            //
-            //     });
-            // });
+            document.querySelectorAll('input[name="checkbox"]').forEach((checkbox, index) => {
+                checkbox.addEventListener("change", function () {
+                    const obj = {
+                        title: checkbox.dataset.title,
+                        address: checkbox.dataset.address,
+                        roadaddress: checkbox.dataset.roadaddress,
+                        latitude: checkbox.dataset.latitude,
+                        longitude: checkbox.dataset.longitude,
+                        link: checkbox.dataset.link,
+                        category: checkbox.dataset.category,
+                    }
+                    // console.log(typeof obj);
+                    let sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
+                    // console.log(typeof sessionChkData);
+                    if (this.checked) {
+                        // some 하나라도
+                        if (!sessionChkData.some(item => item.title === obj.title)) {
+                            sessionChkData.push(obj);
+
+                        }
+
+                        map.setCenter(new naver.maps.LatLng(obj.latitude, obj.longitude))
+
+                    } else {
+                        // 체크되지 않았으면 지우기
+                        sessionChkData = sessionChkData.filter(item => item.title !== obj.title);
+                        // removeSelectStorage(obj);
+                    }
+
+                    sessionStorage.setItem("checkRoot", JSON.stringify(sessionChkData));
+                    updateSelectList();
+                    drawPolyline();
+
+
+                });
+            });
 
             // 체크박스 상태
             function checkboxState() {

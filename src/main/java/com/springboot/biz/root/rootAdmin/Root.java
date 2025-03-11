@@ -5,6 +5,7 @@ import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ public class Root {
     private List<RootList> rootList; // 루트 목록
 
     private LocalDateTime rootDate;
+
+    private LocalDateTime rootModifyDate;
 
 //    public void setRootList(List<RootList> rootList) {
 //        this.rootList = rootList;

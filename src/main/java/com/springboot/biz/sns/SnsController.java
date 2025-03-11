@@ -32,7 +32,7 @@ public class SnsController {
     }
 
     @GetMapping("/form")
-    public String create(){
+    public String create(SnsDTO snsDTO){
         return "main/sns/sns_form";
     }
 
@@ -44,5 +44,11 @@ public class SnsController {
         this.snsService.save(file, link, tag, user);
 
         return "redirect:/sns";
+    }
+
+    @GetMapping("/form/modify/{snsSeq}")
+    public String modify(SnsDTO snsDTO){
+
+        return "main/sns/sns_form";
     }
 }

@@ -11,4 +11,6 @@ import java.util.List;
 public interface RootListRepository extends JpaRepository<RootList, Integer> {
     @Query("SELECT r FROM RootList r WHERE r.root.RootSeq = :rootSeq")
     List<RootList> findByRootId(@Param("rootSeq") Integer rootSeq);
+
+    void deleteByRoot(Root root);
 }

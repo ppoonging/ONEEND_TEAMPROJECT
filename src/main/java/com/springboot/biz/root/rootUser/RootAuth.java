@@ -35,6 +35,8 @@ public class RootAuth {
 
     private LocalDateTime rootAuthDate;
 
+    private LocalDateTime rootAuthModifyDate;
+
     @OneToMany(mappedBy = "rootAuth", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<RootAuthList> rootAuthList;
