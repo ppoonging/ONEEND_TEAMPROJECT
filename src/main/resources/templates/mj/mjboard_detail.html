@@ -1,147 +1,136 @@
+<!DOCTYPE html>
 <html layout:decorate="~{layout}">
-    <main layout:fragment="content">
-        <!--상단-->
-        <div style="background-color: #F4E9E3">
-            <div class="container py-2">
+<main layout:fragment="content">
 
-                <!--수정해야할 부분-->
-                <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">한끝 커뮤니티 > 맛집소개 </span>
-
-            </div>
+    <!--상단-->
+    <div style="background-color: #F4E9E3">
+        <div class="container py-2">
+            <link rel="stylesheet" type="text/css" th:href="@{/mj.css}">
+            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">한끝 커뮤니티 > 맛집소개 </span>
         </div>
-        <div class="container mt-5">
-            <div class="text-center">
-                <img th:src="@{/images/total/밥그릇.png}" width="5%">
-            </div>
+    </div>
 
-            <!--수정해야할 부분-->
-            <!--title-->
-            <h2 class="text-center py-2">맛집소개</h2>
-            <!--content-->
-            <h2 class="border-bottom py-2" th:text="${mjboard.mjTitle}"></h2>
-            <section class="py-5">
-                <div class="card my-3">
-                    <div class="card-body">
-                        <div class="card-text" style="white-space: pre-line" th:utext="${mjboard.mjContent}"></div>
-                        <!--업로드된 파일 있을 때만 이미지 보여주기 -->
-                       <!-- <div th:if="${mjboard.mjFileName != null}">
-                            <img th:src="@{${mjboard.mjFilePath}}"
-                                 class="img-fluid rounded mb-4"
-                                 alt="Uploaded Image"
-                                 style="max-width: 100%; max-height: 400px; object-fit: contain;">
-                        </div>-->
-                        <div class="d-flex justify-content-end">
-                            <div class="badge bg-light text-dark p-2 text-start">
-                                <div th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd HH:mm')}"></div>
-                            </div>
+    <div class="container mt-5">
+        <div class="text-center">
+            <img th:src="@{/images/total/밥그릇.png}" width="5%">
+        </div>
+
+        <h2 class="text-center py-2">맛집소개</h2>
+
+        <!-- 카드형 본문 -->
+        <section class="py-5">
+            <div class="card shadow-sm" style="border-radius: 16px;">
+                <div class="card-body">
+
+                    <!-- 제목 -->
+                    <h3 class="card-title" th:text="${mjboard.mjTitle}" style="font-weight: bold; font-size: 28px;"></h3>
+
+                    <!-- 본문 -->
+                    <div class="card-text mt-4" style="white-space: pre-line;" th:utext="${mjboard.mjContent}"></div>
+
+                    <!-- 날짜 -->
+                    <div class="d-flex justify-content-end mt-3">
+                        <div class="badge bg-light text-dark p-2" style="font-size: 14px;">
+                            <div th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd HH:mm')}"></div>
                         </div>
                     </div>
-                </div>
-                <!-- 작성자만 수정/삭제 보이게 -->
-                <div th:if="${#authentication.name == mjboard.userId.username}">
-                    <div class="my-3">
-                        <a th:href="@{|/mjboard/modify/${mjboard.mjSeq}|}"
-                           class="btn btn-sm btn-outline-secondary"
-                           th:text="'수정'"></a>
-                    </div>
 
+                </div>
+            </div>
+
+            <!-- 추천, 수정, 삭제 버튼 -->
+            <div class="mt-4 d-flex justify-content-between align-items-center">
+
+                <!-- 추천 -->
+                <div class="like-buttonmj d-flex align-items-center" th:data-uri="@{/mjboard/mjRecommend/{id}(id=${mjboard.mjSeq})}">
+                    <input class="on" id="heart" type="checkbox" th:checked="${isRecommended}" />
+                    <label class="likemj d-flex align-items-center mb-0" for="heart" style="cursor: pointer;">
+                        <svg class="like-iconmj" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.8 4.6c-1.4-1.4-3.6-1.4-5 0L12 8.4 8.2 4.6c-1.4-1.4-3.6-1.4-5 0s-1.4 3.6 0 5L12 18l8.8-8.4c1.4-1.4 1.4-3.6 0-5z"></path>
+                        </svg>
+                        <span class="like-textmj ms-2">맛집추천</span>
+                    </label>
+                    <span class="badge bg-secondary ms-2" th:text="${#lists.size(mjboard.recommendUsers)}"></span>
+                </div>
+
+                <!-- 수정/삭제 -->
+                <div th:if="${#authentication.name == mjboard.userId.username}">
+                    <a th:href="@{|/mjboard/modify/${mjboard.mjSeq}|}"
+                       class="btn btn-outline-secondary btn-sm rounded-pill">맛집 수정</a>
                     <a href="javascript:void(0);"
                        th:data-uri="@{|/mjboard/delete/${mjboard.mjSeq}|}"
-                       class="delete btn btn-sm btn-outline-secondary"
-                       th:text="'삭제'"></a>
+                       class="delete btn btn-outline-danger btn-sm rounded-pill">맛집 삭제</a>
                 </div>
 
-                <!--mjRecommend-->
-                <div class="my-3">
-                    <a href="javascript:void(0);"
-                       th:data-uri="@{|/mjboard/mjRecommend/${mjboard.mjSeq}|}"
-                       class="mjRecommend btn btn-sm btn-outline-secondary"
-                       th:text="'추천'"></a>
+            </div>
 
-                    <!-- 추천 수 표시 -->
-                    <span class="badge rounded-pill bg-success"
-                          th:text="${mjboard.mjRecommend}"></span>
+            <!-- 댓글 -->
+            <h6 class="border-bottom py-2 mt-5" th:text="|${#lists.size(mjboard.mjAanswerList)} 개의 답변이 있어요.|"></h6>
 
-                </div>
-
-
-
-                <!--답변 갯수-->
-                <h6 class="border-bottom py-2" th:text="|${#lists.size(mjboard.mjAanswerList)} 개의 답변이 있어요.|"></h6>
-                <!--답변 반복-->
-                <div class="card my-3" th:each="mjanswer : ${mjboard.mjAanswerList}">
-                    <div class="card-body">
-                        <div class="card-text" style="white-space: pre-line" th:text="${mjanswer.mjAnsContent}"></div>
-                        <div class="d-flex justify-content-end">
-                            <div class="badge bg-light text-dark p-2 text-start">
-                                <div th:text="${#temporals.format(mjanswer.mjAnsRegDate, 'yyyy-MM-dd HH:mm')}"></div>
-                            </div>
-                        </div>
+            <!-- 댓글 반복 -->
+            <div class="card my-3" th:each="mjanswer : ${mjboard.mjAanswerList}">
+                <div class="card-body">
+                    <div class="card-text" style="white-space: pre-line" th:text="${mjanswer.mjAnsContent}"></div>
+                    <div class="d-flex justify-content-end">
+                        <div class="badge bg-light text-dark p-2" th:text="${#temporals.format(mjanswer.mjAnsRegDate, 'yyyy-MM-dd HH:mm')}"></div>
                     </div>
                 </div>
-                <!--앵커 기능-->
-              <!--  <a th:href="@{|/mjanswer/modify/${mjanswer.mjSeq}|}"
-                   class="btn btn-sm btn-outline-secondary">수정</a>
+            </div>
 
-                <a href="javascript:void(0);"
-                   th:data-uri="@{|/mjanswer/delete/${mjanswer.mjSeq}|}"
-                   class="delete btn btn-sm btn-outline-secondary">삭제</a>
-
-
-                <a href="javascript:void(0);"
-                   th:data-uri="@{|/mjanswer/mjRecommend/${mjanswer.mjSeq}|}"
-                   class="recommend btn btn-sm btn-outline-secondary">추천</a>
-
-                <span class="badge rounded-pill bg-success"
-                      th:text="${#lists.size(mjanswer.mjAnsRecommend)}"></span>-->
-
-
-                <!--답변-->
-                <form th:action="@{|/mjanswer/create/${mjboard.mjSeq}|}" method="post" th:object="${mjanswerForm}">
-                    <!--<div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-                        <div th:each="err:${#fields.allErrors()}" th:text="${err}"></div>
-                    </div>-->
-                    <textarea class="form-control" name="mjAnsContent" id="mjAnsContent" rows="15"></textarea>
-                    <input class="btn btn-primary my-2" type="submit" value="댓글">
+            <!-- 댓글 폼 -->
+            <form th:action="@{|/mjanswer/create/${mjboard.mjSeq}|}" method="post" th:object="${mjanswerForm}">
+                <textarea class="form-control rounded-3" name="mjAnsContent" id="mjAnsContent" rows="5" placeholder="댓글을 작성해주세요"></textarea>
+                <div class="text-end mt-3">
+                    <input class="btn btn-primary" type="submit" value="댓글 등록">
                     <a th:href="@{/mjboard/list}" class="btn btn-danger">맛집 게시판</a>
-                </form>
+                </div>
+            </form>
 
-                <!--하단 줄 (필요에 따라 사용)-->
-                <hr style="margin-top: 50px">
-            </section>
-        </div>
-        <script layout:fragment="script" type="text/javascript">
-            const delete_elements = document.getElementsByClassName("delete");
-            Array.from(delete_elements).forEach(function(element){
-                element.addEventListener('click', function(){
-                    if(confirm("정말로 삭제하시겠습니까?")){
-                        location.href=this.dataset.uri;
-                    };
+            <hr style="margin-top: 50px">
+        </section>
+    </div>
 
-                });
-
+    <!-- 스크립트 그대로 유지 -->
+    <script layout:fragment="script" type="text/javascript">
+        const delete_elements = document.getElementsByClassName("delete");
+        Array.from(delete_elements).forEach(function(element){
+            element.addEventListener('click', function(){
+                if(confirm("정말로 삭제하시겠습니까?")){
+                    location.href=this.dataset.uri;
+                };
             });
+        });
 
-
-            const recommend_element = document.getElementsByClassName("mjRecommend")
-
-            Array.from(recommend_element).forEach(function(element){
-                element.addEventListener("click" , function(){
-                    if(confirm("추천하시겠습니까?")){
-                        location.href=this.dataset.uri;
-                    };
-
-
-                });
-
-
+        const recommend_element = document.getElementsByClassName("mjRecommend");
+        Array.from(recommend_element).forEach(function(element){
+            element.addEventListener("click", function(){
+                if(confirm("추천하시겠습니까?")){
+                    fetch(this.dataset.uri, { method: "POST" })
+                        .then(response => response.json())
+                        .then(data => {
+                            alert("현재 추천 수: " + data.count);
+                            location.reload();
+                        })
+                        .catch(error => console.error("에러 발생:", error));
+                }
             });
+        });
 
+        document.addEventListener('DOMContentLoaded', function () {
+            const heart = document.getElementById('heart');
+            heart.addEventListener('change', function () {
+                const url = document.querySelector('.like-buttonmj').dataset.uri;
+                fetch(url, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        const likeCountOne = document.querySelector('.like-count.one');
+                        const likeCountTwo = document.querySelector('.like-count.two');
+                        likeCountOne.textContent = data.count;
+                        likeCountTwo.textContent = data.count + 1;
+                    });
+            });
+        });
+    </script>
 
-
-
-
-        </script>
-
-    </main>
+</main>
 </html>

@@ -3,6 +3,9 @@ package com.springboot.biz.mj.board;
 
 import com.springboot.biz.DataNotFoundException;
 import com.springboot.biz.user.HUser;
+import com.springboot.biz.user.HUserRepository;
+import com.springboot.biz.user.HUserSerevice;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,19 +27,31 @@ import java.util.UUID;
 public class MjboardService {
     private final MjboardRepository mjboardRepository;
     private final MjthumbnailService mjthumbnailService;
+    private final HUserSerevice hUserSerevice;
+
 
 
 
 
     // 게시글 목록
-    public Page<Mjboard> getList(int page) {
+ /*   public Page<Mjboard> getList(int page) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "mjRegDate"));
         return this.mjboardRepository.findAll(pageable);
+    }*/
+    public Page<Mjboard> getList(Pageable pageable, String kw) {
+        if (kw == null || kw.trim().isEmpty()) {
+            return mjboardRepository.findAll(pageable);
+        } else {
+            return mjboardRepository.findByMjTitleContaining(kw, pageable);
+        }
     }
+
+
+
 
     // 게시글 작성 (유저 포함)
     public void create(String mjTitle, String mjContent, MultipartFile file, HUser hUser) throws Exception {
-        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files";
+        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/mj";
         UUID uuid = UUID.randomUUID();
         String mjFileName = uuid + "_" + file.getOriginalFilename();
         File saveFile = new File(projectPath, mjFileName);
@@ -47,8 +62,8 @@ public class MjboardService {
         File thumbnailFile = new File(projectPath, thumbnailFileName);
         mjthumbnailService.createThumbnail(saveFile, thumbnailFile);
 
-        String thumbnailUrl = "/files/" + thumbnailFileName;
-        String filePath = "/files/" + mjFileName;
+        String thumbnailUrl = "/files/mj/" + thumbnailFileName;
+        String filePath = "/files/mj/" + mjFileName;
 
         // 저장
         Mjboard mj = new Mjboard();
@@ -64,12 +79,12 @@ public class MjboardService {
 
     // 썸머노트 이미지 저장
     public String saveSummernoteImage(MultipartFile file) throws Exception {
-        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files";
+        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/mj";
         UUID uuid = UUID.randomUUID();
         String fileName = uuid + "_" + file.getOriginalFilename();
         File saveFile = new File(projectPath, fileName);
         file.transferTo(saveFile);
-        return "/files/" + fileName;
+        return "/files/mj/" + fileName;
     }
 
     // 게시글 조회
@@ -92,13 +107,26 @@ public class MjboardService {
 
     // 추천
     // 추천 기능
-    public void mjRecommend(Mjboard mjboard) {
-        if (mjboard.getMjRecommend() == null) { // null 일 때 0으로 초기화
-            mjboard.setMjRecommend(0);
+    @Transactional
+    public int mjRecommend(Mjboard mjboard, HUser user) {
+        // 추천한 사용자 목록 가져오기
+        List<HUser> recommendList = mjboard.getRecommendUsers();
+        // 이미 추천했는지 확인 (userSeq 기준 비교)
+        boolean alreadyRecommended = recommendList.stream()
+                .anyMatch(u -> u.getUserSeq().equals(user.getUserSeq()));  //userSeq 비교
+        if (alreadyRecommended) {
+            // 이미 추천했으면 취소
+            recommendList.removeIf(u -> u.getUserSeq().equals(user.getUserSeq())); //userSeq로 찾아서 제거
+        } else {
+            // 추천 안했으면 추가
+            recommendList.add(user);
         }
-        mjboard.setMjRecommend(mjboard.getMjRecommend() + 1); // 추천 수 증가
-        this.mjboardRepository.save(mjboard);
+        // 저장
+        mjboardRepository.save(mjboard);
+        // 현재 추천 수 반환 (프론트에 추천 수 표시할 때 사용)
+        return recommendList.size();
     }
+
 
 
 }

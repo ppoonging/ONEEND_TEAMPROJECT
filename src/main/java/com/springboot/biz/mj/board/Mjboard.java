@@ -10,6 +10,7 @@ import lombok.NonNull;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -30,12 +31,12 @@ public class Mjboard {
     @Column(length = 100)
     private String mjTitle;   //제목
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT") // 긴 내용을 저장학 위해서 변경함.
     private String mjContent;  //내용
 
     private LocalDateTime mjRegDate;
 
-    private Integer mjRecommend; //맛집소개 추천
+   /* private Integer mjRecommend;*/ //맛집소개 추천
 
     private LocalDateTime mjModifyDate;  //맛집소개 수정일
 
@@ -51,6 +52,11 @@ public class Mjboard {
 
     @OneToMany(mappedBy = "mjBoard", cascade = CascadeType.REMOVE)
     private List<MjAnswer> mjAanswerList;
+
+    @ManyToMany
+    private List<HUser> recommendUsers = new ArrayList<>();//맛집소개 추천
+
+
 
 
 }

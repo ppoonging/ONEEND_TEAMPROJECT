@@ -1,11 +1,12 @@
-package com.springboot.biz.mj.board;// ✳️ MjboardController.java
-
-import com.springboot.biz.mj.answer.MjAnswerForm;
+package com.springboot.biz.mj.board;
+import com.mysql.cj.MysqlConnection;
 import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -15,8 +16,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Controller
@@ -27,13 +37,44 @@ public class MjboardController {
     private final HUserSerevice hUserSerevice;
     private final MjboardService mjboardService;
 
-    // 게시판 리스트
+    @PostMapping("/uploadExternalImage")
+    @ResponseBody
+    public Map<String, String> uploadExternalImage(@RequestBody Map<String, String> req) throws Exception {
+        String imageUrl = req.get("url");
+        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/mj";
+
+        // 이미지 다운로드
+        URL url = new URL(imageUrl);
+        String fileName = UUID.randomUUID() + "_" + Paths.get(url.getPath()).getFileName().toString();
+        File file = new File(projectPath, fileName);
+
+        try (InputStream in = url.openStream(); OutputStream out = new FileOutputStream(file)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = in.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
+        }
+        // 저장된 이미지 경로 반환
+        return Collections.singletonMap("url", "/files/mj/" + fileName);
+    }
+    /*  // 게시판 리스트
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
         Page<Mjboard> paging = this.mjboardService.getList(page);
         model.addAttribute("paging", paging);
         return "mj/mjboard_list";
+    }*/
+    @GetMapping("/list")
+    public String list(Model model, @PageableDefault(size = 9) Pageable pageable,
+                       @RequestParam(value = "kw", defaultValue = "") String kw) {
+        Page<Mjboard> paging = mjboardService.getList(pageable, kw);
+        model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw);
+        return "mj/mjboard_list"; // 경로 확인!
     }
+
+
 
     // 글쓰기 폼 (GET)
     @PreAuthorize("isAuthenticated()")
@@ -113,16 +154,16 @@ public class MjboardController {
     // 추천 기능
     // 추천 기능 (로그인 필요)
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/mjRecommend/{mjSeq}")
-    public String mjRecommend(@PathVariable("mjSeq") Integer mjSeq, Principal principal) {
-        Mjboard mjboard = this.mjboardService.getMjboard(mjSeq);
-        HUser user = this.hUserSerevice.getUser(principal.getName());
-        this.mjboardService.mjRecommend(mjboard);
-        return String.format("redirect:/mjboard/detail/%s", mjSeq);
+    @PostMapping("/mjRecommend/{mjSeq}")
+    @ResponseBody
+    public Map<String, Integer> mjRecommend(@PathVariable("mjSeq") Integer mjSeq, Principal principal) {
+        Mjboard mjboard = mjboardService.getMjboard(mjSeq);
+        HUser user = hUserSerevice.getUser(principal.getName());
+        int recommendCount = mjboardService.mjRecommend(mjboard, user); // 추천/취소 서비스 메소드 호출
+        return Map.of("count", recommendCount); // json 형태로 반환
     }
-
-    @GetMapping("test")
+    /*@GetMapping("test")
     public String test() {
         return "mj/test";
-    }
+    }*/
 }

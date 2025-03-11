@@ -1,88 +1,102 @@
 <html layout:decorate="~{layout}">
-    <main layout:fragment="content">
-        <!--상단-->
-        <div style="background-color: #F4E9E3">
-            <div class="container py-2">
+<main layout:fragment="content">
 
-                <!--수정해야할 부분-->
-                <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px"> 한 끝 > 맛집 소개 </span>
-            </div>
+    <!-- 상단 바 -->
+    <div style="background-color: #F4E9E3">
+        <div class="container py-2">
+            <span style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px"> 한 끝 > 맛집 소개 </span>
         </div>
-        <div class="container mt-5">
-            <div class="text-center">
-                <img th:src="@{/images/total/밥그릇.png}" width="5%">
-            </div>
+    </div>
 
-            <!--수정해야할 부분-->
-            <!--title-->
-            <h2 class="text-center py-2">맛집 소개</h2>
-            <!--content-->
-            <div class="input-group">
-                <input type="text" id="search_kw" class="form-control" th:value="${kw}">
-                <button class="btn btn-warning" type="button" id="btn_search">검색</button>
-            </div>
-            <section class="py-5">
+    <!-- 본문 -->
+    <div class="container mt-5">
 
-                <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
-                <div >
-                    <table class="table">
-                        <thead class="table-danger">
-                        <tr class="tab-content">
-                    <tr>
-                        <th>번호</th>
-                        <td>제목</td>
-                        <th>글쓴이</th>
-                        <th>작성일자</th>
-                    </tr>
-
-                        </thead>
-                        </tr>
-                        <tbody>
-
-                     <tr th:each="mjboard , loop : ${paging}">
-                         <td th:text="${paging.getTotalElements -(paging.number * paging.size)-loop.index}"></td>
-                         <td><a th:href="@{|/mjboard/detail/${mjboard.mjSeq}|}"
-                            th:text="${mjboard.mjTitle}"></a>
-                       <span class="text-danger small ms-2" th:if="${#lists.size(mjboard.mjAanswerList)>0}"
-                             th:text="${#lists.size(mjboard.mjAanswerList)}"></span></td>
-                         <td><span th:if="${mjboard.userId !=null}"
-                         th:text="${mjboard.userId.nickname}"></span></td>
-                         <td th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd HH:mm')}"></td>
-                         <!--<td th:text="${#lists.size(mjboard.mjRecommend)}"></td>-->
-
-
-                     </tr>
-                        </tbody>
-                    </table>
-
-
-                    <!-- **내용** -->
-                </div>
-
-                <a th:href="@{/mjboard/create}" class="btn btn-danger">맛집 등록</a>
-
-                <!--하단 줄 (필요에 따라 사용)-->
-                <hr style="margin-top: 50px">
-                <!--pagination-->
-                <div class="d-flex justify-content-center">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true"> < </span>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true"> > </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </section>
+        <!-- 상단 로고 -->
+        <div class="text-center">
+            <img th:src="@{/images/total/밥그릇.png}" width="5%">
         </div>
 
-    </main>
+        <!-- 타이틀 -->
+        <h2 class="text-center py-2">맛집 소개</h2>
+
+        <!-- 카드형 리스트 -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" th:each="mjboard : ${paging}">
+                <div class="card h-100 shadow-sm">
+
+                    <!--썸네일-->
+                    <img th:src="@{${mjboard.mjthumbnaiurl}}"
+                         class="card-img-top"
+                         alt="썸네일"
+                         style="height: 200px; object-fit: cover;">
+
+                    <!-- 카드 본문 -->
+                    <div class="card-body">
+                        <!-- 제목 -->
+                        <h5 class="card-title">
+                            <a th:href="@{/mjboard/detail/{id}(id=${mjboard.mjSeq})}" th:text="${mjboard.mjTitle}"></a>
+                        </h5>
+
+                        <!-- 댓글 수 -->
+                        <p class="card-text text-muted"
+                           th:if="${mjboard.mjAanswerList != null and #lists.size(mjboard.mjAanswerList) > 0}">
+                            댓글 [<span th:text="${#lists.size(mjboard.mjAanswerList)}"></span>]
+                        </p>
+
+                        <!-- 작성자 -->
+                        <p class="card-text">
+                            <small class="text-muted">작성자:
+                                <span th:if="${mjboard.userId != null}" th:text="${mjboard.userId.nickname}"></span>
+                                <span th:if="${mjboard.userId == null}">알 수 없음</span>
+                            </small>
+                        </p>
+
+                        <!-- 작성일 -->
+                        <p class="card-text">
+                            <small class="text-muted" th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd HH:mm')}"></small>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- 검색창 -->
+        <div class="input-group mb-4">
+            <input type="text" id="search_kw" class="form-control" th:value="${kw}" placeholder="검색어를 입력하세요" style="width: 120px;">
+            <button class="btn btn-warning" type="button" id="btn_search">검색</button>
+        </div>
+        <!-- 맛집 등록 버튼 -->
+        <div class="text-end mt-4">
+            <a th:href="@{/mjboard/create}" class="btn btn-danger">맛집 등록</a>
+        </div>
+
+        <!-- 하단 줄 -->
+        <hr style="margin-top: 50px">
+
+        <!-- 페이징 -->
+        <div class="d-flex justify-content-center">
+            <ul class="pagination">
+                <!-- 이전 페이지 -->
+                <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
+                    <a class="page-link" th:href="@{/mjboard/list(page=${paging.number-1}, kw=${kw})}" aria-label="Previous">
+                        <span aria-hidden="true">&lt;</span>
+                    </a>
+                </li>
+                <!-- 페이지 번호 -->
+                <li th:each="page : ${#numbers.sequence(0, paging.totalPages - 1)}"
+                    th:classappend="${page == paging.number} ? 'active'" class="page-item">
+                    <a class="page-link" th:href="@{/mjboard/list(page=${page}, kw=${kw})}" th:text="${page + 1}"></a>
+                </li>
+                <!-- 다음 페이지 -->
+                <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
+                    <a class="page-link" th:href="@{/mjboard/list(page=${paging.number + 1}, kw=${kw})}" aria-label="Next">
+                        <span aria-hidden="true">&gt;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+</main>
 </html>
