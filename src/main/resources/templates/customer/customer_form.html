@@ -1,20 +1,89 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
+
 <head>
     <meta charset="UTF-8">
     <title>문의 작성</title>
+
     <style>
-        body { font-family: Arial, sans-serif; background-color: #FAF3EE; padding: 20px; }
-        .container { max-width: 700px; margin: auto; padding: 20px; background: white; border-radius: 10px; }
-        label { font-weight: bold; display: block; margin-top: 10px; }
-        input, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; }
-        button { margin-top: 15px; padding: 10px 15px; background: #C8A888; color: white; border: none; cursor: pointer; }
-        button:hover { background: #a88c66; }
+        /* ✅ 전체 화면 구성 */
+        html, body {
+            height: 100%; /* 화면 전체 높이 사용 */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* 세로 배치 */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+        }
+
+        main {
+            flex: 1; /* 남는 공간을 main이 채우도록 */
+            padding: 20px;
+        }
+
+        /* ✅ 컨텐츠 스타일 */
+        .container1 {
+            max-width: 700px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: #C8A888;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #a88c66;
+        }
+
+        /* ✅ 푸터 고정 */
+        footer {
+            background: #f8f8f8;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
     </style>
 </head>
 
+<body>
+
+<!-- 본문 영역 -->
 <main layout:fragment="content">
-    <div class="container">
+    <div style="background-color: #F4E9E3; padding: 10px 20px;">
+        <span style="color: #777; font-family: 'MapoGoldenPier';">고객센터 > 문의하기 </span>
+    </div>
+
+    <div class="container1">
         <h2>문의하기</h2>
         <form th:action="@{add}" method="post">
             <label for="custTitle">제목</label>
@@ -30,4 +99,10 @@
     </div>
 </main>
 
+<!-- ✅ 푸터 -->
+<footer>
+    © 2024 한끝 커뮤니티. All rights reserved.
+</footer>
+
+</body>
 </html>

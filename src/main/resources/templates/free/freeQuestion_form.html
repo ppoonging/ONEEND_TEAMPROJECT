@@ -8,7 +8,7 @@
     <div style="background-color: #F4E9E3; border-bottom: 3px solid #D87C61;">
         <div class="container py-2">
             <span style="color: #777; font-family: 'MapoGoldenPier', sans-serif; font-size: 18px; padding-left: 10px;">
-                맛광 커뮤니티 > 상세보기
+                한끝 커뮤니티 > 자유게시판 > 글 등록
             </span>
         </div>
     </div>
@@ -19,7 +19,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>자유게시판 질문 등록</title>
+    <title>글 등록</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -38,11 +38,12 @@
 </head>
 <body>
 <div class="container my-5">
-    <h2 class="mb-4">자유게시판 질문 등록</h2>
+    <h2 class="mb-4">글 등록</h2>
 
     <form method="post" action="/freequestion/form" enctype="multipart/form-data" th:object="${freeQuestionForm}">
         <!-- CSRF 토큰 -->
-       <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">  토큰 활성화시 사용-->
+
+
 
         <!-- 제목 입력 -->
         <div class="form-group">
@@ -61,14 +62,16 @@
             <small class="text-danger" th:if="${#fields.hasErrors('frboContent')}" th:errors="*{frboContent}"></small>
         </div>
 
-        <!-- 파일 업로드 -->
-        <div class="form-group">
+         <!--화면에 안보이게-->
+        <div class="form-group" style="display: none;">
             <label for="file">첨부 파일</label>
             <input type="file" name="file" id="file" class="form-control-file">
         </div>
 
         <!-- 제출 버튼 -->
-        <button type="submit" class="btn btn-primary">저장하기</button>
+        <button type="submit" style="padding: 8px 16px; background: #D5C9C1; color: white; border: none; border-radius: 5px;">
+            글 등록
+        </button>
     </form>
 </div>
 

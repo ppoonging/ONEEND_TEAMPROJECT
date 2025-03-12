@@ -4,32 +4,151 @@
     <meta charset="UTF-8">
     <title>문의 상세보기</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #FAF3EE; padding: 20px; background-size: cover; }
-        .container { max-width: 800px; margin: auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); }
-        label { font-weight: bold; display: block; margin-top: 10px; color: #444; }
-        .content-box { border: 1px solid #ccc; padding: 12px; border-radius: 5px; background: #fff8f0; margin-bottom: 10px; }
-        .replay-box { background: #f9f9f9; padding: 12px; border-radius: 5px; margin-bottom: 10px; border-left: 4px solid #C8A888; }
-        .replay-user { font-weight: bold; color: #C8A888; }
-        .replay-content { margin: 5px 0; }
-        .replay-time { font-size: 0.9em; color: #777; }
-        .replay-form { margin-top: 20px; padding: 15px; background: #fef7ed; border-radius: 8px; }
-        .form-title { font-size: 18px; font-weight: bold; color: #C8A888; margin-bottom: 10px; }
-        textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; resize: vertical; }
-        .back-btn, .submit-btn, .state-btn { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .back-btn { background: #C8A888; color: white; text-decoration: none; }
-        .back-btn:hover { background: #a88c66; }
-        .submit-btn { background: #D87C61; color: white; margin-top: 10px; }
-        .submit-btn:hover { background: #bb5d42; }
-        .state-btn { background: #4CAF50; color: white; margin-left: 5px; }
-        .state-btn:hover { background: #45a049; }
-        select { padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+        /* 전체 레이아웃 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;  /* 순수 흰색 */
+            padding: 20px;
+        }
+
+        .container1 {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #D5C9C1;
+            padding-bottom: 10px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin: 20px 0 8px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        .content-box {
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        /* 답변 박스 */
+        .replay-box {
+            padding: 14px;
+            background: #f9f9f9;
+            border-left: 4px solid #C8A888;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .replay-user {
+            font-weight: bold;
+            color: #C8A888;
+        }
+
+        .replay-content {
+            margin: 10px 0;
+        }
+
+        .replay-time {
+            font-size: 12px;
+            color: #777;
+        }
+
+        /* 버튼 */
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .back-btn {
+            background: #C8A888;
+            color: white;
+        }
+
+        .back-btn:hover {
+            background: #a88c66;
+        }
+
+        .submit-btn {
+            background: #D87C61;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background: #bb5d42;
+        }
+
+        .state-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .state-btn:hover {
+            background: #45a049;
+        }
+
+        /* 상태 선택 */
+        select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+
+        /* 답변 작성 폼 */
+        .replay-form {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fef7ed;
+            border-radius: 6px;
+        }
+
+        .form-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #C8A888;
+            font-size: 16px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+            margin-bottom: 12px;
+        }
     </style>
 </head>
 
 <main layout:fragment="content">
-    <div class="container">
+    <div style="background-color: #F4E9E3; padding: 10px 20px;">
+        <span style="color: #777; font-family: 'MapoGoldenPier';">고객센터 > 문의 상세보기 </span>
+    </div>
+    <div class="container1">
         <h2>문의 상세보기</h2>
 
+        <!-- 🔹 문의 정보 -->
         <label>제목</label>
         <div class="content-box" th:text="${customer.custTitle}"></div>
 
@@ -42,49 +161,46 @@
         <label>작성일</label>
         <div class="content-box" th:text="${#temporals.format(customer.custRegTime, 'yyyy-MM-dd HH:mm')}"></div>
 
-        <!-- 🔹 처리 상태 변경 -->
+        <!-- 🔹 처리 상태 -->
         <label>처리 상태</label>
         <div class="content-box">
             <span th:text="${customer.custState.getDisplayName()}"></span>
 
-            <!-- 🔹 관리자만 상태 변경 가능 -->
+            <!-- 🔹 관리자 상태 변경 -->
             <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
-                <form th:action="@{/customer/update/{custSeq}(custSeq=${customer.custSeq})}" method="post">
+                <form th:action="@{/customer/update/{custSeq}(custSeq=${customer.custSeq})}" method="post" style="margin-top: 10px;">
                     <select name="state">
                         <option value="PENDING" th:selected="${customer.custState.name() == 'PENDING'}">대기중</option>
                         <option value="IN_PROGRESS" th:selected="${customer.custState.name() == 'IN_PROGRESS'}">처리중</option>
                         <option value="COMPLETED" th:selected="${customer.custState.name() == 'COMPLETED'}">처리완료</option>
                     </select>
-                    <button type="submit" class="state-btn">변경</button>
+                    <button type="submit" class="btn state-btn">변경</button>
                 </form>
             </div>
         </div>
 
         <!-- 🔹 답변 목록 -->
-        <div>
-            <h3>답변</h3>
-            <div th:if="${#lists.isEmpty(replays)}">
-                <p style="color: #777;">아직 답변이 없습니다.</p>
-            </div>
-            <div th:each="replay : ${replays}" class="replay-box">
-                <span class="replay-user" th:text="${replay.user.nickname}"></span>
-                <p class="replay-content" th:text="${replay.replayContent}"></p>
-                <span class="replay-time" th:text="${#temporals.format(replay.replayRegTime, 'yyyy-MM-dd HH:mm')}"></span>
-            </div>
+        <h3 style="margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">답변</h3>
+        <div th:if="${#lists.isEmpty(replays)}">
+            <p style="color: #777;">아직 답변이 없습니다.</p>
+        </div>
+        <div th:each="replay : ${replays}" class="replay-box">
+            <span class="replay-user" th:text="${replay.user.nickname}"></span>
+            <p class="replay-content" th:text="${replay.replayContent}"></p>
+            <span class="replay-time" th:text="${#temporals.format(replay.replayRegTime, 'yyyy-MM-dd HH:mm')}"></span>
         </div>
 
-        <!-- 🔹 관리자만 답변 작성 가능 -->
+        <!-- 🔹 관리자만 답변 작성 -->
         <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="replay-form">
-            <span class="form-title">답변 작성</span>
+            <div class="form-title">답변 작성</div>
             <form th:action="@{/replay/create/{custSeq}(custSeq=${customer.custSeq})}" method="post">
                 <textarea name="replayContent" rows="4" placeholder="답변 내용을 입력하세요..." required></textarea>
-                <button type="submit" class="submit-btn">등록</button>
+                <button type="submit" class="btn submit-btn">등록</button>
             </form>
         </div>
 
-        <!-- 🔹 목록으로 돌아가기 버튼 -->
-        <a href="/customer/" class="back-btn">목록으로 돌아가기</a>
+        <!-- 🔹 돌아가기 버튼 -->
+        <a href="/customer/" class="btn back-btn" style="margin-top: 20px;">목록으로 돌아가기</a>
     </div>
 </main>
-
 </html>
