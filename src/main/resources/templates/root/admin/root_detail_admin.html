@@ -66,8 +66,8 @@
                 <input type="button" id="map-button" class="btn btn-outline-secondary me-2" value="루트 확인">
 
 
-                <button type="button" class="btn btn-outline-secondary">
-                    <a th:href="@{/root/register/list}" class="root-a-outline-se">목록으로</a>
+                <button sec:authorize="hasRole('ADMIN')" type="button" class="btn btn-outline-secondary">
+                    <a th:href="@{/root/register/list}"  class="root-a-outline-se">목록</a>
                 </button>
             </div>
         </section>

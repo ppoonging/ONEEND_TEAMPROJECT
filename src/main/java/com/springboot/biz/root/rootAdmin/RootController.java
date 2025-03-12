@@ -34,6 +34,7 @@ public class RootController {
 
 
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/list")
     public String list(Model model) {
         List<Root> list = this.rootService.getList();
@@ -87,6 +88,8 @@ public class RootController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/form")
     public String tour(RootDTO rootDTO, Model model) {
+
+        model.addAttribute("root", rootDTO);
 
         return "/root/admin/root_form_admin";
     }

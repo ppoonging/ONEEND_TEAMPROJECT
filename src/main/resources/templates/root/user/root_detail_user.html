@@ -90,10 +90,11 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-end mt-4">
-                            <a th:href="@{|/root/form/modify/${rootAuth.rootAuthSeq}|}" sec:authorize="isAuthenticated()" type="button"
-                               class="btn btn-sm btn-outline-secondary me-2">수정</a>
-                            <a href="javascript:void(0);" sec:authorize="isAuthenticated()" class="btn btn-sm btn-outline-secondary"
-                               id="delete-btn"
+                            <a th:href="@{|/root/form/modify/${rootAuth.rootAuthSeq}|}" sec:authorize="isAuthenticated()"
+                               th:if="${#authentication.name == rootAuth.userId.username}"
+                               type="button" class="btn btn-sm btn-outline-secondary me-2">수정</a>
+                            <a href="javascript:void(0);" sec:authorize="isAuthenticated()" class="btn btn-sm btn-outline-secondary" id="delete-btn"
+                               th:if="${#authentication.name == rootAuth.userId.username}"
                                th:data-url="@{|/root/form/delete/${rootAuth.rootAuthSeq}|}">
                                 삭제
                             </a>
@@ -102,7 +103,7 @@
                 </div>
                 <div class="d-flex justify-content-end mt-3">
                     <input type="button" id="map-button" class="btn btn-outline-secondary me-2" value="루트 확인">
-                    <a th:href="@{/root/list}" class="btn btn-outline-secondary root-a-outline-se">목록으로</a>
+                    <a th:href="@{/root/list}" class="btn btn-outline-secondary root-a-outline-se">목록</a>
                 </div>
                 <!-- 모달 창 -->
                 <div id="root-image-modal" class="root-modal">
