@@ -22,9 +22,22 @@
 
             <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
             <div>
+                <div class="d-flex justify-content-between fs-6">
+                    <h3 th:text="${root.rootTitle}"></h3>
+                    <div class="d-flex align-items-center me-2" style="color: #333;">
+
+                        <i class="bi bi-clock-fill me-2 mt-1" style="font-size: 12px"></i>
+                        <span
+                                th:text="${#temporals.format(root.rootDate, 'yyyy-MM-dd HH:mm')}"
+                                th:attr="data-bs-title='수정: ' + ${#temporals.format(root.rootModifyDate, 'yyyy-MM-dd HH:mm')}"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                style="cursor: pointer;">
+                        </span>
+                        </div>
+                </div>
                 <!-- **내용** -->
-                <h3 th:text="${root.rootTitle}"></h3>
-                <input type="hidden" id="select-value" th:value="${root.getRootSeq()}">
+
                 <div class="card">
                     <div class="card-body">
                         <div id="map" style="width: 100%; min-height: 500px; flex-grow: 1;"></div>
@@ -52,7 +65,7 @@
 
 
                 <button type="button" class="btn btn-outline-secondary">
-                    <a th:href="@{/root/register/list}" style="text-decoration: none; color: #6c757d">목록으로</a>
+                    <a th:href="@{/root/register/list}" class="root-a-outline-se">목록으로</a>
                 </button>
             </div>
         </section>
@@ -90,6 +103,10 @@
             } else {
                 setMap(37.5666805, 126.9784147);
             }
+
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
 
         });
 

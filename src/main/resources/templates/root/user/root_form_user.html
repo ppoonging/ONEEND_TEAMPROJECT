@@ -135,9 +135,9 @@
                     </div>
                     <div class="d-flex justify-content-end mt-3">
                         <button type="button" class="btn btn-outline-secondary mb-3 me-2">
-                            <a th:href="@{/root/list}" class="root-a-outline-se d-inline">목록으로</a>
+                            <a th:href="@{/root/list}" class="root-a-outline-se">목록으로</a>
                         </button>
-                        <button type="button" id="form-submit" name="form-submit" class="btn btn-outline-secondary mb-3">저장</button>
+                        <button type="button" id="form-submit" name="form-submit" class="root-a-outline-se">저장</button>
                     </div>
 
                 </form>
@@ -450,7 +450,7 @@
                 removeBtn.classList.add("root-remove-btn-style");
 
                 removeBtn.addEventListener("click", (event) => {
-                    event.stopPropagation(); // 부모 요소(li)의 클릭 이벤트 방지
+                    event.stopPropagation(); // li 의 클릭 이벤트 방지
                     removeSelectStorage(item);
                 });
 
@@ -468,6 +468,36 @@
             });
         }
 
+        document.getElementById("rootSelectList").addEventListener("click", function (event) {
+
+            const targetLi = event.target.closest(".root-list-style");
+
+            if (targetLi) {
+                const lat = parseFloat(targetLi.dataset.rootAuthListLatitude);
+                const lng = parseFloat(targetLi.dataset.rootAuthListLongitude);
+                const position = new naver.maps.LatLng(lat, lng);
+
+                map.setCenter(position);
+                map.setZoom(17);
+
+                if (marker) {
+                    marker.setMap(null);
+                }
+
+                // 선택한 좌표에 마커 추가
+                marker = new naver.maps.Marker({
+                    position: position,
+                    map: map,
+                    icon: {
+                        content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
+                        anchor: new naver.maps.Point(10, 40)
+                    },
+                    animation: naver.maps.Animation.BOUNCE
+                });
+            }
+
+        })
+
         // 체크하면 라인 그리기
         function checkDrawPolyline() {
             const sessionChkData = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
@@ -482,7 +512,7 @@
             // 기존 폴리라인 제거
             if (selPolyline) {
                 selPolyline.setMap(null);
-                selPolyline = null; // 기존 폴리라인 객체 초기화
+                selPolyline = null;
             }
 
             if (selMaker) {
@@ -523,17 +553,14 @@
             input.addEventListener('change', function(event) {
                 const file = event.target.files[0];
 
-                // 이미지 파일인지 체크
                 if (file && file.type.startsWith('image/')) {
                     const reader = new FileReader();
 
                     reader.onload = function(e) {
-                        // 이미 존재하는 미리보기 제거
                         const existingPreview = input.parentElement.querySelector('.image-preview');
                         if (existingPreview) {
                             existingPreview.src = e.target.result;
                         } else {
-                            // 이미지 미리보기 생성 및 추가
                             const img = document.createElement('img');
                             img.src = e.target.result;
                             img.classList.add('image-preview');
@@ -562,7 +589,7 @@
                     const parentLi = chk.closest('li');
                     const fileInputDiv = parentLi.querySelector('.mb-3');
                     fileInputDiv.style.display = 'none';
-                    fileInputDiv.querySelector('input').value = ''; // 파일 선택 초기화
+                    fileInputDiv.querySelector('input').value = '';
                 }
             });
 

@@ -248,7 +248,7 @@
      function getCenter(value) {
 
          if (value.length === 0) {
-             return new naver.maps.LatLng(37.5666805, 126.9784147); // 기본 위치 (서울 시청)
+             return new naver.maps.LatLng(37.5666805, 126.9784147); // 서울 시청
          }
 
          let latSum = 0;
@@ -313,12 +313,12 @@
 
      // 이미지 모달 동작
      function openModal(imgElement) {
-         let imageSrc = imgElement.getAttribute("data-img"); // data-img 속성값 가져오기
+         let imageSrc = imgElement.getAttribute("data-img");
          let modal = document.getElementById("root-image-modal");
          let modalImg = document.getElementById("root-modal-image");
 
-         modal.style.display = "block"; // 모달 표시
-         modalImg.src = imageSrc; // 이미지 경로 설정
+         modal.style.display = "block";
+         modalImg.src = imageSrc;
      }
 
      document.querySelector(".close").addEventListener("click", function() {

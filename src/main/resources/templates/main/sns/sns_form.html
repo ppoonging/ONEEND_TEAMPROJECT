@@ -22,9 +22,15 @@
 
                 <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
                 <div>
-                    <form th:action="@{/sns/form/save}" th:object="${snsDTO}" method="post" enctype="multipart/form-data">
+                    <form id="register-form" th:action="@{/sns/form/save}" th:object="${snsDTO}" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="file" class="form-label">이미지 등록</label>
+                            <div id="preview-container">
+                                <img th:if="${sns != null && sns.snsImagePath != null}"
+                                     th:src="@{${sns.snsImagePath}}"
+                                     id="image-preview"
+                                     style="width: 80px; height: 80px; object-fit: cover; margin-bottom: 10px;">
+                            </div>
                             <input type="file" id="file" name="file" class="form-control" required>
                         </div>
                         <div class="mb-3">
@@ -32,16 +38,81 @@
                             <input type="text" id="link" name="link" th:field="*{link}" class="form-control" >
                         </div>
                         <div class="mb-3">
+                            <label for="link" class="form-label">제목</label>
+                            <input type="text" id="title" name="tag" th:field="*{title}" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="link" class="form-label">내용</label>
+                            <input type="text" id="content" name="tag" th:field="*{content}" class="form-control">
+                        </div>
+                        <div class="mb-3">
                             <label for="link" class="form-label">태그</label>
                             <input type="text" id="tag" name="tag" th:field="*{tag}" class="form-control">
                         </div>
-                        <button type="submit" class="btn btn-outline-secondary float-end">업로드</button>
+                        <input type="hidden" id="form-mod" name="formMod" th:value="${snsSeq != null ? 'modify' : 'save'}">
+                        <input type="hidden" id="snsSeq" name="snsSeq" th:value="${snsSeq}">
+                        <input type="hidden" id="imagePath" name="imagePath" th:value="${sns != null ? sns.snsImagePath : ''}">
+                        <button type="button" id="form-submit" class="btn btn-outline-secondary float-end">업로드</button>
                     </form>
 
                 </div>
 
             </section>
         </div>
+        <script th:inline="javascript" layout:fragment="script">
+
+            let sns = /*[[${sns}]]*/ [];
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const fileInput = document.getElementById("file");
+                const previewContainer = document.getElementById("preview-container");
+
+                // 파일 선택 시 미리보기
+                fileInput.addEventListener("change", function (event) {
+                    const file = event.target.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            let previewImage = document.getElementById("image-preview");
+
+                            if (!previewImage) {
+                                previewImage = document.createElement("img");
+                                previewImage.id = "image-preview";
+                                previewImage.style.width = '80px';
+                                previewImage.style.height = '80px';
+                                previewImage.style.objectFit = 'cover';
+                                previewImage.style.marginBottom = '10px';
+                                previewContainer.appendChild(previewImage);
+                            }
+
+                            previewImage.src = e.target.result; // 새 이미지로 교체
+                        };
+                        reader.readAsDataURL(file); // Base64로 변환
+                    }
+                });
+            });
+
+
+            // 저장/수정
+            document.getElementById("form-submit").addEventListener("click", function () {
+                console.log("click");
+
+                const saveForm = document.getElementById("register-form");
+
+                const formMode = document.getElementById("form-mod").value;
+                const snsSeq = document.getElementById("snsSeq").value;
+
+                if (formMode === 'save') {
+                    saveForm.action = "/sns/form/save"; // 저장
+                } else if (formMode === 'modify') {
+                    alert("수정되었습니다.")
+                    saveForm.action = `/sns/form/modify/${snsSeq}`; // 수정
+                }
+
+                saveForm.submit();
+
+            });
+        </script>
 
     </main>
 </html>

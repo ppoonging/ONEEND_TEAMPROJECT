@@ -213,33 +213,29 @@ public class RootAuthController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
         }
 
-        // 2. 선택한 루트 가져오기
         Root rootEntity = rootService.get(rootAuthDTO.getRootSeq());
 
-        // 3. 선택된 루트 리스트 파싱
         List<RootAuthListDTO> rootAuthList = new ArrayList<>();
         if (rootAuthDTO.getRootAuthList() != null && !rootAuthDTO.getRootAuthList().isEmpty()) {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 rootAuthList = objectMapper.readValue(rootAuthDTO.getRootAuthList(), new TypeReference<List<RootAuthListDTO>>() {});
             } catch (JsonProcessingException e) {
-                e.printStackTrace(); // 파싱 실패 시
+                e.printStackTrace();
             }
         }
 
-        // 4. 유효성 검사
         if (bindingResult.hasErrors()) {
             model.addAttribute("root", rootService.getList());
             Root selRoot = rootService.get(rootAuthDTO.getRootSeq());
             model.addAttribute("selRoot", selRoot);
             model.addAttribute("selRootList", selRoot.getRootList());
             model.addAttribute("selRootUserList", rootAuthList);
-            return "/root/user/root_form_user"; // 실패 시 원래 폼으로
+            return "/root/user/root_form_user";
         }
 
         System.out.println("리스트 오나 테스트 " + rootAuthList);
 
-        // 5. 서비스 통해 실제 수정 처리
         rootAuthService.modify(rootAuthDTO.getFiles(), rootAuthDTO.getTitle(), rootAuthDTO.getContent(), rootAuthList, user, rootEntity, rootAuthSeq);
 
         return String.format("redirect:/root/detail/%s", rootAuthSeq);

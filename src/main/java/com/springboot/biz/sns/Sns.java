@@ -23,8 +23,13 @@ public class Sns{
 
     private String snsImageName;  //파일 이름
 
+    private String snsCommentTitle;
+
+    private String snsCommentContent;
+
     private String snsTag;
 
     @ManyToOne
     private HUser userId;  //유저 아이디(FK)
+
 }

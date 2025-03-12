@@ -98,21 +98,20 @@ public class RootController {
             return "root/admin/root_form_admin"; // 실패 시 원래 화면으로
         }
 
-        // JSON 문자열을 Java List<RootListDTO>로 변환
         List<RootListDTO> rootList = new ArrayList<>();
         if (rootDTO.getRootList() != null && !rootDTO.getRootList().isEmpty()) {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 rootList = objectMapper.readValue(rootDTO.getRootList(), new TypeReference<List<RootListDTO>>() {});
             } catch (JsonProcessingException e) {
-                e.printStackTrace(); // 에러 처리
+                e.printStackTrace();
             }
         }
 
         HUser user = this.hUserSerevice.getUser(principal.getName());
         rootService.save(rootDTO.getTitle(), rootList, user);
 
-        return "redirect:/root/register/list"; // 저장 후 리다이렉트
+        return "redirect:/root/register/list";
     }
 
     @GetMapping("/form/modify/{rootSeq}")

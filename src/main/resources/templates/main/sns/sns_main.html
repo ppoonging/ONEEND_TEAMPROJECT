@@ -28,20 +28,21 @@
                                 <iframe width="100%" height="550px" src="https://www.youtube.com/embed/ELq_V8PF2tc?si=iLgTiQmCEnzV5WUG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                             </div>
                     </div>
+                    <hr style="margin: 50px 0px">
                     <!--sns 카드-->
-                    <div class="pt-5">
+                    <div class="pt-6">
                         <div class="row">
                             <div th:each="snsList : ${snsList}" class="col-md-4 mb-4">
-                                <div class="card" style="width: 100%;">
-                                    <a th:href="@{${snsList.snsLink}}" style="text-decoration: none; color: black">
-                                        <img th:src="@{${snsList.snsImagePath}}" class="card-img-top" height="300px">
-                                        <div class="card-body">
-                                            <p class="card-text" th:text="${snsList.snsTag}"></p>
-                                        </div>
-                                    </a>
+                                <div style="width: 100%;" class="sns-card">
+                                        <a th:href="@{${snsList.snsLink}}" style="text-decoration: none; color: black">
+                                            <img th:src="@{${snsList.snsImagePath}}" class="sns-card-image">
+                                            <p class="sns-card-title" th:text="${snsList.snsCommentTitle}"></p>
+                                            <p class="sns-card-body" th:text="${snsList.snsCommentContent}"></p>
+                                            <p class="sns-footer" th:text="${snsList.snsTag}"></p>
+                                        </a>
                                 </div>
                                 <div class="d-flex justify-content-end mt-2">
-                                    <button class="btn btn-sm btn-outline-secondary">수정</button>
+                                    <a sec:authorize="hasRole('ADMIN')" th:href="@{|/sns/form/modify/${snsList.snsSeq}|}" class="btn btn-sm btn-outline-secondary">수정</a>
                                 </div>
 
                             </div>

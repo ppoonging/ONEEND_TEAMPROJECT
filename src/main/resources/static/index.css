@@ -189,6 +189,131 @@ a {
 }
 
 
+.sns-card {
+    padding: 20px;
+    width: 330px;
+    height: 500px;
+    min-height: 150px;
+    border-radius: 20px;
+    background: #f6f6f6;
+    box-shadow: 5px 5px 6px #dadada,
+    -5px -5px 6px #f6f6f6;
+    transition: 0.4s;
+}
+
+.sns-card:hover {
+    translate: 0 -10px;
+}
+
+.sns-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #3053a8;
+    margin: 15px 0 0 10px;
+}
+
+.sns-card-image {
+    width: 100%;
+    height: 300px;
+    min-height: 100px;
+    background-color: #c9c9c9;
+    border-radius: 15px;
+    box-shadow: inset 8px 8px 10px #c3c3c3,
+    inset -8px -8px 10px #cfcfcf;
+}
+
+.sns-card-body {
+    margin: 13px 0 0 10px;
+    color: rgb(69, 69, 69);
+    font-size: 15px;
+}
+
+.sns-footer {
+    float: right;
+    margin: 28px 0 0 18px;
+    font-size: 13px;
+    color: #9c9c9c;
+}
+
+.sns-by-name {
+    font-weight: 700;
+}
+
+/**/
+
+/* From Uiverse.io by JohnnyCSilva */
+.root-card {
+    --border-radius: 0.75rem;
+    --primary-color: #7257fa;
+    --secondary-color: #3c3852;
+    width: 210px;
+    font-family: "Arial";
+    padding: 1rem;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    background: #f1f1f3;
+    box-shadow: 0px 8px 16px 0px rgb(0 0 0 / 3%);
+    position: relative;
+}
+
+.root-card > * + * {
+    margin-top: 1.1em;
+}
+
+.root-card .card__content {
+    color: var(--secondary-color);
+    font-size: 0.86rem;
+}
+
+.root-card .card__title {
+    padding: 0;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.root-card .card__date {
+    color: #6e6b80;
+    font-size: 0.8rem;
+}
+
+.root-card .card__arrow {
+    position: absolute;
+    background: var(--primary-color);
+    padding: 0.4rem;
+    border-top-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+    bottom: 0;
+    right: 0;
+    transition: 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.root-card svg {
+    transition: 0.2s;
+}
+
+/* hover */
+.root-card:hover .card__title {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.root-card:hover .card__arrow {
+    background: #111;
+}
+
+.root-card:hover .card__arrow svg {
+    transform: translateX(3px);
+}
+
+
+/**/
+
+
+
+
 .custom-card {
     width: 18rem; /* 기본 카드 너비 */
     transition: transform 0.3s ease-in-out; /* 카드 호버 효과 */

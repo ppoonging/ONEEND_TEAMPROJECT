@@ -107,7 +107,7 @@
                 if (isModify) {
                     console.log("지금 여긴가?")
 
-                    center = getCenter(rootList); // 수정 모드면 rootList 기준
+                    center = getCenter(rootList);
                     console.log("흠" + center);
                 }else if (savedLat && savedLng) {
                     center = new naver.maps.LatLng(parseFloat(savedLat), parseFloat(savedLng));
@@ -130,7 +130,7 @@
                     if (sessionStorage.getItem("savedCheckRoot")) {
                         console.log("작성")
                         sessionStorage.setItem("checkRoot", sessionStorage.getItem("savedCheckRoot"));
-                        sessionStorage.removeItem("savedCheckRoot");  // 임시 저장한 데이터 제거
+                        sessionStorage.removeItem("savedCheckRoot");
                         checkboxState();  // 체크박스 다시 적용
                         updateSelectList();  // 리스트 다시 업데이트
                         drawPolyline();  // 경로 다시 그리기
@@ -224,11 +224,11 @@
                 });
 
                 // 새로 그린 요소에 다시 이벤트 등록
-                attachCheckboxEvents();
-                attachClickAddressEvents();
+                CheckboxEvents();
+                clickAddressEvents();
             }
 
-            function attachCheckboxEvents() {
+            function CheckboxEvents() {
                 document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
                     checkbox.addEventListener("change", function () {
                         const obj = {
@@ -244,15 +244,13 @@
                         if (this.checked) {
                             if (!sessionChkData.some(item => item.title === obj.title)) sessionChkData.push(obj);
 
-                            // ✅ 체크 시 지도 중심 이동
                             const lat = parseFloat(obj.latitude);
                             const lng = parseFloat(obj.longitude);
                             const position = new naver.maps.LatLng(lat, lng);
                             map.setCenter(position);
-                            map.setZoom(17); // 필요 시 확대
+                            map.setZoom(17);
 
-                            // ✅ 마커도 표시 (선택)
-                            if (marker) marker.setMap(null); // 기존 마커 제거
+                            if (marker) marker.setMap(null);
                             marker = new naver.maps.Marker({
                                 position: position,
                                 map: map,
@@ -273,7 +271,7 @@
                 });
             }
 
-            function attachClickAddressEvents() {
+            function clickAddressEvents() {
                 document.querySelectorAll('h6[name="click-address"]').forEach((data) => {
                     data.addEventListener("click", function () {
                         const lat = parseFloat(data.dataset.lat);
