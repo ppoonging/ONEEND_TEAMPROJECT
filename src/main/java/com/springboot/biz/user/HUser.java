@@ -48,4 +48,8 @@ public class HUser {
 
     private boolean active = true;
 
+    @Column(name = "reset_token", nullable = true)
+    private String resetToken;  //토큰 값
+
+
 }
