@@ -329,6 +329,29 @@ a {
     border-top: 2px solid #ddd; /* 상단에 회색 선 추가 */
 }
 
+.pagination .page-item .page-link {
+    color: #888;
+    border: 1px solid #fff;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+
+.pagination .page-item.active .page-link {
+    background-color: transparent;
+    color: #5C4033;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #eee;
+    background-color: transparent;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #D5C9C1;
+    color: #5C4033;
+    border-color: transparent;
+}
 
 .pagination .page-item .page-link {
     color: #888;
