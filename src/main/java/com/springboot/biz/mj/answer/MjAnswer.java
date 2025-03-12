@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -32,11 +34,14 @@ public class MjAnswer {
 
     private Integer mjAnsRecommend;  //맛집소개 답변 추천
 
-    private String mjAnsComment;  //맛집소개 답변에 답변
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_mjAnsSeq")
+    private MjAnswer mjAnsComment;  //맛집소개 답변에 답변
 
     @ManyToOne
     private Mjboard mjBoard;   //맛집 질문과 관계맺기
 
-
+    @OneToMany(mappedBy = "mjAnsComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MjAnswer> childAnswers = new ArrayList<>(); // 대댓글 리스트
 
 }

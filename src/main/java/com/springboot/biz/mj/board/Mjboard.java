@@ -11,7 +11,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -40,7 +42,7 @@ public class Mjboard {
 
     private LocalDateTime mjModifyDate;  //맛집소개 수정일
 
-    @Column(columnDefinition = "Integer default 0")
+    @Column(columnDefinition = "integer default 0", nullable = false)
     @NonNull
     private Integer mjCnt;  //맛집 조회수
 
@@ -54,7 +56,8 @@ public class Mjboard {
     private List<MjAnswer> mjAanswerList;
 
     @ManyToMany
-    private List<HUser> recommendUsers = new ArrayList<>();//맛집소개 추천
+    private Set<HUser> recommendUsers = new HashSet<>();
+//맛집소개 추천
 
 
 

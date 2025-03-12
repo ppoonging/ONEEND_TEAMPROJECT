@@ -1,11 +1,13 @@
 package com.springboot.biz.mj.board;
 import com.mysql.cj.MysqlConnection;
+import com.springboot.biz.mj.answer.MjAnswerForm;
 import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -66,11 +68,16 @@ public class MjboardController {
         return "mj/mjboard_list";
     }*/
     @GetMapping("/list")
-    public String list(Model model, @PageableDefault(size = 9) Pageable pageable,
+    public String list(Model model,
+                       @PageableDefault(size = 6, sort = "mjRegDate", direction = Sort.Direction.DESC) Pageable pageable,
                        @RequestParam(value = "kw", defaultValue = "") String kw) {
-        Page<Mjboard> paging = mjboardService.getList(pageable, kw);
-        model.addAttribute("paging", paging);
-        model.addAttribute("kw", kw);
+
+        Map<String, Object> result = mjboardService.getList(pageable, kw);
+
+        model.addAttribute("paging", result.get("paging")); // 게시판 리스트
+        model.addAttribute("starCountMap", result.get("starCountMap")); // 별점 Map
+        model.addAttribute("kw", kw); // 검색어
+
         return "mj/mjboard_list"; // 경로 확인!
     }
 
@@ -96,7 +103,7 @@ public class MjboardController {
 
         // 로그인 사용자 정보 가져오기
         HUser hUser = this.hUserSerevice.getUser(principal.getName());
-        this.mjboardService.create(mjboardForm.getMjTitle(), mjboardForm.getMjContent(), file, hUser);
+        this.mjboardService.create(mjboardForm.getMjTitle(), mjboardForm.getMjContent(), file, hUser,0);
 
         return "redirect:/mjboard/list";
     }
@@ -111,12 +118,16 @@ public class MjboardController {
     }
 
     // 상세 페이지
+    // 상세 페이지
     @GetMapping("/detail/{mjSeq}")
     public String detail(Model model, @PathVariable("mjSeq") Integer mjSeq) {
-        Mjboard mjboard = this.mjboardService.getMjboard(mjSeq);
+        Mjboard mjboard = this.mjboardService.getMjboard(mjSeq);//조회수 증가 포함
+        model.addAttribute("mjanswerForm", new MjAnswerForm()); // 댓글 입력 폼
+        model.addAttribute("mjreplyForm", new MjAnswerForm());  // 대댓글 입력 폼
         model.addAttribute("mjboard", mjboard);
         return "mj/mjboard_detail";
     }
+
 
     // 수정 폼 (GET)
     @PreAuthorize("isAuthenticated()")
@@ -153,17 +164,20 @@ public class MjboardController {
 
     // 추천 기능
     // 추천 기능 (로그인 필요)
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()") // 로그인된 사용자만 접근 가능
     @PostMapping("/mjRecommend/{mjSeq}")
     @ResponseBody
     public Map<String, Integer> mjRecommend(@PathVariable("mjSeq") Integer mjSeq, Principal principal) {
-        Mjboard mjboard = mjboardService.getMjboard(mjSeq);
-        HUser user = hUserSerevice.getUser(principal.getName());
-        int recommendCount = mjboardService.mjRecommend(mjboard, user); // 추천/취소 서비스 메소드 호출
-        return Map.of("count", recommendCount); // json 형태로 반환
+        Mjboard mjboard = mjboardService.getMjboard(mjSeq); // 게시글 조회
+        HUser user = hUserSerevice.getUser(principal.getName()); // 로그인 사용자 정보
+        int recommendCount = mjboardService.mjRecommend(mjboard, user); // 추천 서비스 호출
+        return Map.of("count", recommendCount); // 추천 수 반환
     }
+
+
     /*@GetMapping("test")
     public String test() {
         return "mj/test";
     }*/
+
 }

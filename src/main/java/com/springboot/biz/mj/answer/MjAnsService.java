@@ -2,6 +2,7 @@ package com.springboot.biz.mj.answer;
 
 import com.springboot.biz.DataNotFoundException;
 import com.springboot.biz.mj.board.Mjboard;
+import com.springboot.biz.user.HUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,15 +17,31 @@ import java.util.Optional;
 public class MjAnsService {
     private  final  MjAnsRepository mjAnsRepository;
 
-
-    public MjAnswer createMjAnswer(Mjboard mjboard, String mjAnsContent) {
+    // 댓글 저장
+    public MjAnswer createMjAnswer(Mjboard mjboard, String mjAnsContent, HUser user) {
         MjAnswer ans = new MjAnswer();
         ans.setMjBoard(mjboard);
         ans.setMjAnsContent(mjAnsContent);
+        ans.setUserId(user); //유저 연결 필수
         ans.setMjAnsRegDate(LocalDateTime.now());
-        this.mjAnsRepository.save(ans);
-        return ans;
+        ans.setMjAnsRecommend(0);
+        return mjAnsRepository.save(ans);
     }
+
+    // 대댓글 저장
+    public MjAnswer createMjAnswer(Mjboard mjboard, String mjAnsContent, MjAnswer parentAnswer, HUser user) {
+        MjAnswer ans = new MjAnswer();
+        ans.setMjBoard(mjboard);
+        ans.setMjAnsContent(mjAnsContent);
+        ans.setUserId(user); //유저 연결 필수
+        ans.setMjAnsComment(parentAnswer);
+        ans.setMjAnsRegDate(LocalDateTime.now());
+        ans.setMjAnsRecommend(0);
+        return mjAnsRepository.save(ans);
+    }
+
+
+
     public MjAnswer getMjAnswer(Integer mjAnsSeq) {
         Optional<MjAnswer> ans = this.mjAnsRepository.findById(mjAnsSeq);
         if (ans.isPresent()) {

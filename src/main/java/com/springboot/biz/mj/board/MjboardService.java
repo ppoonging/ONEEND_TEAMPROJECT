@@ -17,10 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,44 +35,54 @@ public class MjboardService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "mjRegDate"));
         return this.mjboardRepository.findAll(pageable);
     }*/
-    public Page<Mjboard> getList(Pageable pageable, String kw) {
-        if (kw == null || kw.trim().isEmpty()) {
-            return mjboardRepository.findAll(pageable);
-        } else {
-            return mjboardRepository.findByMjTitleContaining(kw, pageable);
+    // 게시판 리스트 (추천수, 별점 계산 포함)
+    public Map<String, Object> getList(Pageable pageable, String kw) {
+        Page<Mjboard> paging = mjboardRepository.findAllByKeyword(kw, pageable); // 기존 페이징
+
+        // 추천수, 별점 Map으로 저장
+        Map<Integer, Integer> starCountMap = new HashMap<>();
+        for (Mjboard board : paging) {
+            int recommendCount = board.getRecommendUsers().size(); // 추천 수
+            int starCount = (int) Math.min(5, Math.ceil((recommendCount / 50.0) * 5)); // 별점 계산
+            starCountMap.put(board.getMjSeq(), starCount);
         }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("paging", paging); // 원본 데이터
+        result.put("starCountMap", starCountMap); // 별점 맵
+        return result;
     }
 
 
 
 
-    // 게시글 작성 (유저 포함)
-    public void create(String mjTitle, String mjContent, MultipartFile file, HUser hUser) throws Exception {
+
+    // 게시글 작성 (썸네일 URL 저장 X, 원본 파일명만 저장)
+    public void create(String mjTitle, String mjContent, MultipartFile file, HUser hUser, Integer mjCnt) throws Exception {
         String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/mj";
         UUID uuid = UUID.randomUUID();
-        String mjFileName = uuid + "_" + file.getOriginalFilename();
+        String mjFileName = uuid + "_" + file.getOriginalFilename(); // 저장할 파일명
         File saveFile = new File(projectPath, mjFileName);
-        file.transferTo(saveFile);
+        file.transferTo(saveFile); // 원본 파일 저장
 
-        // 썸네일 생성
+        // 썸네일 파일 자동 생성
         String thumbnailFileName = "thumb_" + mjFileName;
         File thumbnailFile = new File(projectPath, thumbnailFileName);
-        mjthumbnailService.createThumbnail(saveFile, thumbnailFile);
+        mjthumbnailService.createThumbnail(saveFile, thumbnailFile); // 썸네일 생성
 
-        String thumbnailUrl = "/files/mj/" + thumbnailFileName;
-        String filePath = "/files/mj/" + mjFileName;
-
-        // 저장
+        // DB에는 원본 파일명만 저장
         Mjboard mj = new Mjboard();
-        mj.setMjFilePath(filePath);
-        mj.setMjthumbnaiurl(thumbnailUrl);
-        mj.setMjFileName(mjFileName);
+        mj.setMjFilePath("/files/mj/" + mjFileName); // 원본 파일 경로
+        mj.setMjFileName(mjFileName); // 원본 파일명
         mj.setMjTitle(mjTitle);
         mj.setMjContent(mjContent);
         mj.setMjRegDate(LocalDateTime.now());
         mj.setUserId(hUser);
-        this.mjboardRepository.save(mj);
+        mj.setMjCnt(0);
+        mjboardRepository.save(mj);
     }
+
+
 
     // 썸머노트 이미지 저장
     public String saveSummernoteImage(MultipartFile file) throws Exception {
@@ -88,10 +95,18 @@ public class MjboardService {
     }
 
     // 게시글 조회
+    @Transactional
     public Mjboard getMjboard(Integer mjSeq) {
-        return mjboardRepository.findById(mjSeq)
+        Mjboard mjboard = mjboardRepository.findById(mjSeq)
                 .orElseThrow(() -> new DataNotFoundException("게시글을 찾을 수 없습니다."));
+        if (mjboard.getMjCnt() == null) {
+            mjboard.setMjCnt(0);  // 혹시라도 null이면 0으로 세팅
+        }
+        mjboard.setMjCnt(mjboard.getMjCnt() + 1); // 조회수 +1
+        return mjboard;
     }
+
+
 
     // 수정
     public void modify(Mjboard mjboard, String mjTitle, String mjContent) {
@@ -109,25 +124,18 @@ public class MjboardService {
     // 추천 기능
     @Transactional
     public int mjRecommend(Mjboard mjboard, HUser user) {
-        // 추천한 사용자 목록 가져오기
-        List<HUser> recommendList = mjboard.getRecommendUsers();
-        // 이미 추천했는지 확인 (userSeq 기준 비교)
-        boolean alreadyRecommended = recommendList.stream()
-                .anyMatch(u -> u.getUserSeq().equals(user.getUserSeq()));  //userSeq 비교
-        if (alreadyRecommended) {
-            // 이미 추천했으면 취소
-            recommendList.removeIf(u -> u.getUserSeq().equals(user.getUserSeq())); //userSeq로 찾아서 제거
+        Set<HUser> recommendUsers = mjboard.getRecommendUsers(); // 추천한 사용자 목록
+
+        // 이미 추천했으면 추천 취소
+        if (recommendUsers.contains(user)) {
+            recommendUsers.remove(user);
         } else {
-            // 추천 안했으면 추가
-            recommendList.add(user);
+            recommendUsers.add(user); // 추천 안했으면 추가
         }
-        // 저장
-        mjboardRepository.save(mjboard);
-        // 현재 추천 수 반환 (프론트에 추천 수 표시할 때 사용)
-        return recommendList.size();
+
+        mjboardRepository.save(mjboard); // 저장
+        return recommendUsers.size(); // 추천 수 반환
     }
-
-
 
 }
 

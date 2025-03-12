@@ -1,5 +1,7 @@
+<!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
     <!-- 상단 바 -->
     <div style="background-color: #F4E9E3">
@@ -12,68 +14,69 @@
     <div class="container mt-5">
 
         <!-- 상단 로고 -->
-        <div class="text-center">
+        <div class="text-center mb-4">
             <img th:src="@{/images/total/밥그릇.png}" width="5%">
         </div>
 
         <!-- 타이틀 -->
-        <h2 class="text-center py-2">맛집 소개</h2>
+        <h2 class="text-center py-2" style="font-weight: bold;">맛집 소개</h2>
 
         <!-- 카드형 리스트 -->
-        <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
             <div class="col" th:each="mjboard : ${paging}">
-                <div class="card h-100 shadow-sm">
-
-                    <!--썸네일-->
+                <div class="card h-100 shadow-sm" style="border-radius: 16px; overflow: hidden;">
+                    <!-- 썸네일 -->
                     <img th:src="@{${mjboard.mjthumbnaiurl}}"
                          class="card-img-top"
                          alt="썸네일"
                          style="height: 200px; object-fit: cover;">
 
                     <!-- 카드 본문 -->
-                    <div class="card-body">
+                    <div class="card-body d-flex flex-column justify-content-between" style="padding: 16px;">
                         <!-- 제목 -->
-                        <h5 class="card-title">
-                            <a th:href="@{/mjboard/detail/{id}(id=${mjboard.mjSeq})}" th:text="${mjboard.mjTitle}"></a>
+                        <h5 class="card-title" style="font-weight: bold; font-size: 20px; color: #333; line-height: 1.4; margin-bottom: 10px;">
+                            <a th:href="@{/mjboard/detail/{id}(id=${mjboard.mjSeq})}" th:text="${mjboard.mjTitle}" style="text-decoration: none; color: inherit;"></a>
                         </h5>
 
-                        <!-- 댓글 수 -->
-                        <p class="card-text text-muted"
-                           th:if="${mjboard.mjAanswerList != null and #lists.size(mjboard.mjAanswerList) > 0}">
-                            댓글 [<span th:text="${#lists.size(mjboard.mjAanswerList)}"></span>]
+                        <!-- 추천/별점 -->
+                        <p class="card-text text-muted mb-2" style="font-size: 14px;">
+                            👍 총 추천수: <span th:text="${#lists.size(mjboard.recommendUsers)}">0</span>명
                         </p>
-
-                        <!-- 작성자 -->
-                        <p class="card-text">
-                            <small class="text-muted">작성자:
-                                <span th:if="${mjboard.userId != null}" th:text="${mjboard.userId.nickname}"></span>
-                                <span th:if="${mjboard.userId == null}">알 수 없음</span>
-                            </small>
-                        </p>
-
-                        <!-- 작성일 -->
-                        <p class="card-text">
-                            <small class="text-muted" th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd HH:mm')}"></small>
-                        </p>
+                        <!-- ⭐ 별점 -->
+                        <div class="d-flex align-items-center mb-2">
+                            <span style="font-size: 14px; margin-right: 5px;">⭐ 평점</span>
+                            <div>
+                                <span th:each="star : ${#numbers.sequence(1, 5)}"
+                                      th:classappend="${star <= starCountMap[mjboard.mjSeq]} ? 'text-warning' : 'text-secondary'"
+                                      class="bi bi-star-fill" style="font-size: 16px;"></span>
+                            </div>
+                        </div>
+                        <!-- 작성자 + 날짜 -->
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <p class="card-text mb-0" style="font-size: 13px; color: #777;">
+                                <small>👤 <span th:text="${mjboard.userId.nickname}">작성자</span></small>
+                            </p>
+                            <p class="card-text mb-0" style="font-size: 12px; color: #aaa;">
+                                <small th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd')}"></small>
+                            </p>
+                        </div>
                     </div>
-
                 </div>
-            </div>
+            </div> <!-- 카드 반복 끝 -->
         </div>
-        <!-- 검색창 -->
-        <div class="input-group mb-4">
-            <input type="text" id="search_kw" class="form-control" th:value="${kw}" placeholder="검색어를 입력하세요" style="width: 120px;">
+
+        <!-- 검색창 (반복문 밖으로 이동) -->
+        <div class="input-group my-4 w-50 mx-auto">
+            <input type="text" id="search_kw" class="form-control" th:value="${kw}" placeholder="검색어를 입력하세요">
             <button class="btn btn-warning" type="button" id="btn_search">검색</button>
         </div>
-        <!-- 맛집 등록 버튼 -->
-        <div class="text-end mt-4">
+
+        <!-- 맛집 등록 버튼 (반복문 밖으로 이동) -->
+        <div class="text-end mb-3">
             <a th:href="@{/mjboard/create}" class="btn btn-danger">맛집 등록</a>
         </div>
 
-        <!-- 하단 줄 -->
-        <hr style="margin-top: 50px">
-
-        <!-- 페이징 -->
+        <!-- 페이징 (반복문 밖으로 이동) -->
         <div class="d-flex justify-content-center">
             <ul class="pagination">
                 <!-- 이전 페이지 -->
@@ -96,7 +99,27 @@
             </ul>
         </div>
 
+        <!-- 하단 줄 -->
+        <hr style="margin-top: 50px">
     </div>
+
+    <!-- 검색 기능 스크립트 -->
+    <script layout:fragment="script" type="text/javascript">
+        const searchEl = document.querySelector("#search_kw");
+        const btnSearchEl = document.querySelector("#btn_search");
+
+        btnSearchEl.addEventListener('click', function () {
+            const kw = searchEl.value;
+            location.href = '/mjboard/list?kw=' + encodeURIComponent(kw);
+        });
+
+        searchEl.addEventListener('keyup', function (event) {
+            if (event.key === 'Enter') {
+                const kw = searchEl.value;
+                location.href = '/mjboard/list?kw=' + encodeURIComponent(kw);
+            }
+        });
+    </script>
 
 </main>
 </html>
