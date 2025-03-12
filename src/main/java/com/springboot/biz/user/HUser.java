@@ -45,12 +45,11 @@ public class HUser {
 
     private LocalDateTime createDate;   //만든날짜
 
-    //수정
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private HUserRole role;  //유저권한
 
     private boolean active = true;
+
+
 
     @Column(name = "reset_token", nullable = true)
     private String resetToken;  //토큰 값
