@@ -5,6 +5,7 @@ import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,14 +29,16 @@ public class SnsController {
 
         List<Sns> snsList = this.snsService.getAll();
         model.addAttribute("snsList", snsList);
-        return "main/sns/sns_main";
+        return "sns/sns_main";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/form")
     public String create(SnsDTO snsDTO){
-        return "main/sns/sns_form";
+        return "sns/sns_form";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/form/save")
     public String create(@RequestParam("file") MultipartFile file, @RequestParam("link") String link, @RequestParam("tag") String tag,
                          @RequestParam("title") String title, @RequestParam("content") String content,
@@ -48,6 +51,7 @@ public class SnsController {
         return "redirect:/sns";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/form/modify/{snsSeq}")
     public String modify(@PathVariable("snsSeq") Integer snsSeq, SnsDTO snsDTO, Principal principal, Model model){
 
@@ -69,11 +73,12 @@ public class SnsController {
         model.addAttribute("snsSeq", snsSeq);
         model.addAttribute("sns", sns);
 
-        return "main/sns/sns_form";
+        return "sns/sns_form";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/form/modify/{snsSeq}")
-    public String update(@PathVariable("snsSeq") Integer snsSeq, SnsDTO snsDTO,
+    public String modify(@PathVariable("snsSeq") Integer snsSeq, SnsDTO snsDTO,
                          Principal principal) throws IOException {
 
         HUser user = this.hUserSerevice.getUser(principal.getName());

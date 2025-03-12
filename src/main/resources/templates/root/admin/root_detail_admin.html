@@ -5,7 +5,8 @@
         <div class="container py-2">
 
             <!--수정해야할 부분-->
-            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">소근소근 > 한식루트 인증</span>
+            <span class=""
+                  style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">소근소근 > 한식루트 인증</span>
 
         </div>
     </div>
@@ -34,7 +35,7 @@
                                 data-bs-placement="top"
                                 style="cursor: pointer;">
                         </span>
-                        </div>
+                    </div>
                 </div>
                 <!-- **내용** -->
 
@@ -48,8 +49,9 @@
                             </ul>
                         </div>
                         <div class="d-flex justify-content-end mt-4">
-                            <a th:href="@{|/root/register/form/modify/${root.rootSeq}|}" type="button" class="btn btn-sm btn-outline-secondary me-2">수정</a>
-                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary"
+                            <a th:href="@{|/root/register/form/modify/${root.rootSeq}|}" sec:authorize="hasRole('ADMIN')" type="button"
+                               class="btn btn-sm btn-outline-secondary me-2">수정</a>
+                            <a href="javascript:void(0);" sec:authorize="hasRole('ADMIN')" class="btn btn-sm btn-outline-secondary"
                                id="delete-btn"
                                th:data-url="@{|/root/register/form/delete/${root.rootSeq}|}">
                                 삭제
@@ -88,7 +90,7 @@
                 mapTypeControl: true
             });
 
-            naver.maps.Event.addListener(map, 'init', function() {
+            naver.maps.Event.addListener(map, 'init', function () {
                 if (rootList.length > 0) {
                     displayMap(rootList);
                     centerRootMove(rootList);
@@ -97,7 +99,7 @@
         }
 
         // 페이지 로드 시 동작
-        document.addEventListener("DOMContentLoaded", ()=>{
+        document.addEventListener("DOMContentLoaded", () => {
             if (rootList.length > 0) {
                 setMap();
             } else {
@@ -122,12 +124,12 @@
 
             if (!line || line.length === 0) return;
 
-            const path = line.map((data)=>{
+            const path = line.map((data) => {
                 // console.log(data)
                 return new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)
             })
 
-            if(polyline) polyline.setMap(null);
+            if (polyline) polyline.setMap(null);
 
             polyline = new naver.maps.Polyline({
                 map: map,
@@ -172,10 +174,8 @@
 
             const path = root.map(data => new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude))
 
-            // list 의 중앙값
             const center = getCenter(root);
 
-            // 중심 이동
             map.setCenter(center);
 
             // 경로에 맞게 줌 자동 조정
@@ -185,7 +185,7 @@
         }
 
         // 버튼 클릭 시 중앙 이동
-        document.getElementById("map-button").addEventListener("click", function (){
+        document.getElementById("map-button").addEventListener("click", function () {
             console.log("click");
             centerRootMove(rootList);
         })
@@ -207,10 +207,10 @@
             return new naver.maps.LatLng(latSum / cnt, lngSum / cnt);
         }
 
-        ocument.getElementById("delete-btn").addEventListener("click", function () {
-            if(confirm("삭제하시겠습니까?")) {
+        document.getElementById("delete-btn").addEventListener("click", function () {
+            if (confirm("삭제하시겠습니까?")) {
                 window.location.href = this.dataset.url;
-            }else {
+            } else {
                 console.log("취소");
             }
         })
@@ -219,4 +219,6 @@
     </script>
 
 </main>
+
 </html>
+<link rel="stylesheet" type="text/css" th:href="@{/mj-design-css.css}">

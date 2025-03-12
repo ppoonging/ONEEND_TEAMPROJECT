@@ -5,7 +5,8 @@
         <div class="container py-2">
 
             <!--수정해야할 부분-->
-            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">소근소근 > 한식루트 인증</span>
+            <span class=""
+                  style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">소근소근 > 한식루트 인증</span>
 
         </div>
     </div>
@@ -24,20 +25,21 @@
             <div style="height: 700px">
                 <table class="table">
                     <thead>
-                        <tr class="text-center">
-                            <th scope="col" style="width: 10%;">상태</th>
-                            <th scope="col" style="width: 10%;">No</th>
-                            <th scope="col" style="width: 60%;" class="text-start">제목</th>
-                            <th scope="col" style="width: 15%;">등록일</th>
-                        </tr>
+                    <tr class="text-center">
+                        <th scope="col" style="width: 10%;">상태</th>
+                        <th scope="col" style="width: 10%;">No</th>
+                        <th scope="col" style="width: 60%;" class="text-start">제목</th>
+                        <th scope="col" style="width: 15%;">등록일</th>
+                    </tr>
                     </thead>
                     <tbody class="table-group-divider">
-                        <tr th:each="list : ${list}" class="text-center">
-                            <td th:text="상태">1</td>
-                            <td th:text="${list.getRootSeq()}"></td>
-                            <td  class="text-start"><a th:text="${list.getRootTitle()}" th:href="@{|/root/register/detail/${list.getRootSeq()}|}"></a></td>
-                            <td th:text="${#temporals.format(list.getRootDate,'YYYY-MM-dd HH:mm')} "></td>
-                        </tr>
+                    <tr th:each="list : ${list}" class="text-center">
+                        <td th:text="상태">1</td>
+                        <td th:text="${list.getRootSeq()}"></td>
+                        <td class="text-start"><a th:text="${list.getRootTitle()}"
+                                                  th:href="@{|/root/register/detail/${list.getRootSeq()}|}"></a></td>
+                        <td th:text="${#temporals.format(list.getRootDate,'YYYY-MM-dd HH:mm')} "></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -61,12 +63,14 @@
                         </a>
                     </li>
                 </ul>
-                <button type="button">
-                    <a th:href="@{/root/register/form}">작성</a>
-                </button>
+
+                <a th:href="@{/root/register/form}" sec:authorize="hasRole('ADMIN')" class="btn root-btn-style mb-3">작성</a>
+
             </div>
         </section>
     </div>
 
 </main>
+
 </html>
+<link rel="stylesheet" type="text/css" th:href="@{/mj-design-css.css}">

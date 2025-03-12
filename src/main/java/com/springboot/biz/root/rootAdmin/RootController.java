@@ -11,6 +11,7 @@ import com.springboot.biz.user.HUserSerevice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,6 +45,7 @@ public class RootController {
 //        return "/main/root/admin/root_list_admin";
 //    }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/form/delete/{rootSeq}")
     public String delete(@PathVariable("rootSeq") Integer rootSeq) {
         this.rootService.delete(rootSeq);
@@ -74,12 +76,14 @@ public class RootController {
 //        return "/root/admin/root_form_admin";
 //    }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/form/search")
-    @ResponseBody  // 💥 이거 추가!!
+    @ResponseBody
     public List<Map<String, String>> search(@RequestParam String query) {
         return rootService.search(query); // JSON 형태로 반환
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/form")
     public String tour(RootDTO rootDTO, Model model) {
 
@@ -87,6 +91,7 @@ public class RootController {
     }
 
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/form/save")
     public String rootSave(RootDTO rootDTO,
                            Principal principal, BindingResult bindingResult) {
@@ -114,6 +119,7 @@ public class RootController {
         return "redirect:/root/register/list";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/form/modify/{rootSeq}")
     public String rootModify(@PathVariable("rootSeq") Integer rootSeq, Model model, RootDTO rootDTO, Principal principal) {
 
@@ -148,6 +154,7 @@ public class RootController {
         return "/root/admin/root_form_admin";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/form/modify/{rootSeq}")
     public String modify(@PathVariable("rootSeq") Integer rootSeq, Model model, RootDTO rootDTO, Principal principal, BindingResult bindingResult) {
 
