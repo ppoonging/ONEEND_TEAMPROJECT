@@ -33,11 +33,11 @@
                         <i class="bi bi-clock-fill me-2 mt-1" style="font-size: 12px"></i>
                         <span
                                 th:text="${#temporals.format(rootAuth.rootAuthDate, 'yyyy-MM-dd HH:mm')}"
-                                th:attr="data-bs-title='수정: ' + ${#temporals.format(rootAuth.rootAuthModifyDate, 'yyyy-MM-dd HH:mm')}"
+                                th:attr="data-bs-title= ${rootAuth.rootAuthModifyDate != null } ? '수정일: ' + ${#temporals.format(rootAuth.rootAuthModifyDate, 'yyyy-MM-dd HH:mm')} : '등록일'"
                                 data-bs-toggle="tooltip"
                                 data-bs-placement="top"
                                 style="cursor: pointer;">
-</span>
+                    </span>
                     </div>
                 </div>
                 <input type="hidden" id="select-value" th:value="${rootAuth.rootAuthSeq}">
@@ -102,9 +102,7 @@
                 </div>
                 <div class="d-flex justify-content-end mt-3">
                     <input type="button" id="map-button" class="btn btn-outline-secondary me-2" value="루트 확인">
-                    <button type="button" class="btn btn-outline-secondary">
-                        <a th:href="@{/root/list}" class="root-a-outline-se">목록으로</a>
-                    </button>
+                    <a th:href="@{/root/list}" class="btn btn-outline-secondary root-a-outline-se">목록으로</a>
                 </div>
                 <!-- 모달 창 -->
                 <div id="root-image-modal" class="root-modal">

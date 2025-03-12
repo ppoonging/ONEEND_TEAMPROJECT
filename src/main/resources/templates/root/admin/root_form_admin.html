@@ -25,7 +25,7 @@
             <div>
                 <div class="d-flex justify-content-end mb-2">
                     <label class="switch">
-                        <input type="checkbox">
+                        <input type="checkbox" id="rootStateToggle">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -80,10 +80,11 @@
                     </div>
                     <input type="hidden" id="form-mod" name="formMod" th:value="${rootSeq != null ? 'modify' : 'save'}">
                     <input type="hidden" id="rootListData" name="rootList">
+                    <input type="hidden" id="rootState" name="rootState">
+                    <input type="hidden" id="rootSeq" name="rootSeq" th:value="${rootSeq}">
                     <div class="d-flex justify-content-between mt-3">
                         <input type="button" id="map-button" class="btn btn-outline-secondary" value="루트 확인">
                         <input type="button" id="form-submit" name="form-submit" value="저장" class="btn btn-primary">
-                        <input type="hidden" id="rootSeq" name="rootSeq" th:value="${rootSeq}">
                     </div>
                 </form>
 
@@ -619,6 +620,26 @@
             return new naver.maps.LatLng(latSum / cnt, lngSum / cnt);
         }
 
+        // 루트 활성화
+        // document.getElementById("rootStateToggle").addEventListener("change", function () {
+        //
+        //     let rootState = false;
+        //
+        //     if (this.checked) {
+        //         rootState = true;
+        //     } else {
+        //         rootState = false;
+        //     }
+        //
+        //     document.getElementById("rootState").value = rootState;
+        // });
+
+        document.getElementById("rootStateToggle").addEventListener("change", function () {
+            const rootState = this.checked;
+            document.getElementById("rootState").value = rootState;
+            console.log("rootState: ", rootState);
+        });
+
         // 저장
         document.getElementById("form-submit").addEventListener("click", function () {
             console.log("click");
@@ -652,7 +673,6 @@
                 saveForm.submit();
             }
             saveForm.classList.add('was-validated');
-
 
         });
 

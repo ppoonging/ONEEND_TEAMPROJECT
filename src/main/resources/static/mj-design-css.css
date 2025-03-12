@@ -67,6 +67,20 @@
 .root-a-outline-se:hover {
     text-decoration: none;
     color: #fff;
+    cursor: pointer !important;
+}
+
+
+
+#select-root {
+    width: 300px; /* 원하는 고정 크기 */
+}
+
+#select-root option {
+    max-width: 100%; /* option 크기에 맞춤 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
@@ -330,7 +344,7 @@
 
 .root-list-card .hover_content p {
     margin: 1.4em 0 0;
-    color: #515151;
+    color: #777777;
     line-height: 1.4em;
     font-size: 13px;
     display: -webkit-box;
@@ -421,4 +435,13 @@ input:focus + .slider {
 input:checked + .slider:before {
     transform: translateX(1.4em);
     background-color: #fff;
+}
+
+.brutal-subscribe__title {
+    display: block;
+    font-size: 36px;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+    text-shadow: 3px 3px 0 rgb(158, 158, 111);
 }

@@ -22,51 +22,31 @@
         <section class="py-5">
 
             <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
-            <div style="height: 700px">
+            <div>
                 <table class="table">
                     <thead>
-                    <tr class="text-center">
-                        <th scope="col" style="width: 10%;">상태</th>
-                        <th scope="col" style="width: 10%;">No</th>
-                        <th scope="col" style="width: 60%;" class="text-start">제목</th>
-                        <th scope="col" style="width: 15%;">등록일</th>
-                    </tr>
+                        <tr class="text-center">
+                            <th scope="col" style="width: 10%;">상태</th>
+                            <th scope="col" style="width: 5%;">No</th>
+                            <th scope="col" style="width: 65%;" class="text-start">제목</th>
+                            <th scope="col" style="width: 15%;">등록일</th>
+                        </tr>
                     </thead>
                     <tbody class="table-group-divider">
-                    <tr th:each="list : ${list}" class="text-center">
-                        <td th:text="상태">1</td>
-                        <td th:text="${list.getRootSeq()}"></td>
-                        <td class="text-start"><a th:text="${list.getRootTitle()}"
-                                                  th:href="@{|/root/register/detail/${list.getRootSeq()}|}"></a></td>
-                        <td th:text="${#temporals.format(list.getRootDate,'YYYY-MM-dd HH:mm')} "></td>
-                    </tr>
+                        <tr th:each="list : ${list}" class="text-center">
+                            <td th:text="${list.rootState == true ? '활성화' : '비활성화'}"></td>
+                            <td th:text="${list.getRootSeq()}"></td>
+                            <td class="text-start"><a th:text="${list.getRootTitle()}"
+                                                      th:href="@{|/root/register/detail/${list.getRootSeq()}|}"></a></td>
+                            <td th:text="${#temporals.format(list.getRootDate,'YYYY-MM-dd HH:mm')} "></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
-
-            <!--하단 줄 (필요에 따라 사용)-->
-            <hr style="margin-top: 50px">
-            <!--pagination-->
-            <div class="d-flex justify-content-center">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true"> < </span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true"> > </span>
-                        </a>
-                    </li>
-                </ul>
-
-                <a th:href="@{/root/register/form}" sec:authorize="hasRole('ADMIN')" class="btn root-btn-style mb-3">작성</a>
-
+            <div class="d-flex justify-content-end">
+                <a th:href="@{/root/register/form}" sec:authorize="hasRole('ADMIN')" class="btn btn-outline-secondary root-a-outline-se mb-3">작성</a>
             </div>
+
         </section>
     </div>
 

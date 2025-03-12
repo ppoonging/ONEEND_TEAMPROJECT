@@ -8,6 +8,7 @@ import com.springboot.biz.root.rootUser.RootAuthDTO;
 import com.springboot.biz.root.rootUser.RootAuthListDTO;
 import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,8 +94,8 @@ public class RootController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/form/save")
-    public String rootSave(RootDTO rootDTO,
-                           Principal principal, BindingResult bindingResult) {
+    public String rootSave(@Valid RootDTO rootDTO, BindingResult bindingResult,
+                           Principal principal) {
 
 //        System.out.println("제목: " + title);
 //        System.out.println("rootList JSON: " + rootListJson);
@@ -113,8 +114,10 @@ public class RootController {
             }
         }
 
+//        System.out.println("rootState: " + rootDTO.isRootState());
+
         HUser user = this.hUserSerevice.getUser(principal.getName());
-        rootService.save(rootDTO.getTitle(), rootList, user);
+        rootService.save(rootDTO.getTitle(), rootDTO.isRootState(), rootList, user);
 
         return "redirect:/root/register/list";
     }
@@ -133,6 +136,7 @@ public class RootController {
 
         rootDTO.setTitle(root.getRootTitle());
         rootDTO.setRootLists(root.getRootList());
+        rootDTO.setRootState(root.isRootState());
 
         List<RootListDTO> simpleList = root.getRootList().stream()
                         .map(list -> new RootListDTO(
@@ -156,7 +160,7 @@ public class RootController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/form/modify/{rootSeq}")
-    public String modify(@PathVariable("rootSeq") Integer rootSeq, Model model, RootDTO rootDTO, Principal principal, BindingResult bindingResult) {
+    public String modify(@PathVariable("rootSeq") Integer rootSeq, Model model, @Valid RootDTO rootDTO, BindingResult bindingResult, Principal principal) {
 
         HUser user = this.hUserSerevice.getUser(principal.getName());
         Root root = this.rootService.get(rootSeq);
@@ -185,7 +189,7 @@ public class RootController {
         }
 
 
-        rootService.modify(rootSeq, rootDTO.getTitle(), rootList, user);
+        rootService.modify(rootSeq, rootDTO.getTitle(), rootDTO.isRootState(), rootList, user);
 
         return String.format("redirect:/root/register/detail/%s", rootSeq);
     }

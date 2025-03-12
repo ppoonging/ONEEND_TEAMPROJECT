@@ -31,7 +31,7 @@
                     <div class="col-sm-11">
                         <select id="select-root" th:field="*{rootSeq}" class="form-select" required>
                             <option value="">선택</option>
-                            <option th:each="root : ${root}"
+                            <option th:each="root : ${root}" th:if="${root.rootState}"
                                     th:value="${root.rootSeq}"
                                     th:text="${root.rootTitle}"
                             >
@@ -151,10 +151,8 @@
                         <input type="hidden" id="rootAuthSeq" name="rootAuthSeq" th:value="${rootAuthSeq}">
                     </div>
                     <div class="d-flex justify-content-end mt-3">
-                        <button type="button" class="btn btn-outline-secondary mb-3 me-2">
-                            <a th:href="@{/root/list}" class="root-a-outline-se">목록으로</a>
-                        </button>
-                        <button type="button" id="form-submit" name="form-submit" class="root-a-outline-se">저장</button>
+                        <a th:href="@{/root/list}" class="btn btn-outline-secondary root-a-outline-se me-2 root-cursor">목록으로</a>
+                        <button type="button" id="form-submit" name="form-submit" class="btn btn-outline-secondary root-a-outline-se">저장</button>
                     </div>
 
                 </form>
