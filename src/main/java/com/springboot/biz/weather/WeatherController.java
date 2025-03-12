@@ -36,6 +36,8 @@ public class WeatherController {
         // 지역 이름을 한글로 변환
         String koreanLocation = changeKor(location);
 
+
+
         // 모델에 날씨 정보 추가
         model.addAttribute("weatherData", weatherResponse);
         model.addAttribute("today", today); // 오늘 날짜 추가
