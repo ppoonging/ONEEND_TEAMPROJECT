@@ -3,15 +3,13 @@
         <a th:href="@{/users/signup}" sec:authorize="isAnonymous()" style="text-decoration: none">
             <span style="border-right: 1px solid #ccc; font-size: 14px; color: #777;" class="px-2">회원가입 </span>
         </a>
+
         <a th:href="@{/users/login}" sec:authorize="isAnonymous()"  style="text-decoration: none">
             <span class="px-2" style="font-size: 14px; color: #777;">로그인</span>
         </a>
         <a th:href="@{/users/logout}" sec:authorize="isAuthenticated()"  style="text-decoration: none">
             <span class="px-2" style="font-size: 14px; color: #777;">로그아웃</span>
         </a>
-        <!--<a th:href="@{/findPassword}"  style="text-decoration: none">
-            <span class="px-2" style="font-size: 14px; color: #777;">비밀번호 찾기/변경하기</span>
-        </a>-->
     </div>
 
     <!--네비바-->
