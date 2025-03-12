@@ -34,10 +34,6 @@ class OneendApplicationTests {
     void contextLoads() {
 
 
-        List<Root> root = this.rootAuthService.get();
-        System.out.println(root.get(1).getRootTitle());
-
-
 
 
 
