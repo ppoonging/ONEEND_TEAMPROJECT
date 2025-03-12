@@ -49,4 +49,10 @@ public class HUser {
     @Column(nullable = false)
     private HUserRole role;  //유저권한
 
+    private boolean active = true;
+
+    @Column(name = "reset_token", nullable = true)
+    private String resetToken;  //토큰 값
+
+
 }

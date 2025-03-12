@@ -1,5 +1,6 @@
 package com.springboot.biz.root.rootAdmin;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,6 +18,8 @@ public class RootList {
     private Integer RootListSeq;
 
     @ManyToOne
+    @JoinColumn(name = "root_seq")
+    @JsonBackReference
     private Root root; // 루트
 
     @ManyToOne
@@ -32,6 +35,11 @@ public class RootList {
 
     private Double rootListLongitude;  //경도
 
+    private String rootListLink; // 장소 정보 url
+
+    private String rootListCategory; // 장소 분류
+
+    private Integer rootListIndex;
 
 
 }

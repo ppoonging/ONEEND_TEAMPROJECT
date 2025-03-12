@@ -1,9 +1,11 @@
 package com.springboot.biz.root.rootAdmin;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,9 +26,12 @@ public class Root {
     private String rootTitle;  //루트 제목
 
     @OneToMany(mappedBy = "root", cascade = CascadeType.REMOVE)
-    private List<RootList> rootList = new ArrayList<>(); // 루트 목록
+    @JsonManagedReference
+    private List<RootList> rootList; // 루트 목록
 
     private LocalDateTime rootDate;
+
+    private LocalDateTime rootModifyDate;
 
 //    public void setRootList(List<RootList> rootList) {
 //        this.rootList = rootList;

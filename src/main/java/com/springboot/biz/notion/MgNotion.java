@@ -1,6 +1,7 @@
 package com.springboot.biz.notion;
 
 import com.springboot.biz.user.HUser;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
@@ -30,14 +31,17 @@ public class MgNotion {
 
     @Column(columnDefinition = "Integer default 0")
     @NonNull
-    private Integer notionCnt; // 공지사항 조회수
-
-    private String notionFilePath; //파일 경로
-
-    private String notionFileName;  //파일 이름
+    private int notionCnt; // 공지사항 조회수
 
     @ManyToOne
     private HUser author;    //작성자
+
+    private LocalDateTime modifyDate;
+
+    private String frboFilePath; //파일경로
+
+    private String frboFileName; //파일이름
+
 
 }
 
