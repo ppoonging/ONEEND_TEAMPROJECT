@@ -1,123 +1,68 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
-    <!-- 상단 바 -->
-    <div style="background-color: #F4E9E3">
-        <div class="container py-2">
-            <span style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px"> 한 끝 > 맛집 소개 </span>
-        </div>
-    </div>
-
-    <!-- 본문 -->
     <div class="container mt-5">
-
-        <!-- 상단 로고 -->
-        <div class="text-center mb-4">
-            <img th:src="@{/images/total/밥그릇.png}" width="5%">
-        </div>
-
-        <!-- 타이틀 -->
-        <h2 class="text-center py-2" style="font-weight: bold;">맛집 소개</h2>
+        <h2 class="text-center py-3">맛집 소개</h2>
 
         <!-- 카드형 리스트 -->
         <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
             <div class="col" th:each="mjboard : ${paging}">
-                <div class="card h-100 shadow-sm" style="border-radius: 16px; overflow: hidden;">
-                    <!-- 썸네일 -->
-                    <img th:src="@{${mjboard.mjthumbnaiurl}}"
-                         class="card-img-top"
-                         alt="썸네일"
-                         style="height: 200px; object-fit: cover;">
-
-                    <!-- 카드 본문 -->
-                    <div class="card-body d-flex flex-column justify-content-between" style="padding: 16px;">
-                        <!-- 제목 -->
-                        <h5 class="card-title" style="font-weight: bold; font-size: 20px; color: #333; line-height: 1.4; margin-bottom: 10px;">
-                            <a th:href="@{/mjboard/detail/{id}(id=${mjboard.mjSeq})}" th:text="${mjboard.mjTitle}" style="text-decoration: none; color: inherit;"></a>
+                <div class="card h-100">
+                    <img th:src="@{${mjboard.mjFilePath}}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a th:href="@{/mjboard/detail/{id}(id=${mjboard.mjSeq})}" th:text="${mjboard.mjTitle}"></a>
                         </h5>
-
-                        <!-- 추천/별점 -->
-                        <p class="card-text text-muted mb-2" style="font-size: 14px;">
-                            👍 총 추천수: <span th:text="${#lists.size(mjboard.recommendUsers)}">0</span>명
+                        <p class="card-text">조회수: <span th:text="${mjboard.mjCnt}"></span></p>
+                        <p class="card-text">👍 추천: <span th:text="${#lists.size(mjboard.recommendUsers)}"></span></p>
+                        <p class="card-text">
+                            ⭐ 평점:
+                            <span th:each="star : ${#numbers.sequence(1,5)}"
+                                  th:classappend="${star <= starCountMap[mjboard.mjSeq]} ? 'text-warning' : 'text-secondary'"
+                                  class="bi bi-star-fill"></span>
                         </p>
-                        <!-- ⭐ 별점 -->
-                        <div class="d-flex align-items-center mb-2">
-                            <span style="font-size: 14px; margin-right: 5px;">⭐ 평점</span>
-                            <div>
-                                <span th:each="star : ${#numbers.sequence(1, 5)}"
-                                      th:classappend="${star <= starCountMap[mjboard.mjSeq]} ? 'text-warning' : 'text-secondary'"
-                                      class="bi bi-star-fill" style="font-size: 16px;"></span>
-                            </div>
-                        </div>
-                        <!-- 작성자 + 날짜 -->
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <p class="card-text mb-0" style="font-size: 13px; color: #777;">
-                                <small>👤 <span th:text="${mjboard.userId.nickname}">작성자</span></small>
-                            </p>
-                            <p class="card-text mb-0" style="font-size: 12px; color: #aaa;">
-                                <small th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd')}"></small>
-                            </p>
-                        </div>
                     </div>
                 </div>
-            </div> <!-- 카드 반복 끝 -->
+            </div>
         </div>
 
-        <!-- 검색창 (반복문 밖으로 이동) -->
-        <div class="input-group my-4 w-50 mx-auto">
-            <input type="text" id="search_kw" class="form-control" th:value="${kw}" placeholder="검색어를 입력하세요">
+        <!-- 검색창 -->
+        <div class="input-group my-4">
+            <input type="text" id="search_kw" class="form-control" th:value="${kw}" placeholder="검색어 입력">
             <button class="btn btn-warning" type="button" id="btn_search">검색</button>
         </div>
 
-        <!-- 맛집 등록 버튼 (반복문 밖으로 이동) -->
-        <div class="text-end mb-3">
+        <!-- 맛집 등록 버튼 -->
+        <div class="text-end">
             <a th:href="@{/mjboard/create}" class="btn btn-danger">맛집 등록</a>
         </div>
 
-        <!-- 페이징 (반복문 밖으로 이동) -->
-        <div class="d-flex justify-content-center">
+        <!-- 페이징 -->
+        <div class="d-flex justify-content-center mt-4">
             <ul class="pagination">
-                <!-- 이전 페이지 -->
                 <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
-                    <a class="page-link" th:href="@{/mjboard/list(page=${paging.number-1}, kw=${kw})}" aria-label="Previous">
-                        <span aria-hidden="true">&lt;</span>
-                    </a>
+                    <a class="page-link" th:href="@{/mjboard/list(page=${paging.number-1}, kw=${kw})}">«</a>
                 </li>
-                <!-- 페이지 번호 -->
                 <li th:each="page : ${#numbers.sequence(0, paging.totalPages - 1)}"
                     th:classappend="${page == paging.number} ? 'active'" class="page-item">
-                    <a class="page-link" th:href="@{/mjboard/list(page=${page}, kw=${kw})}" th:text="${page + 1}"></a>
+                    <a class="page-link" th:href="@{/mjboard/list(page=${page}, kw=${kw})}" th:text="${page+1}"></a>
                 </li>
-                <!-- 다음 페이지 -->
                 <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
-                    <a class="page-link" th:href="@{/mjboard/list(page=${paging.number + 1}, kw=${kw})}" aria-label="Next">
-                        <span aria-hidden="true">&gt;</span>
-                    </a>
+                    <a class="page-link" th:href="@{/mjboard/list(page=${paging.number+1}, kw=${kw})}">»</a>
                 </li>
             </ul>
         </div>
-
-        <!-- 하단 줄 -->
-        <hr style="margin-top: 50px">
     </div>
 
-    <!-- 검색 기능 스크립트 -->
-    <script layout:fragment="script" type="text/javascript">
-        const searchEl = document.querySelector("#search_kw");
+    <script>
         const btnSearchEl = document.querySelector("#btn_search");
-
+        const searchEl = document.querySelector("#search_kw");
         btnSearchEl.addEventListener('click', function () {
-            const kw = searchEl.value;
-            location.href = '/mjboard/list?kw=' + encodeURIComponent(kw);
+            location.href = '/mjboard/list?kw=' + encodeURIComponent(searchEl.value);
         });
-
-        searchEl.addEventListener('keyup', function (event) {
-            if (event.key === 'Enter') {
-                const kw = searchEl.value;
-                location.href = '/mjboard/list?kw=' + encodeURIComponent(kw);
-            }
+        searchEl.addEventListener('keyup', function (e) {
+            if (e.key === 'Enter') location.href = '/mjboard/list?kw=' + encodeURIComponent(searchEl.value);
         });
     </script>
 
