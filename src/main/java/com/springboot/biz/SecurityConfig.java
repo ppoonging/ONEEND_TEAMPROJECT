@@ -17,22 +17,31 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authorizeHttpRequests) ->
-                        authorizeHttpRequests
-                                .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
-                .formLogin((formLogin) -> formLogin
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/api/**") // API 경로는 CSRF 검사 제외
+                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/**").authenticated() // API는 로그인 필요
+                        .anyRequest().permitAll() // 그 외는 모두 허용
+                )
+                .formLogin(form -> form
                         .loginPage("/users/login")
-                        .defaultSuccessUrl("/"))
-                .logout((logout) -> logout
+                        .defaultSuccessUrl("/")
+                        .permitAll()
+                )
+                .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/users/logout"))
                         .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true));
+                        .invalidateHttpSession(true)
+                );
+
         return http.build();
     }
+
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
