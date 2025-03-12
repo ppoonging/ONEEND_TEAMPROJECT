@@ -17,6 +17,23 @@
             <div th:utext="${freeQuestion.frboContent}" style="font-size: 15px; line-height: 1.6;"></div>
         </div>
 
+        <!-- 추천 버튼 & 추천 수 -->
+        <div class="my-4 d-flex align-items-center gap-3" sec:authorize="isAuthenticated()">
+            <a th:href="@{|/freequestion/recommend/${freeQuestion.frboSeq}|}"
+               class="btn d-flex align-items-center"
+               style="padding: 8px 16px; border-radius: 30px;"
+               th:classappend="${#lists.contains(freeQuestion.freeCnt, #authentication.principal)} ? 'btn-danger' : 'btn-primary'">
+                <!-- 하트 아이콘 -->
+                <i class="bi" th:classappend="${#lists.contains(freeQuestion.freeCnt, #authentication.principal)} ? 'bi-heart-fill me-2' : 'bi-heart me-2'"></i>
+                <span th:text="${#lists.contains(freeQuestion.freeCnt, #authentication.principal)} ? '추천 취소' : '추천하기'"></span>
+            </a>
+            <!-- 추천 수 -->
+            <span class="ms-2" style="font-size: 16px;">
+        <i class="bi bi-hand-thumbs-up-fill"></i>
+        <b th:text="${freeQuestion.freeCnt.size()}">0</b> 명이 추천했어요
+    </span>
+        </div>
+
         <!-- 수정/삭제 버튼 -->
         <div class="text-end mb-4" sec:authorize="isAuthenticated()">
             <a th:href="@{|/freequestion/modify/${freeQuestion.frboSeq}|}" class="btn btn-outline-secondary btn-sm">수정</a>
@@ -44,8 +61,6 @@
                         <div th:id="'answerContent-' + ${answer.frboAnSeq}" th:utext="${answer.frboAnsContent}" style="font-size: 14px;"></div>
                         <small class="text-muted" th:text="${#temporals.format(answer.frboARegDate, 'yyyy-MM-dd HH:mm')}"></small>
                     </div>
-
-                    <!-- 댓글 버튼 -->
                     <div class="mt-2 d-flex gap-2" sec:authorize="isAuthenticated()">
                         <button class="btn btn-sm btn-outline-secondary" th:onclick="|showEditForm(${answer.frboAnSeq})|">수정</button>
                         <form th:id="'editForm-' + ${answer.frboAnSeq}" th:action="@{|/freeanswer/modify/${answer.frboAnSeq}|}" method="post" style="display: none;" class="w-100 mt-2">

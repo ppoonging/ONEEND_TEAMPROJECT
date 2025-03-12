@@ -59,6 +59,11 @@ public class FreeQuestionService {
         }
     }
 
+    // 추천순
+    public Page<FreeQuestion> getPopularQuestionList(int page, String kw, String searchType) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return freeQuestionRepository.findAllByRecommend(kw, searchType, pageable);
+    }
 
 
     //글 등록,파일 업로드
@@ -129,6 +134,17 @@ public class FreeQuestionService {
     }
 
 
+    @Transactional
+    public void toggleRecommend(FreeQuestion question, HUser user) {
+        if (question.getFreeCnt().contains(user)) {
+            // 이미 추천한 경우 -> 추천 취소
+            question.getFreeCnt().remove(user);
+        } else {
+            // 추천하지 않은 경우 -> 추천
+            question.getFreeCnt().add(user);
+        }
+        freeQuestionRepository.save(question); // 저장
+    }
 
 
 
