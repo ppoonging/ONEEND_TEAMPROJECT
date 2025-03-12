@@ -18,6 +18,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
 
     @Bean
+
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf
@@ -28,6 +29,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll() // 그 외는 모두 허용
                 )
                 .formLogin(form -> form
+
                         .loginPage("/users/login")
                         .defaultSuccessUrl("/")
                         .permitAll()

@@ -17,7 +17,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HUserSerevice {
     private final HUserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
+
 
 
     public HUser create(String username, String password, String nickname, String email,
