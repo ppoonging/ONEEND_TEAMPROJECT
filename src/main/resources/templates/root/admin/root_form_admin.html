@@ -23,6 +23,12 @@
 
             <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
             <div>
+                <div class="d-flex justify-content-end mb-2">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
 
                 <!--제목, 주소검색-->
                 <form th:action="@{/root/register/form/save}" th:object="${rootDTO}" id="register-form" method="post"
