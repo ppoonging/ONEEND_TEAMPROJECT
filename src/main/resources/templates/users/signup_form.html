@@ -5,69 +5,135 @@
         <div class="container py-2">
 
             <!--수정해야할 부분-->
-            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">맛광 커뮤니티 > 자유게시판</span>
+            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px"> 한끝 > 회원가입 </span>
 
         </div>
     </div>
     <div class="container mt-5">
         <div class="text-center">
-            <img th:src="@{/images/total/밥그릇.png}" width="5%">
+            <img th:src="@{/images/total/bab.png}" width="5%">
         </div>
 
         <!--수정해야할 부분-->
         <!--title-->
-        <h2 class="text-center py-2">자유게시판</h2>
+        <h2 class="text-center py-2">한식 끝판왕</h2>
         <!--content-->
         <section class="py-5 center">
 
             <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
             <div>
 
-                <form th:action="@{/users/signup}" method="post" th:object="${HUserForm}">
+                <!DOCTYPE html>
+                <html lang="ko">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>회원가입</title>
 
-                    <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+                </head>
+                <body>
 
-                    <div>
+
+                <p class="title d-flex justify-content-center">회원가입</p>
+
+                <p class="message d-flex justify-content-center">한 끝에 오신 것을 환영합니다.</p>
+
+                <form class="form needs-validation" th:action="@{/users/signup}" method="post" th:object="${HUserForm}"
+                      id="HUserForm" novalidate>
+
+                    <!-- 아이디 -->
+                    <div class="form-group">
                         <label for="username" class="form-label">아이디</label>
-                        <input type="text" name="username" id="username"class="form-control">
-
-                        <label for="password" class="form-label">비밀번호</label>
-                        <input type="text" name="password" id="password"class="form-control">
-
-                        <label for="password2" class="form-label">비밀번호 확인</label>
-                        <input type="text" name="password2" id="password2"class="form-control">
+                        <input class="input form-control" type="text" name="username" id="username" placeholder=" "
+                               required>
+                        <div class="invalid-feedback">아이디를 입력하세요.</div>
                     </div>
-                    <div>
-                        <label for="nickname" class="form-label">이름</label>
-                        <input type="text" name="nickname" id="nickname"class="form-control">
 
-
+                    <!-- 이메일 -->
+                    <div class="form-group">
                         <label for="email" class="form-label">이메일</label>
-                        <input type="text" name="email" id="email"class="form-control">
+                        <input class="input form-control" type="email" name="email" id="email" placeholder=" " required>
+                        <div class="invalid-feedback">유효한 이메일 주소를 입력하세요.</div>
                     </div>
 
-                    <label for="phoneNumber" class="form-label">핸드폰번호</label>
-                    <input type="text" name="phoneNumber" id="phoneNumber"class="form-control">
+                    <!-- 비밀번호 -->
+                    <div class="form-group">
+                        <label for="password" class="form-label">비밀번호</label>
+                        <input class="input form-control" type="password" name="password" id="password" placeholder=" "
+                               required>
+                        <div class="invalid-feedback">비밀번호를 입력하세요.</div>
+                    </div>
 
-                    <label for="birthday" class="form-label">생년월일</label>
-                    <input type="text" name="birthday" id="birthday"class="form-control">
+                    <!-- 비밀번호 확인 -->
+                    <div class="form-group">
+                        <label for="password2" class="form-label">비밀번호 확인</label>
+                        <input class="input form-control" type="password" name="password2" id="password2"
+                               placeholder=" " required>
+                        <div class="invalid-feedback">비밀번호를 다시 입력하세요.</div>
+                    </div>
+
+                    <!-- 닉네임 -->
+                    <div class="form-group">
+                        <label for="nickname" class="form-label">닉네임</label>
+                        <input class="input form-control" type="text" name="nickname" id="nickname" placeholder=" "
+                               required>
+                        <div class="invalid-feedback">닉네임을 입력하세요.</div>
+                    </div>
+
+                    <!-- 휴대폰 번호 -->
+                    <div class="form-group">
+                        <label for="phoneNumber" class="form-label">휴대폰 번호</label>
+                        <input class="input form-control" type="text" name="phoneNumber" id="phoneNumber"
+                               placeholder=" " required>
+                        <div class="invalid-feedback">휴대폰 번호를 입력하세요.</div>
+                    </div>
+
+                    <!-- 생년월일 -->
+                    <div class="form-group">
+                        <label for="birthday" class="form-label">생년월일</label>
+                        <input class="input form-control" type="text" name="birthday" id="birthday" placeholder=" "
+                               required>
+                        <div class="invalid-feedback">생년월일을 입력하세요.</div>
+                    </div>
+
+                    <!-- 주소 -->
+                    <div class="form-group">
+                        <label for="address" class="form-label">주소</label>
+                        <div class="input-group mb-2">
+                            <input class="input form-control" type="text" name="address" id="address"
+                                   placeholder="주소를 검색하세요" readonly required>
+                            <button type="button" class="btn btn-secondary" onclick="execDaumPostcode()">주소 찾기</button>
+                        </div>
+                        <div class="invalid-feedback">주소를 입력하세요.</div>
+                    </div>
+
+                    <!-- 우편번호 -->
+                    <div class="form-group">
+                        <label for="zipCode" class="form-label">우편번호</label>
+                        <input class="input form-control" type="text" name="zipCode" id="zipCode" placeholder="우편번호"
+                               readonly required>
+                        <div class="invalid-feedback">우편번호를 입력하세요.</div>
+                    </div>
+
+                    <!-- 상세 주소 -->
+                    <div class="form-group">
+                        <label for="addressDetail" class="form-label">상세 주소</label>
+                        <input class="input form-control" type="text" name="addressDetail" id="addressDetail"
+                               placeholder="상세 주소를 입력하세요" required>
+                        <div class="invalid-feedback">상세 주소를 입력하세요.</div>
+                    </div>
 
 
 
-                    <label for="address" class="form-label">주소</label>
-                    <input type="text" name="address" id="address"class="form-control">
-
-
-                    <label for="addressDetail" class="form-label">상세주소</label>
-                    <input type="text" name="addressDetail" id="addressDetail"class="form-control">
-
-                    <label for="zipCode" class="form-label">우편주소</label>
-                    <input type="text" name="zipCode" id="zipCode"class="form-control">
-
-
-                    <input type="submit" value="회원가입" class="  btn btn-primary">
-
+                    <div class="d-flex justify-content-center mt-4">
+                        <button type="submit" class="btn custom-btn123">회원가입</button>
+                    </div>
                 </form>
+
+
+                <link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
+                </body>
+                </html>
 
             </div>
 
@@ -80,3 +146,43 @@
 
 </main>
 </html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById('HUserForm');
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault(); // 제출 막기
+                event.stopPropagation(); // 이벤트 전파 방지
+            }
+            form.classList.add('was-validated'); // 부트스트랩 검증 스타일 추가
+        }, false);
+    });
+
+
+</script>
+
+
+
+
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+<script>
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                let roadAddr = data.roadAddress; // 도로명 주소
+                let jibunAddr = data.jibunAddress; // 지번 주소
+
+                // 주소 입력
+                document.getElementById('address').value = roadAddr ? roadAddr : jibunAddr;
+
+                // 우편번호 입력
+                document.getElementById('zipCode').value = data.zonecode;
+
+                // 상세 주소로 이동
+                document.getElementById('addressDetail').focus();
+            }
+        }).open();
+    }
+</script>

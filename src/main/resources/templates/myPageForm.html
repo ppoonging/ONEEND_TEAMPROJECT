@@ -1,0 +1,91 @@
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+  <!-- 상단 네비 -->
+  <div style="background-color: #F4E9E3;">
+    <div class="container py-2">
+      <span style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">마이페이지 > 정보수정</span>
+    </div>
+  </div>
+
+  <!-- 본문 -->
+  <div class="container mt-5">
+    <div class="text-center">
+      <img th:src="@{/images/total/bab.png}" width="5%">
+    </div>
+
+    <!-- 타이틀 -->
+    <h2 class="text-center py-4" style="font-weight: bold; color: #B4A99C;">정보 수정</h2>
+
+    <!-- 카드형 폼 -->
+    <section class="py-5">
+      <form method="post" th:object="${HUserForm}" enctype="multipart/form-data" class="p-4 shadow rounded bg-white">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <table class="table">
+          <tr class="table-white">
+            <td><label for="nickname" class="form-label"><strong>닉네임</strong></label></td>
+            <td><input type="text" id="nickname" name="nickname" class="form-control" placeholder="닉네임 입력"></td>
+          </tr>
+          <tr class="table-white">
+            <td><label for="email" class="form-label"><strong>이메일</strong></label></td>
+            <td><input type="text" id="email" name="email" class="form-control" placeholder="이메일 입력"></td>
+          </tr>
+          <tr class="table-white">
+            <td><label for="phoneNumber" class="form-label"><strong>연락처</strong></label></td>
+            <td><input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="연락처 입력"></td>
+          </tr>
+          <tr class="table-white">
+            <td><label for="address" class="form-label"><strong>주소</strong></label></td>
+            <td><input type="text" id="address" name="address" class="form-control" placeholder="주소 입력"></td>
+          </tr>
+        </table>
+
+        <!-- 저장 버튼 -->
+        <div class="text-center mt-4">
+          <input type="submit" value="저장" class="btn"
+                 style="background-color: #F4E9E3; color: black; border: none; padding: 10px 30px; border-radius: 5px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        </div>
+      </form>
+    </section>
+  </div>
+</main>
+
+<!-- 스타일 정의 -->
+<style>
+  .table-white {
+    background-color: #ffffff;
+    border: none;
+  }
+
+  .table td {
+    vertical-align: middle;
+    padding: 12px 10px;
+    border: none;
+  }
+
+  /* 라벨을 고정 길이로 줄이기 */
+  .table label {
+    margin-bottom: 0;
+    font-size: 16px;
+    color: #555;
+    display: inline-block;
+    width: 80px; /* ✅ 라벨 고정 폭 (필요시 조절 가능 ex. 70px, 100px 등) */
+    text-align: left;
+  }
+
+  /* 인풋창 스타일 */
+  .form-control {
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 8px 12px;
+    width: 100%; /* 테이블 너비 맞춰서 자동 조정 */
+  }
+
+  /* 인풋 포커스 효과 */
+  .form-control:focus {
+    border-color: #B4A99C;
+    box-shadow: 0 0 0 0.2rem rgba(180, 169, 156, 0.25);
+  }
+</style>
+</html>

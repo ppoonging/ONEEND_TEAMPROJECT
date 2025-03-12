@@ -45,7 +45,16 @@ public class HUser {
 
     private LocalDateTime createDate;   //만든날짜
 
-    private String role;  //유저권한
+    //수정
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private HUserRole role;  //유저권한
+
+    private boolean active = true;
+
+    @Column(name = "reset_token", nullable = true)
+    private String resetToken;  //토큰 값
+
 
     //추천 기능위해 추가
     public boolean equals(Object o) {

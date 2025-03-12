@@ -1,10 +1,14 @@
 <header th:fragment="header" style="background-color: #fff;" id="header" class="pt-3 sticky-top">
     <div class="container d-flex justify-content-end">
-        <a th:href="@{/users/signup}" style="text-decoration: none">
+        <a th:href="@{/users/signup}" sec:authorize="isAnonymous()" style="text-decoration: none">
             <span style="border-right: 1px solid #ccc; font-size: 14px; color: #777;" class="px-2">회원가입 </span>
         </a>
-        <a th:href="@{/users/login}" style="text-decoration: none">
+
+        <a th:href="@{/users/login}" sec:authorize="isAnonymous()"  style="text-decoration: none">
             <span class="px-2" style="font-size: 14px; color: #777;">로그인</span>
+        </a>
+        <a th:href="@{/users/logout}" sec:authorize="isAuthenticated()"  style="text-decoration: none">
+            <span class="px-2" style="font-size: 14px; color: #777;">로그아웃</span>
         </a>
     </div>
 
@@ -54,7 +58,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" th:href="@{/notion/}">공지사항</a></li>
-                                <li><a class="dropdown-item" th:href="@{/inquriy/}">Q&A</a></li>
+                                <li><a class="dropdown-item" th:href="@{/customer/}">Q&A</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -84,7 +88,7 @@
                                 <div class="collapse bg-white" id="collapseExample2" style="position: absolute; border: 1px solid #eee; border-radius: 10%; transform: translateX(-35%)" >
                                     <div class="py-2" style="font-size: 13px; display: flex; flex-flow: column; text-wrap: nowrap">
                                        <a th:href="@{/users/myPage}" class="coll py-1 px-3" style="color: #333; text-decoration: none">마이페이지</a>
-                                       <a href="#" class="coll py-1 px-3" style="color: #333; text-decoration: none;">내 글 목록</a>
+                                       <a th:href="@{/favorite/my}" class="coll py-1 px-3" style="color: #333; text-decoration: none;">내 글 목록</a>
                                     </div>
                                 </div>
                             </li>
