@@ -24,14 +24,20 @@
                                th:href="@{/mjboard/detail/{id}(id=${mjboard.mjSeq})}"
                                th:text="${mjboard.mjTitle}"></a>
                         </h5>
-                        <p class="card-text">조회수: <span th:text="${mjboard.mjCnt}"></span></p>
+                        <!-- 추천 -->
                         <p class="card-text">👍 추천: <span th:text="${#lists.size(mjboard.recommendUsers)}"></span></p>
-                        <p class="card-text">
-                            ⭐ 평점:
-                            <span th:each="star : ${#numbers.sequence(1,5)}"
-                                  th:classappend="${star <= starCountMap[mjboard.mjSeq]} ? 'text-warning' : 'text-secondary'"
-                                  class="bi bi-star-fill"></span>
-                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <!-- 평점 -->
+                            <div>
+                                평점:
+                                <span th:each="star : ${#numbers.sequence(1,5)}"
+                                      th:classappend="${star <= starCountMap[mjboard.mjSeq]} ? 'text-warning' : 'text-secondary'"
+                                      class="bi bi-star-fill"></span>
+                            </div>
+                            <!-- 조회수 -->
+                            <div>조회수: <span th:text="${mjboard.mjCnt}"></span></div>
+                        </div>
+
 
                         <!-- 작성자, 작성일자 (아이콘 변경 및 유지) -->
                         <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
