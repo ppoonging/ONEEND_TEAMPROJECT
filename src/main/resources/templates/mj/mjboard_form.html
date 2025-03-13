@@ -5,100 +5,308 @@
         <h2 class="text-center text-white py-2 font-bold-style">맛집 소개</h2>
     </div>
     <div class="container">
+        <section class="py-5">
+            <!-- 블로그형 카드 스타일 -->
+            <div class="card shadow-sm p-4" style="border-radius: 16px; background-color: #fff;">
 
-        <!-- 블로그형 카드 스타일 -->
-        <div class="card shadow-sm p-4" style="border-radius: 16px; background-color: #fff;">
-          
-          <h2 class="mb-4" style="font-weight: bold; font-size: 28px; text-align: center;">맛집 소개 등록</h2>
+                <h2 class="mb-4" style="font-weight: bold; font-size: 28px; text-align: center;">맛집 소개 등록</h2>
+                <div class="d-flex justify-content-end mb-2">
+                    <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">위치 등록</button>
+                </div>
 
-        <!--CSRF 토큰 -->
-        <meta name="_csrf" th:content="${_csrf.token}" />
-        <meta name="_csrf_header" th:content="${_csrf.headerName}" />
-          
-        <!--폼 시작 -->
-        <form th:action="@{/mjboard/create}" method="post" enctype="multipart/form-data" th:object="${mjboardForm}" id="mjForm">
-            <!-- 제목 입력 -->
-            <input type="text" th:field="*{mjTitle}" placeholder="제목을 입력하세요" class="form-control mb-3" required>
+                <!--CSRF 토큰 -->
+                <meta name="_csrf" th:cont ent="${_csrf.token}"/>
+                <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
-            <!-- 내용 (썸머노트) -->
-            <textarea th:field="*{mjContent}" id="summernote" class="form-control" placeholder="내용을 입력하세요"></textarea>
+                <!--폼 시작 -->
+                <form th:action="@{/mjboard/create}" method="post" enctype="multipart/form-data"
+                      th:object="${mjboardForm}" id="mjForm">
+                    <!-- 제목 입력 -->
+                    <input type="text" th:field="*{mjTitle}" placeholder="제목을 입력하세요" class="form-control mb-3" required>
 
-            <!-- 파일 첨부 -->
-            <input type="file" name="file" class="form-control mt-3 d-none"> <!-- d-none으로 숨겨둠 -->
-        </form>
+                    <!-- 내용 (썸머노트) -->
+                    <textarea th:field="*{mjContent}" id="summernote" class="form-control"
+                              placeholder="내용을 입력하세요"></textarea>
 
-        <button type="submit" form="mjForm" class="btn-naver-fixed">등록하기</button>
-    </div>
+                    <!-- 파일 첨부 -->
+                    <input type="file" name="file" class="form-control mt-3 d-none"> <!-- d-none으로 숨겨둠 -->
 
-    <!--CSS 파일 연결 -->
-    <link rel="stylesheet" type="text/css" th:href="@{/mj.css}">
+                    <!-- 지도 -->
+                    <div class="modal modal-xl fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">위치 등록</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3 row">
+                                        <label for="query" class="col-sm-1 col-form-label">검색</label>
+                                        <div class="col-sm-5">
+                                            <input type="text" id="query" name="query" th:value="${query}" class="form-control" placeholder="키워드를 정확히 입력해주세요.">
+                                        </div>
+                                        <div class="col-1 d-grid">
+                                            <button type="button" id="search-submit" class="btn btn-outline-primary">검색</button>
+                                        </div>
+                                    </div>
 
-    <!--썸머노트 CDN -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/lang/summernote-ko-KR.js"></script>
+                                    <div class="d-flex justify-content-between h-100">
+                                        <!--left-->
+                                        <div class="d-flex flex-column justify-content-between" style="width: 58%;">
+                                            <div id="map" style="width: 100%; min-height: 500px; flex-grow: 1;"></div>
+                                        </div>
 
-    <!--썸머노트 기능 및 이미지 업로드 -->
-    <script>
-        $(document).ready(function () {
-            let csrfToken = $("meta[name='_csrf']").attr("content");
-            let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+                                        <!--right-->
+                                        <div class="h-100" style="width: 40%;">
+                                            <ul id="searchResultList" class="h-100 p-0 mb-0">
+                                                <li id="search-data-list">
+                                                    <!--검색 리스트 공간-->
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            $('#summernote').summernote({
-                height: 300,
-                lang: 'ko-KR',
-                placeholder: '내용을 입력해주세요...',
-                callbacks: {
-                    // 이미지 업로드
-                    onImageUpload: function (files) {
-                        let data = new FormData();
-                        data.append('file', files[0]);
-                        $.ajax({
-                            url: '/mjboard/uploadImage',
-                            type: 'POST',
-                            data: data,
-                            contentType: false,
-                            processData: false,
-                            beforeSend: function (xhr) {
-                                xhr.setRequestHeader(csrfHeader, csrfToken);
+                    <input type="hidden" name="mjMapTitle" id="mjMapTitle" th:field="*{mjMapTitle}">
+                    <input type="hidden" name="mjMapAddress" id="mjMapAddress" th:field="*{mjMapAddress}">
+                    <input type="hidden" name="mjMapRodeAddress" id="mjMapRodeAddress" th:field="*{mjMapRodeAddress}">
+                    <input type="hidden" name="mjMapLatitude" id="mjMapLatitude" th:field="*{mjMapLatitude}">
+                    <input type="hidden" name="mjMapLongitude" id="mjMapLongitude" th:field="*{mjMapLongitude}">
+                    <input type="hidden" name="mjMapLink" id="mjMapLink" th:field="*{mjMapLink}">
+                    <input type="hidden" name="mjMapCategory" id="mjMapCategory" th:field="*{mjMapCategory}">
+
+
+                </form>
+
+                <form id="searchForm" th:action="@{/mjboard/form/search}" method="get">
+                    <input type="hidden" id="hiddenQuery" name="query">
+                </form>
+
+
+                <button type="submit" form="mjForm" class="btn-naver-fixed">등록하기</button>
+            </div>
+
+            <!--CSS 파일 연결 -->
+            <link rel="stylesheet" type="text/css" th:href="@{/mj.css}">
+
+            <!--썸머노트 CDN -->
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+            <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+            <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/lang/summernote-ko-KR.js"></script>
+
+            <!--썸머노트 기능 및 이미지 업로드 -->
+            <script>
+                $(document).ready(function () {
+                    let csrfToken = $("meta[name='_csrf']").attr("content");
+                    let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+                    $('#summernote').summernote({
+                        height: 300,
+                        lang: 'ko-KR',
+                        placeholder: '내용을 입력해주세요...',
+                        callbacks: {
+                            // 이미지 업로드
+                            onImageUpload: function (files) {
+                                let data = new FormData();
+                                data.append('file', files[0]);
+                                $.ajax({
+                                    url: '/mjboard/uploadImage',
+                                    type: 'POST',
+                                    data: data,
+                                    contentType: false,
+                                    processData: false,
+                                    beforeSend: function (xhr) {
+                                        xhr.setRequestHeader(csrfHeader, csrfToken);
+                                    },
+                                    success: function (response) {
+                                        $('#summernote').summernote('insertImage', response.url);
+                                    },
+                                    error: function () {
+                                        alert('이미지 업로드 실패');
+                                    }
+                                });
                             },
-                            success: function (response) {
-                                $('#summernote').summernote('insertImage', response.url);
-                            },
-                            error: function () {
-                                alert('이미지 업로드 실패');
-                            }
-                        });
-                    },
-                    // 외부 이미지 자동 저장
-                    onPaste: function (e) {
-                        let clipboardData = e.originalEvent.clipboardData;
-                        let pastedData = clipboardData.getData('Text');
-                        if (pastedData.startsWith('http')) {
-                            $.ajax({
-                                url: '/mjboard/uploadExternalImage',
-                                type: 'POST',
-                                contentType: 'application/json',
-                                data: JSON.stringify({url: pastedData}),
-                                beforeSend: function (xhr) {
-                                    xhr.setRequestHeader(csrfHeader, csrfToken);
-                                },
-                                success: function (result) {
-                                    $('#summernote').summernote('insertImage', result.url);
-                                },
-                                error: function () {
-                                    alert('외부 이미지 업로드 실패');
+                            // 외부 이미지 자동 저장
+                            onPaste: function (e) {
+                                let clipboardData = e.originalEvent.clipboardData;
+                                let pastedData = clipboardData.getData('Text');
+                                if (pastedData.startsWith('http')) {
+                                    $.ajax({
+                                        url: '/mjboard/uploadExternalImage',
+                                        type: 'POST',
+                                        contentType: 'application/json',
+                                        data: JSON.stringify({url: pastedData}),
+                                        beforeSend: function (xhr) {
+                                            xhr.setRequestHeader(csrfHeader, csrfToken);
+                                        },
+                                        success: function (result) {
+                                            $('#summernote').summernote('insertImage', result.url);
+                                        },
+                                        error: function () {
+                                            alert('외부 이미지 업로드 실패');
+                                        }
+                                    });
+                                    e.preventDefault();
                                 }
-                            });
-                            e.preventDefault();
+                            }
                         }
-                    }
-                }
-            });
-        });
-    </script>
+                    });
+                });
+            </script>
 
+
+
+    </section>
+    </div>
+    <script th:inline="javascript" layout:fragment="script">
+
+        let map;
+
+        // 모달
+        document.addEventListener("DOMContentLoaded", () => {
+            const myModal = document.getElementById('exampleModal')
+
+            myModal.addEventListener('shown.bs.modal', () => {
+                if (!map) {
+                    console.log("확인")
+                    setMap(new naver.maps.LatLng(37.5666805, 126.9784147)); // 처음이면 세팅
+                } else {
+                    console.log("확2")
+                    map.refresh(); // 있으면 리프레시
+                }
+            })
+
+
+        });
+
+        // 맵 세팅
+        function setMap(center) {
+
+            console.log("동작")
+
+            map = new naver.maps.Map("map", {
+                center: center,
+                zoom: 16,
+                zoomControl: true,
+                mapTypeControl: true
+            });
+
+            // if (rootList && rootList.length > 0) {
+            //     const bounds = new naver.maps.LatLngBounds();
+            //     rootList.forEach(data => bounds.extend(new naver.maps.LatLng(data.latitude, data.longitude)));
+            //     map.fitBounds(bounds);
+            // }
+        }
+
+
+        // 주소 검색 동작
+        document.getElementById("search-submit").addEventListener("click", function () {
+            console.log("주소 검색 동작")
+
+            const query = document.getElementById("query").value;
+
+            if (query.trim().length === 0) {
+                alert("검색어를 입력하세요.");
+                return;
+            }
+
+            // fetch 로 받아서 새로고침 안되게 -> 그전에 Param으로 받아서 새로고침되는 문제 해결
+            fetch(`/mjboard/form/search?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("검색결과", data);
+                    searchResult(data);
+                })
+                .catch(error => {
+                    console.error("검색 실패:", error);
+                    alert("검색 중 오류가 발생했습니다.");
+                });
+        });
+
+        function searchResult(value) {
+            const listContainer = document.getElementById("searchResultList");
+            listContainer.innerHTML = ""; // 초기화
+
+            if (value.length === 0) {
+                listContainer.innerHTML = "<li>검색 결과가 없습니다.</li>";
+                return;
+            }
+
+            value.forEach(data => {
+                const li = document.createElement('li');
+                li.classList.add('d-flex', 'flex-row', 'p-1', 'h-100', 'root-li');
+
+                li.innerHTML = `
+                            <div class="p-2" style="width: 90%;">
+                                <h6 style="font-weight: bold; cursor: pointer; font-size: 14px" name="click-address"
+                                    data-lat="${data.latitude}" data-lng="${data.longitude}">${data.title}</h6>
+                                <p class="mb-1" style="font-size: 12px; color: #777">카테고리: ${data.category}</p>
+                                <p class="mb-1" style="font-size: 12px; color: #444">지번: ${data.address}</p>
+                                <p class="mb-0" style="font-size: 12px; color: #444">도로명: ${data.roadAddress}</p>
+                                <input type="hidden" value="${data.latitude}" />
+                                <input type="hidden" value="${data.longitude}" />
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center" style="width: 10%">
+                                <div class="checkbox-form">
+                                    <input type="radio" name="checkbox" class="root-checkbox-input"
+                                        data-title="${data.title}"
+                                        data-address="${data.address}"
+                                        data-roadaddress="${data.roadAddress}"
+                                        data-latitude="${data.latitude}"
+                                        data-longitude="${data.longitude}"
+                                        data-link="${data.link}"
+                                        data-category="${data.category}"
+                                    />
+                                </div>
+                            </div>
+                    `;
+
+                listContainer.appendChild(li);
+            });
+
+            // // 새로 그린 요소에 다시 이벤트 등록
+            // CheckboxEvents();
+            // clickAddressEvents();
+        }
+
+        document.addEventListener("click", function (e) {
+            if (e.target && e.target.classList.contains('root-checkbox-input')) {
+                const selected = e.target;
+
+                // 데이터 가져오기
+                const title = selected.dataset.title;
+                const address = selected.dataset.address;
+                const roadAddress = selected.dataset.roadaddress;
+                const latitude = selected.dataset.latitude;
+                const longitude = selected.dataset.longitude;
+                const link = selected.dataset.link;
+                const category = selected.dataset.category;
+
+                console.log("선택된 장소:", title, address, latitude, longitude); // 확인용
+
+                // hidden input에 값 저장
+                document.getElementById('mjMapTitle').value = title;
+                document.getElementById('mjMapAddress').value = address;
+                document.getElementById('mjMapRodeAddress').value = roadAddress;
+                document.getElementById('mjMapLatitude').value = latitude;
+                document.getElementById('mjMapLongitude').value = longitude;
+                document.getElementById('mjMapLink').value = link;
+                document.getElementById('mjMapCategory').value = category;
+            }
+        });
+
+
+    </script>
 </main>
+
+
+
 </html>

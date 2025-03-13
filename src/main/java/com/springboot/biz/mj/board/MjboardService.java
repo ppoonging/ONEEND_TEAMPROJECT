@@ -37,7 +37,9 @@ public class MjboardService {
     }
 
     // 게시글 작성
-    public void create(String mjTitle, String mjContent, MultipartFile file, HUser hUser, Integer mjCnt) throws Exception {
+    public void create(String mjTitle, String mjContent, MultipartFile file, HUser hUser, Integer mjCnt,
+                       String mjMapTitle, String mjMapAddress, String mjMapRodeAddress, Double mjMapLatitude,
+                       Double mjMapLongitude, String mjMapLink, String mjMapCategory) throws Exception {
         String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/mj";
         UUID uuid = UUID.randomUUID();
         String mjFileName = uuid + "_" + file.getOriginalFilename();
@@ -56,6 +58,13 @@ public class MjboardService {
         mj.setMjRegDate(LocalDateTime.now());
         mj.setUserId(hUser);
         mj.setMjCnt(0);
+        mj.setMjMapTitle(mjMapTitle);
+        mj.setMjMapAddress(mjMapAddress);
+        mj.setMjMapRodeAddress(mjMapRodeAddress);
+        mj.setMjMapLatitude(mjMapLatitude);
+        mj.setMjMapLongitude(mjMapLongitude);
+        mj.setMjMapLink(mjMapLink);
+        mj.setMjMapCategory(mjMapCategory);
         mjboardRepository.save(mj);
     }
 

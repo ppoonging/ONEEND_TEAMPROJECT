@@ -1,5 +1,6 @@
 package com.springboot.biz.mj.board;
 
+import com.springboot.biz.map.MapService;
 import com.springboot.biz.mj.answer.MjAnswerForm;
 import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
@@ -24,10 +25,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.security.Principal;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Controller
@@ -36,6 +34,7 @@ public class MjboardController {
 
     private final HUserSerevice hUserSerevice;
     private final MjboardService mjboardService;
+    private final MapService mapService;
 
     // 목록
     @GetMapping("/list")
@@ -90,7 +89,9 @@ public class MjboardController {
             return "mj/mjboard_form";
         }
         HUser hUser = hUserSerevice.getUser(principal.getName());
-        mjboardService.create(mjboardForm.getMjTitle(), mjboardForm.getMjContent(), file, hUser, 0);
+        mjboardService.create(mjboardForm.getMjTitle(), mjboardForm.getMjContent(), file, hUser, 0,
+                mjboardForm.getMjMapTitle(), mjboardForm.getMjMapAddress(), mjboardForm.getMjMapRodeAddress(), mjboardForm.getMjMapLatitude(),
+                mjboardForm.getMjMapLongitude(), mjboardForm.getMjMapLink(), mjboardForm.getMjMapCategory());
         return "redirect:/mjboard/list";
     }
 
@@ -187,4 +188,13 @@ public class MjboardController {
         mjboardService.delete(board);
         return "redirect:/mjboard/list";
     }
+
+    // 검색
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/form/search")
+    @ResponseBody
+    public List<Map<String, String>> search(@RequestParam String query) {
+        return mapService.search(query); // JSON 형태로 반환
+    }
+
 }
