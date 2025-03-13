@@ -84,56 +84,8 @@ a {
 
 /* ---------------------------------------- */
 
-/*root css*/
-.root-checkbox-input {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    border: 1px solid #333;
-    appearance: none;
-    cursor: pointer;
-    transition: background 0.1s;
-    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='black' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
-    background-size: 100% 100%;
-    background-position: 50%;
-    background-repeat: no-repeat;
-}
 
-.root-checkbox-input:checked {
-    border-color: transparent;
-    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
-    background-size: 100% 100%;
-    background-position: 50%;
-    background-repeat: no-repeat;
-    background-color: #857761;
-}
 
-#restaurant {
-    border-bottom: 1px solid #fff
-}
-
-#restaurant:last-child {
-    border-bottom: 0;
-}
-
-.root-list-style {
-    font-size: 14px;
-    margin-right: 5px;
-    color: #555;
-}
-
-.root-button-style {
-    border: 0;
-    background: none;
-    transform: translateY(2px);
-}
-
-.root-button-style > i  {
-    font-size: 20px;
-    font-weight: bold;
-    color: #853a22;
-
-}
 
 
 
@@ -152,7 +104,224 @@ a {
     border-top: 2px solid #ddd; /* 상단에 회색 선 추가 */
 }
 
+.pagination .page-item .page-link {
+    color: #888;
+    border: 1px solid #fff;
+    padding: 6px 12px;
+    font-size: 14px;
+}
 
 
+.pagination .page-item.active .page-link {
+    background-color: transparent;
+    color: #5C4033;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #eee;
+    background-color: transparent;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #D5C9C1;
+    color: #5C4033;
+    border-color: transparent;
+}
+
+.pagination .page-item .page-link {
+    color: #888;
+    border: 1px solid #fff;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+
+.pagination .page-item.active .page-link {
+    background-color: transparent;
+    color: #5C4033;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #eee;
+    background-color: transparent;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #D5C9C1;
+    color: #5C4033;
+    border-color: transparent;
+}
+
+
+/*로그인 회원가입 용*/
+/* 전체 폼 스타일 */
+.form {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* 제목 스타일 */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.message {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* 입력 필드 스타일 */
+.form-label {
+    position: relative;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.input {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+}
+
+.input:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.3);
+}
+
+/* 라벨(플로팅 텍스트) */
+.form-label span {
+    position: absolute;
+    top: 14px;
+    left: 12px;
+    font-size: 14px;
+    color: #888;
+    transition: all 0.3s ease-in-out;
+    pointer-events: none;
+}
+
+/* 입력 필드에 값이 입력되었거나 포커스 시 라벨 애니메이션 */
+.input:focus + span,
+.input:not(:placeholder-shown) + span {
+    top: -8px;
+    left: 10px;
+    font-size: 12px;
+    color: #007bff;
+    background: white;
+    padding: 0 5px;
+}
+
+/* 제출 버튼 스타일 */
+.submit {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.submit:hover {
+    background: #0056b3;
+}
+
+/*이이디 찾기 비빌번호 찾기
+         회원가입 버튼 관련 css*/
+
+.container-1 {
+    display: flex;
+    justify-content: space-evenly; /* 가운데 정렬 */
+    margin: 0 50px;
+    align-items: center;
+    height: 2vh; /* 전체 화면 높이에서 가운데 정렬 */
+    margin-top: 50px;
+}
+.link-menu {
+    display: flex;
+    gap: 10px; /* 링크 사이 간격 */
+    color: #777; /* 글씨 색상 */
+    font-size: 14px; /* 글씨 크기 */
+}
+.link-menu a {
+    text-decoration: none;
+    color: inherit; /* 부모 색상 상속 */
+}
+.link-menu a:hover {
+    color: #333; /* 호버 시 색상 변경 */
+}
+.divider {
+    color: #ccc; /* 구분선 색상 */
+    margin: 0 10px;
+}
+
+.pagination .page-item .page-link {
+    color: #888;
+    border: 1px solid #fff;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+
+.pagination .page-item.active .page-link {
+    background-color: transparent;
+    color: #5C4033;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #eee;
+    background-color: transparent;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #D5C9C1;
+    color: #5C4033;
+    border-color: transparent;
+}
+
+.category-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* 버튼 간격 */
+    margin: 20px 0; /* 위아래 여백 */
+}
+
+
+.category5-btn {
+    text-decoration: none;
+    color: #777; /* 기본 색상 */
+    font-size: 18px;
+    font-weight: 500;
+    padding: 10px 15px;
+    border-radius: 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+.category5-btn:hover {
+    color: #E87D3E; /* 오렌지색 강조 */
+}
+
+.category5-btn.active {
+    color: #E87D3E;
+    font-weight: 700;
+    border: 2px solid #E87D3E;
+    padding: 8px 15px;
+    border-radius: 20px;
+}
 
 

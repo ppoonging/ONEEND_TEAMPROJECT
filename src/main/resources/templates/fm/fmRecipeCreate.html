@@ -1,0 +1,63 @@
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+    <!--상단-->
+    <div style="background-color: #F4E9E3">
+        <div class="container py-2">
+
+            <!--수정해야할 부분-->
+            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">한식 끝판왕 > 정석 레시피 > 레시피 작성</span>
+
+        </div>
+    </div>
+    <div class="container mt-5">
+        <div class="text-center">
+            <img th:src="@{/images/total/bab.png}" width="5%">
+        </div>
+
+        <!--수정해야할 부분-->
+        <!--title-->
+        <h2 class="text-center py-2">레시피 작성</h2>
+        <!--content-->
+        <section class="py-5">
+
+            <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+
+
+
+                <!-- **내용** -->
+
+            <form method="post" th:action="@{/fm/create}" th:object="${fmRecipe}" enctype="multipart/form-data">
+                <label for-="fmrecipeCategory" class="form-label"> 카테고리</label>
+                <input type="text" name="fmrecipeCategory" id="fmrecipeCategory" >
+
+                <label for-="fmrecipeTitle" class="form-label">제목</label>
+                <input type="text" name="fmrecipeTitle" id="fmrecipeTitle" >
+
+                <label for-="fmrecipeIngre" class="form-label"> 재료 및 분량</label>
+                <input type="text" name="fmrecipeIngre" id="fmrecipeIngre" >
+
+                <label for-="fmrecipeReady" class="form-label">준비하기</label>
+                <input type="text" name="fmrecipeReady" id="fmrecipeReady" >
+
+                <label for-="fmrecipeContent" class="form-label">레시피 내용</label>
+                <input type="text" name="fmrecipeContent" id="fmrecipeContent" >
+
+
+                <!-- 파일 업로드 -->
+                    <label for="file" class="form-label">파일 업로드</label>
+                    <input type="file" name="file" id="file" class="form-control">
+
+                <input type="submit" class="btn btn-primary" value="질문저장">
+            </form>
+
+
+
+            <!--하단 줄 (필요에 따라 사용)-->
+            <hr style="margin-top: 50px">
+            <!--pagination-->
+
+        </section>
+    </div>
+
+</main>
+</html>

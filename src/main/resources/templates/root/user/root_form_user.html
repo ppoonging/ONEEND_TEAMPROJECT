@@ -1,0 +1,726 @@
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+    <!--상단-->
+    <div style="background-color: #F4E9E3">
+        <div class="container py-2">
+
+            <!--수정해야할 부분-->
+            <span class=""
+                  style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">소근소근 > 한식루트 인증</span>
+
+        </div>
+    </div>
+    <div class="container mt-5">
+        <div class="text-center">
+            <img th:src="@{/images/total/bab.png}" width="5%">
+        </div>
+
+        <!--수정해야할 부분-->
+        <!--title-->
+        <h2 class="text-center py-2">한식루트 인증하기</h2>
+        <!--content-->
+        <section class="py-5">
+
+            <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+            <div th:object="${rootAuthDTO}">
+                <!--                <div th:replace="~{form_errors :: formErrorsFragment}"></div>-->
+                <form id="select-form" th:action="@{/root/form}" method="get" class="row mb-3 needs-validation"
+                      novalidate>
+                    <span class="blockquote-footer mb-1">루트 선택을 먼저해주세요, 루트 선택 시 입력한 내용이 초기화됩니다.</span>
+                    <label for="select-root" class="col-sm-1 col-form-label">루트 선택</label>
+                    <div class="col-sm-11">
+                        <select id="select-root" th:field="*{rootSeq}" class="form-select" required>
+                            <option value="">선택</option>
+                            <option th:each="root : ${root}" th:if="${root.rootState}"
+                                    th:value="${root.rootSeq}"
+                                    th:text="${root.rootTitle}"
+                            >
+                            </option>
+                        </select>
+                        <div class="invalid-feedback">
+                            루트를 선택해주세요.
+                        </div>
+                    </div>
+
+                </form>
+
+                <form th:action="@{/root/form/save}" id="register-form" enctype="multipart/form-data" method="post"
+                      class="needs-validation" novalidate>
+
+                    <!--                    <input type="hidden" th:name="${_csrf.parameterName}" th:vale="${_csrf.token}">-->
+                    <!--                    <input type="hidden" id="rootAuthSeq" name="rootAuthSeq" th:value="${rootAuthDTO.rootAuthSeq}">-->
+
+                    <div class="mb-2 row">
+                        <label for="title" class="col-sm-1 col-form-label">제목</label>
+                        <div class="col-sm-11">
+                            <input type="text" id="title" name="title" th:field="*{title}" class="form-control"
+                                   required>
+                            <div class="invalid-feedback">
+                                제목을 입력해주세요.
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="mb-3 row">
+
+                    </div>
+
+                    <div class="d-flex justify-content-between" style=" height: 580px;">
+
+                        <!--left-->
+                        <div class="d-flex flex-column justify-content-between" style="width: 60%;">
+                            <!--top-->
+                            <div id="map" style="width: 100%; flex-grow: 1;"></div>
+
+                            <div style="width: 100%;" class="py-1 root-li">
+                                <ul class="d-flex mb-0 flex-wrap px-4 py-1" id="rootSelectList">
+                                    <li></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!--right-->
+                        <div class="h-100 overflow-y-auto" style="width: 35%;">
+                            <ul th:if="${selRootList}" class="p-3 mb-0">
+                                <li id="search-data-list" th:each="selRootList : ${selRootList}" class="root-li">
+                                    <div class="d-flex flex-row p-2 ">
+                                        <div class="my-2" style="width: 90%;">
+                                            <h6 th:utext="${selRootList.rootListIndex} + '. ' + ${selRootList.rootListTitle}"
+                                                style="font-weight: bold; cursor: pointer;" name="click-address"
+                                                th:data-lat="${selRootList.rootListLatitude}"
+                                                th:data-lng="${selRootList.rootListLongitude}"></h6>
+                                            <p th:text="'카테고리: ' + ${selRootList.rootListCategory}" class="mb-2"
+                                               style="font-size: 14px; color: #777"></p>
+                                            <p th:text="'지번: ' + ${selRootList.rootListAddress}" class="mb-2"
+                                               style="font-size: 14px; color: #444"></p>
+                                            <p th:text="'도로명: ' + ${selRootList.rootListRodeAddress}" class="mb-0"
+                                               style="font-size: 14px; color: #444"></p>
+                                            <input type="hidden" id="latitude"
+                                                   th:value="${selRootList.rootListLatitude}"/>
+                                            <input type="hidden" id="longitude"
+                                                   th:value="${selRootList.rootListLongitude}"/>
+                                        </div>
+                                        <div class="d-flex justify-content-center align-items-center"
+                                             style="width: 10%">
+                                            <div class="checkbox-form">
+                                                <input type="checkbox" id="checkbox" name="checkbox"
+                                                       class="root-checkbox-input"
+                                                       th:data-title="${selRootList.rootListTitle}"
+                                                       th:data-address="${selRootList.rootListAddress}"
+                                                       th:data-roadaddress="${selRootList.rootListRodeAddress}"
+                                                       th:data-latitude="${selRootList.rootListLatitude}"
+                                                       th:data-longitude="${selRootList.rootListLongitude}"
+                                                       th:data-link="${selRootList.rootListLink}"
+                                                       th:data-category="${selRootList.rootListCategory}"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 p-2 file-container" style="display:none;">
+                                        <input class="form-control form-control-sm file-input" type="file" name="files">
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column align-items-end">
+                        <p id="checkVaild" class="text-danger mb-1"
+                           style="font-size: .875em; margin-top: .25rem; display: none;">리스트를 하나 이상 선택해주세요.</p>
+                    </div>
+                    <div class="mt-3">
+                        <input type="button" id="map-button" class="btn btn-sm btn-outline-secondary" value="루트 확인">
+                        <input type="button" id="map-root-remove-button" class="btn btn-sm btn-outline-secondary"
+                               value="루트 지우기">
+                        <input type="button" id="map-marker-remove-button" class="btn btn-sm btn-outline-secondary"
+                               value="마커 지우기">
+                    </div>
+                    <div class="mt-3">
+                        <div>
+                            <label for="content" class="form-label">후기</label>
+                            <textarea class="form-control" id="content" name="content" th:field="*{content}" required
+                                      rows="5"></textarea>
+                            <div class="invalid-feedback">
+                                내용을 입력해주세요.
+                            </div>
+                        </div>
+                        <input type="hidden" id="rootListData" name="rootList" th:field="*{rootAuthList}">
+                        <input type="hidden" id="rootSeq" name="rootSeq">
+                        <input type="hidden" id="form-mod" name="formMod"
+                               th:value="${rootAuthSeq != null ? 'modify' : 'save'}">
+                        <input type="hidden" id="rootAuthSeq" name="rootAuthSeq" th:value="${rootAuthSeq}">
+                    </div>
+                    <div class="d-flex justify-content-end mt-3">
+                        <a th:href="@{/root/list}" class="btn btn-outline-secondary root-a-outline-se me-2 root-cursor">목록으로</a>
+                        <button type="button" id="form-submit" name="form-submit" class="btn btn-outline-secondary root-a-outline-se">저장</button>
+                    </div>
+
+                </form>
+            </div>
+
+        </section>
+    </div>
+    <script th:inline="javascript" layout:fragment="script">
+        let map;
+        let marker;
+        let polyline;
+        let rootList = /*[[${selRootList}]]*/ [];
+        let rootAuthList = /*[[${rootAuthList}]]*/ [];
+        let selPolyline;
+
+        console.log(rootAuthList);
+
+        let initMaker = [];
+        let selMaker = [];
+
+        // 페이지 로드 시 동작
+        document.addEventListener("DOMContentLoaded", () => {
+            setMap();
+            drawPolyline(rootList);
+            updateSelectList();
+
+            let isModify = rootAuthList && rootAuthList.length > 0;
+
+            console.log("확인 " + rootAuthList)
+
+            if (isModify) {
+                drawAuthPolyline(rootAuthList);
+                sessionStorage.setItem("checkRootUser", JSON.stringify(rootAuthList));
+            }
+
+            if (!isModify) {
+                document.querySelectorAll('.mb-3 .form-control').forEach(div => {
+                    div.parentElement.style.display = 'none';
+                });
+            }
+
+            if (isModify) {
+                modifySaveCheckList();
+            }
+        });
+
+        // 초기 map 설정
+        function setMap() {
+
+            let center = rootAuthList != null ? getCenter(rootAuthList) : new naver.maps.LatLng(37.5666805, 126.9784147);
+
+            map = new naver.maps.Map("map", {
+                center: center,
+                zoom: 15, // 기본 줌 설정
+                zoomControl: true,
+                mapTypeControl: true
+            });
+
+            if (rootList.length > 0) {
+                const bounds = new naver.maps.LatLngBounds();
+                rootList.forEach(data => bounds.extend(new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)));
+                map.fitBounds(bounds);
+            }
+
+        }
+
+        // 초반 경로 라인 그리기
+        function drawPolyline(value) {
+
+            if (!rootList || rootList.length === 0) return;
+
+            const path = value.map((data) => {
+                // console.log(data)
+                return new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)
+            })
+
+            if (polyline) {
+                polyline.setMap(null);
+            }
+
+            polyline = new naver.maps.Polyline({
+                map: map,
+                path: path,
+                strokeColor: '#FE2E2E',
+                strokeStyle: 'longdash',
+                strokeOpacity: 0.5,
+                strokeWeight: 2
+            });
+
+            if (window.markers) {
+                window.markers.forEach(marker => marker.setMap(null));
+            }
+            window.markers = [];
+
+            // 순서대로 마커 추가
+            value.forEach((data) => {
+                const marker = new naver.maps.Marker({
+                    position: new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude),
+                    map: map,
+                    icon: {
+                        content: `<span style="font-size: 10px; color: white; width: 10px; height: 10px; padding: 3px 5px; background-color: #FE2E2E; border-radius: 50%; opacity: 50%">${data.rootListIndex}</span>`,
+                        anchor: new naver.maps.Point(10, 15)
+                    }
+                });
+
+                initMaker.push(marker);
+
+            });
+
+        }
+
+        // rootAuthList를 기반으로 폴리라인 그리기
+        function drawAuthPolyline(value) {
+            if (!value || value.length === 0) return;
+
+            const path = value.map((data) => {
+                return new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude);
+            });
+
+            if (selPolyline) {
+                selPolyline.setMap(null);
+            }
+
+            selPolyline = new naver.maps.Polyline({
+                map: map,
+                path: path,
+                strokeColor: '#FA5858',
+                strokeStyle: 'solid',
+                strokeWeight: 3
+            });
+
+            addAuthMarkers(value);
+        }
+
+        // rootAuthList 위치에 마커 추가
+        function addAuthMarkers(value) {
+            if (selMaker.length > 0) {
+                selMaker.forEach(marker => marker.setMap(null));
+                selMaker = [];
+            }
+
+            value.forEach(data => {
+                const marker = new naver.maps.Marker({
+                    position: new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude),
+                    map: map,
+                    icon: {
+                        content: `<img width="30" height="30" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
+                        anchor: new naver.maps.Point(17, 20)
+                    }
+                });
+
+                selMaker.push(marker);
+            });
+        }
+
+        // select 선택 시
+        document.getElementById("select-root").addEventListener("change", function () {
+            sessionStorage.removeItem("checkRootUser");
+            // document.getElementById("select-form").submit();
+            const selectedValue = this.value;
+            window.location.href = '/root/form?rootSeq=' + selectedValue;
+        });
+
+        // 중앙 값 구해서 설정
+        function getCenter(value) {
+
+            if (value.length === 0) {
+                return new naver.maps.LatLng(37.5666805, 126.9784147); // 기본 위치 (서울 시청)
+            }
+
+            let latSum = 0;
+            let lngSum = 0;
+            let cnt = value.length;
+
+            value.forEach(data => {
+                latSum += data.rootListLatitude;
+                lngSum += data.rootListLongitude;
+            });
+
+            return new naver.maps.LatLng(latSum / cnt, lngSum / cnt);
+        }
+
+        // title 체크 시 지도/마커
+        document.querySelectorAll('h6[name="click-address"]').forEach((data) => {
+            data.addEventListener("click", function () {
+                const lat = parseFloat(data.dataset.lat);
+                const lng = parseFloat(data.dataset.lng);
+
+                const position = new naver.maps.LatLng(lat, lng);
+
+                if (marker) marker.setMap(null);
+
+                marker = new naver.maps.Marker({
+                    position: new naver.maps.LatLng(lat, lng),
+                    map: map,
+                    icon: {
+                        content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
+                        anchor: new naver.maps.Point(12, 40)
+                    },
+                    animation: naver.maps.Animation.BOUNCE
+                });
+
+                map.setCenter(position);
+                map.setZoom(17);
+
+            });
+        });
+
+        // 수정 -> 체크 및 이미지 업로드 검토
+        function modifySaveCheckList() {
+            const savedList = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
+
+            document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
+                const dataTitle = checkbox.dataset.title;
+                const matched = savedList.find(item => item.rootAuthListTitle === dataTitle);
+
+                if (matched) {
+                    checkbox.checked = true;
+                    const checkLi = checkbox.closest('li');
+                    const fileContainer = checkLi.querySelector('.file-container');
+
+                    if (fileContainer) {
+                        fileContainer.style.display = 'block';
+                    }
+
+                    if (matched.rootAuthListImagePath && matched.rootAuthListImageName) {
+                        const existingPreview = fileContainer.querySelector('.image-preview');
+                        const fullImagePath = matched.rootAuthListImagePath;
+
+                        if (!existingPreview) {
+                            const img = document.createElement('img');
+                            img.src = fullImagePath;
+                            img.classList.add('image-preview');
+                            img.style.width = '80px';
+                            img.style.height = '80px';
+                            img.style.objectFit = 'cover';
+                            img.style.marginBottom = '10px';
+                            fileContainer.insertBefore(img, fileContainer.firstChild); // 파일 input 위에 삽입
+                        }
+                    }
+                }
+            });
+        }
+
+        // 체크 시 동작
+        document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
+            checkbox.addEventListener("change", function () {
+
+                const checkVaild = document.getElementById("checkVaild");
+                checkVaild.style.display = 'none';
+
+                const checkLi = checkbox.closest('li');
+                const fileContainer = checkLi.querySelector('.file-container');
+
+                const obj = {
+                    rootAuthListTitle: checkbox.dataset.title,
+                    rootAuthListAddress: checkbox.dataset.address,
+                    rootAuthListRoadAddress: checkbox.dataset.roadaddress,
+                    rootAuthListLatitude: checkbox.dataset.latitude,
+                    rootAuthListLongitude: checkbox.dataset.longitude,
+                    rootAuthListLink: checkbox.dataset.link,
+                    rootAuthListCategory: checkbox.dataset.category
+                };
+
+                let sessionChkDataSel = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
+
+                if (this.checked) {
+                    if (!sessionChkDataSel.some(item => item.rootAuthListTitle === obj.rootAuthListTitle)) {
+                        sessionChkDataSel.push(obj);
+                    }
+                    fileContainer.style.display = 'block'; // 파일 업로드 보이기
+                } else {
+                    sessionChkDataSel = sessionChkDataSel.filter(item => item.rootAuthListTitle !== obj.rootAuthListTitle);
+                    fileContainer.style.display = 'none'; // 파일 업로드 숨기기
+                }
+
+                sessionStorage.setItem("checkRootUser", JSON.stringify(sessionChkDataSel));
+
+                checkDrawPolyline();
+
+            })
+        })
+
+        // list 업데이트
+        function updateSelectList() {
+            const rootSelectList = document.getElementById("rootSelectList");
+            rootSelectList.innerHTML = "";
+            const sessionChkData = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
+
+            if (sessionChkData.length === 0) {
+                rootSelectList.innerHTML = "<li> 위치를 추가하세요 </li>";
+                return;
+            }
+
+            sessionChkData.forEach((item) => {
+                const li = document.createElement("li");
+
+                const cleanTitle = item.rootAuthListTitle;
+                li.textContent = cleanTitle;
+                li.classList.add("root-list-style");
+
+                // 삭제 버튼 추가
+                const removeBtn = document.createElement("button");
+
+                const icon = document.createElement("i");
+                icon.classList.add("bi", "bi-x");
+
+                removeBtn.appendChild(icon);
+                removeBtn.classList.add("root-remove-btn-style");
+
+                removeBtn.addEventListener("click", (event) => {
+                    event.stopPropagation(); // li 의 클릭 이벤트 방지
+                    removeSelectStorage(item);
+                });
+
+                li.appendChild(removeBtn);
+
+                li.dataset.rootAuthListTitle = item.rootAuthListTitle
+                li.dataset.rootAuthListAddress = item.rootAuthListAddress
+                li.dataset.rootAuthListRoadAddress = item.rootAuthListRoadAddress
+                li.dataset.rootAuthListLatitude = item.rootAuthListLatitude
+                li.dataset.rootAuthListLongitude = item.rootAuthListLongitude
+                li.dataset.rootAuthListLink = item.rootAuthListLink
+                li.dataset.rootAuthListCategory = item.rootAuthListCategory
+
+                rootSelectList.appendChild(li);
+            });
+        }
+
+        document.getElementById("rootSelectList").addEventListener("click", function (event) {
+
+            const targetLi = event.target.closest(".root-list-style");
+
+            if (targetLi) {
+                const lat = parseFloat(targetLi.dataset.rootAuthListLatitude);
+                const lng = parseFloat(targetLi.dataset.rootAuthListLongitude);
+                const position = new naver.maps.LatLng(lat, lng);
+
+                map.setCenter(position);
+                map.setZoom(17);
+
+                if (marker) {
+                    marker.setMap(null);
+                }
+
+                // 선택한 좌표에 마커 추가
+                marker = new naver.maps.Marker({
+                    position: position,
+                    map: map,
+                    icon: {
+                        content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
+                        anchor: new naver.maps.Point(10, 40)
+                    },
+                    animation: naver.maps.Animation.BOUNCE
+                });
+            }
+
+        })
+
+        // 체크하면 라인 그리기
+        function checkDrawPolyline() {
+            const sessionChkData = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
+
+
+            if (sessionChkData.length === 0) return;
+
+            const path = sessionChkData.map(data => new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude))
+
+            // console.log(path);
+
+            // 기존 폴리라인 제거
+            if (selPolyline) {
+                selPolyline.setMap(null);
+                selPolyline = null;
+            }
+
+            if (selMaker) {
+                selMaker.forEach(marker => marker.setMap(null));
+            }
+            selMaker = [];
+
+            if (sessionChkData.length === 0) return;
+
+            selPolyline = new naver.maps.Polyline({
+                map: map,
+                path: path,
+                strokeColor: '#FA5858',
+                strokeStyle: 'stroke',
+                strokeWeight: 2
+            });
+
+            sessionChkData.forEach((data, index) => {
+                const marker = new naver.maps.Marker({
+                    position: new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude),
+                    map: map,
+                    icon: {
+                        content: `<img width="30" height="30" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
+                        anchor: new naver.maps.Point(17, 20)
+                    }
+                });
+
+                selMaker.push(marker);
+
+            });
+
+            updateSelectList();
+
+        }
+
+        // 파일 미리보기
+        document.querySelectorAll('.file-input').forEach(input => {
+            input.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        const existingPreview = input.parentElement.querySelector('.image-preview');
+                        if (existingPreview) {
+                            existingPreview.src = e.target.result;
+                        } else {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.classList.add('image-preview');
+                            img.style.width = '80px';
+                            img.style.height = '80px';
+                            img.style.objectFit = 'cover';
+                            img.style.marginBottom = '10px';
+                            input.parentElement.insertBefore(img, input);
+                        }
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        // 로컬스토리지에서 값 삭제하는 함수
+        function removeSelectStorage(value) {
+            let sessionChkData = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
+            sessionChkData = sessionChkData.filter(item => item.rootAuthListTitle !== value.rootAuthListTitle);
+            sessionStorage.setItem("checkRootUser", JSON.stringify(sessionChkData));
+
+            document.querySelectorAll('input[name="checkbox"]').forEach((chk) => {
+                if (chk.dataset.rootAuthListTitle === value.rootAuthListTitle) {
+                    chk.checked = false;
+                    const parentLi = chk.closest('li');
+                    const fileInputDiv = parentLi.querySelector('.mb-3');
+                    fileInputDiv.style.display = 'none';
+                    fileInputDiv.querySelector('input').value = '';
+                }
+            });
+
+            selMaker = selMaker.filter(marker => {
+                const position = marker.getPosition();
+                if (position.lat() === parseFloat(value.rootAuthListLatitude) && position.lng() === parseFloat(value.rootAuthListLongitude)) {
+                    marker.setMap(null);
+                    return false; // 필터에서 제거 (삭제된 마커만 필터링)
+                }
+                return true; // 유지할 마커
+            });
+
+            checkDrawPolyline();
+            updateSelectList();
+        }
+
+        // 루트 중앙 이동
+        document.getElementById("map-button").addEventListener("click", function () {
+            // console.log("click")
+
+            const path = rootList.map((data) => {
+                // console.log(data);
+                return new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude)
+            })
+
+            // list 의 중앙값
+            const center = getCenter(rootList);
+
+            // 중심 이동
+            map.setCenter(center);
+
+            // 경로에 맞게 줌 자동 조정
+            const bounds = new naver.maps.LatLngBounds();
+            path.forEach(coord => bounds.extend(coord));
+            map.fitBounds(bounds);
+        })
+
+        // 루트 폴리라인 지우기
+        document.getElementById("map-root-remove-button").addEventListener("click", function () {
+            console.log("click");
+
+            // 기존 폴리라인 제거
+            if (selPolyline) {
+                selPolyline.setMap(null);
+                selPolyline = null;
+            }
+
+            if (selMaker) {
+                selMaker.forEach(marker => marker.setMap(null));
+            }
+            selMaker = [];
+
+            document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
+                checkbox.checked = false;
+            });
+
+            sessionStorage.removeItem("checkRootUser");
+        })
+
+        // 위치 마커 지우기
+        document.getElementById("map-marker-remove-button").addEventListener("click", function () {
+            console.log("click");
+
+            if (marker) marker.setMap(null);
+        })
+
+        // 저장
+        document.getElementById("form-submit").addEventListener("click", function () {
+            console.log("click");
+
+            const saveForm = document.getElementById("register-form");
+            const selForm = document.getElementById("select-form");
+
+            let list = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
+            document.getElementById("rootListData").value = JSON.stringify(list);
+
+            const formMode = document.getElementById("form-mod").value;
+            const rootAuthSeq = document.getElementById("rootAuthSeq").value;
+
+            let check = document.querySelectorAll('input[name="checkbox"]:checked');
+            const checkVaild = document.getElementById("checkVaild");
+            let checkSel = check.length > 0;
+
+            checkVaild.style.display = `none`;
+
+            let hasError = false;
+
+            if (!checkSel) {
+                checkVaild.style.display = `block`;
+                hasError = true;
+
+            }
+
+            if (hasError || !saveForm.checkValidity() || !selForm.checkValidity() || !checkSel) {
+                event.preventDefault();
+                event.stopPropagation();
+
+            } else {
+
+                let rootseq = document.getElementById("select-root").value;
+                document.getElementById("rootSeq").value = rootseq;
+                sessionStorage.removeItem("checkRootUser");
+
+                if (formMode === 'save') {
+                    saveForm.action = "/root/form/save"; // 저장
+                } else if (formMode === 'modify') {
+                    saveForm.action = `/root/form/modify/${rootAuthSeq}`; // 수정
+                }
+
+                saveForm.submit();
+            }
+            saveForm.classList.add('was-validated');
+            selForm.classList.add('was-validated');
+        });
+
+    </script>
+</main>
+
+</html>
+<link rel="stylesheet" type="text/css" th:href="@{/mj-design-css.css}">

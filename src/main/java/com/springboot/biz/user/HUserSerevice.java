@@ -17,7 +17,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HUserSerevice {
     private final HUserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
+
 
 
     public HUser create(String username, String password, String nickname, String email,
@@ -46,6 +48,23 @@ public class HUserSerevice {
     public HUser getUserByEmail(String email){
         return userRepository.findByEmail(email).orElse(null);
     }
+
+
+
+
+    // username으로 유저 조회
+    public HUser getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new DataNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
+    // ID로 유저 조회
+    public HUser getUserById(Integer userSeq) {
+        return userRepository.findById(userSeq)
+                .orElseThrow(() -> new DataNotFoundException("사용자를 찾을 수 없습니다. ID: " + userSeq));
+    }
+
+
 
 
     public void modify(HUser hUser, String nickname, String email, String phoneNumber, String address) {

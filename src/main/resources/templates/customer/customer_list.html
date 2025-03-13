@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>문의 목록</title>
+
+</head>
+
+<main layout:fragment="content">
+
+    <!-- ✅ 상단 바 추가 -->
+    <div class="top-bar">
+        한끝 커뮤니티 > 문의하기
+    </div>
+
+    <div class="container1">
+
+        <!-- ✅ FAQ 섹션 유지 -->
+        <div class="faq-section">
+            <div class="faq-title">자주 묻는 질문 (FAQ)</div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. 문의 후 답변은 얼마나 걸리나요?</div>
+                <div class="faq-answer">A. 보통 1~2일 이내에 답변드리고 있으며, 주말 및 공휴일 제외될 수 있습니다.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. 문의를 수정하거나 삭제할 수 있나요?</div>
+                <div class="faq-answer">A. 작성하신 문의는 마이페이지에서 수정 또는 삭제 가능합니다.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q. 비밀글로 설정하면 어떤가요?</div>
+                <div class="faq-answer">A. 비밀글로 설정된 문의는 관리자와 작성자만 확인 가능합니다.</div>
+            </div>
+        </div>
+
+        <!-- ✅ 문의 목록 -->
+        <h2>문의 목록</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일</th>
+                <th>상태</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="customer : ${customers}">
+                <td th:text="${customer.custSeq}"></td>
+                <td style="text-align: left; padding-left: 15px;">
+                    <a th:href="@{/customer/detail/{custSeq}(custSeq=${customer.custSeq})}" class="detail-link"
+                       th:text="${customer.custTitle}"></a>
+                </td>
+                <td th:text="${customer.user.nickname}"></td>
+                <td th:text="${#temporals.format(customer.custRegTime, 'yyyy-MM-dd')}"></td>
+                <td th:text="${customer.custState.getDisplayName()}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- ✅ 문의 작성 버튼 -->
+        <button type="button"
+                style="padding: 8px 16px; background: #D5C9C1; color: white; border: none; border-radius: 5px; cursor: pointer;"
+                onclick="location.href='/customer/add'">
+            문의 작성
+        </button>
+
+    </div>
+
+    <!-- ✅ FAQ 토글 JavaScript 유지 -->
+    <script>
+        // FAQ 질문 클릭 시 답변 토글
+        document.addEventListener("DOMContentLoaded", function () {
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(function (item) {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', function () {
+                    const answer = item.querySelector('.faq-answer');
+                    const isOpen = item.classList.contains('active');
+                    document.querySelectorAll('.faq-item').forEach(function (el) {
+                        el.classList.remove('active');
+                        el.querySelector('.faq-answer').style.display = 'none';
+                    });
+                    if (!isOpen) {
+                        item.classList.add('active');
+                        answer.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
+
+</main>
+</html>
+<style>
+    /* 기본 설정 */
+    body {
+        font-family: '맑은 고딕', 'Malgun Gothic', Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container1{
+        max-width: 900px;
+        margin: 30px auto;
+        padding: 20px;
+        background: #fff;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    h2, .faq-title {
+        font-size: 18px;
+        margin-bottom: 20px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #444;
+    }
+
+    /* ✅ 상단 안내 바 */
+    .top-bar {
+        background-color: #F4E9E3;
+        padding: 12px 20px;
+        border-bottom: 1px solid #ddd;
+        font-family: 'MapoGoldenPier', sans-serif;
+        font-size: 14px;
+        color: #777;
+    }
+
+    /* FAQ 스타일 유지 */
+    .faq-section {
+        margin-bottom: 30px;
+    }
+
+    .faq-item {
+        border: 1px solid #ddd;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .faq-question {
+        padding: 12px;
+        background: #f9f9f9;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .faq-answer {
+        padding: 12px;
+        display: none;
+        background: #fff;
+        color: #555;
+        border-top: 1px solid #eee;
+    }
+
+    .faq-item.active .faq-question::before {
+        content: '▼ ';
+        color: #333;
+    }
+
+    .faq-question::before {
+        content: '▶ ';
+        margin-right: 5px;
+        color: #888;
+    }
+
+    /* 테이블 스타일 유지 */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    th {
+        background: #f1f1f1;
+        font-weight: bold;
+    }
+
+    tr:hover {
+        background: #f9f9f9;
+    }
+
+    a.detail-link {
+        color: #333;
+        text-decoration: none;
+    }
+
+    a.detail-link:hover {
+        text-decoration: underline;
+    }
+
+    /* 버튼 유지 */
+    .add-btn {
+        display: inline-block;
+        padding: 10px 18px;
+        background: #444;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 14px;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .add-btn:hover {
+        background: #333;
+    }
+</style>

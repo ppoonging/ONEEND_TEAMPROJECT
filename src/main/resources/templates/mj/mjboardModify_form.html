@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+
+    <!-- 상단 바 디자인 -->
+    <div style="background-color: #F4E9E3; border-bottom: 3px solid #D87C61;">
+        <div class="container py-2">
+            <span style="color: #777; font-family: 'MapoGoldenPier', sans-serif; font-size: 18px; padding-left: 10px;">
+                한끝 > 맛집소개 수정하기
+            </span>
+        </div>
+    </div>
+
+    <!-- 본문 내용 -->
+    <div class="container my-5">
+        <h2 class="mb-4">맛집소개 수정하기</h2>
+
+        <form th:action="@{|/mjboard/modify/${mjboard.mjSeq}|}" method="post" enctype="multipart/form-data" th:object="${mjboardForm}">
+            <!-- CSRF 토큰 (필요시 주석 해제) -->
+            <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"> -->
+
+            <!-- 제목 입력 -->
+            <div class="form-group">
+                <label for="mjTitle">제목</label>
+                <input type="text" th:field="*{mjTitle}" id="mjTitle" class="form-control" placeholder="제목을 입력하세요">
+                <small class="text-danger" th:if="${#fields.hasErrors('mjTitle')}" th:errors="*{mjTitle}"></small>
+            </div>
+
+            <!-- 내용 (썸머노트 에디터) -->
+            <div class="form-group">
+                <label for="mjContent">내용</label>
+                <textarea th:field="*{mjContent}" id="summernote" class="form-control" rows="10"></textarea>
+                <small class="text-danger" th:if="${#fields.hasErrors('mjContent')}" th:errors="*{mjContent}"></small>
+            </div>
+
+            <!-- 저장 버튼 -->
+            <button type="submit" class="btn btn-primary">수정하기</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- ✅ 썸머노트 관련 -->
+    <!-- jQuery (필수) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Summernote CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <!-- Summernote JS -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <!-- 한국어 언어 파일 -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/lang/summernote-ko-KR.js"></script>
+
+    <!-- ✅ 썸머노트 초기화 -->
+    <script>
+        $(document).ready(function () {
+            $('#summernote').summernote({
+                height: 300,  // 에디터 높이
+                lang: 'ko-KR',  // 한국어
+                placeholder: '내용을 입력해주세요...',
+                callbacks: {
+                    onImageUpload: function (files) {
+                        let data = new FormData();
+                        data.append('file', files[0]);
+                        $.ajax({
+                            url: '/mjboard/uploadImage',  // ✅ 정확한 컨트롤러 주소
+                            type: 'POST',
+                            data: data,
+                            contentType: false,
+                            processData: false,
+                            success: function (url) {
+                                // ✅ 업로드 후 에디터에 이미지 추가
+                                $('#summernote').summernote('insertImage', url.url, function ($image) {
+                                    $image.css('max-width', '100%');
+                                    $image.css('max-height', '400px');
+                                    $image.css('height', 'auto');
+                                });
+                            },
+                            error: function () {
+                                alert('이미지 업로드 실패');
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+
+</main>
+</html>

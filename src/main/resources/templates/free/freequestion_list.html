@@ -1,190 +1,92 @@
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
-    <!--상단-->
-    <div style="background-color: #F4E9E3">
-        <div class="container py-2">
-            <span style="color: #777; font-family: 'MapoGoldenPier'; padding-left: 8px">맛광 커뮤니티 > 자유게시판</span>
-        </div>
+
+    <!-- 상단 -->
+    <div style="background-color: #F4E9E3; padding: 10px 20px;">
+        <span style="color: #777; font-family: 'MapoGoldenPier';">한끝 커뮤니티 > 자유게시판</span>
     </div>
 
-    <div class="container mt-5">
+    <div class="container" style="margin-top: 30px;"> <!-- 간격 넓힘 -->
         <div class="text-center">
-            <img th:src="@{/images/total/bab.png}" width="100">
+            <img th:src="@{/images/total/bab.png}" width="5%">
         </div>
 
         <!-- 제목 -->
-        <h2 class="text-center py-2">자유게시판</h2>
+        <h2 class="text-center py-3" style="font-weight: bold; color: #333;">자유게시판</h2>
 
-        <!-- 검색 폼 -->
-        <div class="text-center py-4">
-            <form th:action="@{/freequestion/list}" method="get">
-                <!-- 검색 옵션 선택 -->
-                <select name="searchType" class="form-control d-inline-block" style="width: 20%; padding: 10px; font-size: 16px; border-radius: 25px;">
-                    <option value="title" th:selected="${searchType == 'title'}">제목만 검색</option>
-                    <option value="content" th:selected="${searchType == 'content'}">내용만 검색</option>
-                    <option value="both" th:selected="${searchType == 'both'}">제목+내용 검색</option>
-                </select>
-
-                <!-- 검색어 입력 -->
-                <input type="text" name="kw" class="form-control d-inline-block" style="width: 60%; padding: 10px;" placeholder="검색어 입력" th:value="${kw}">
-
-                <!-- 검색 버튼 -->
-                <button type="submit" class="btn btn-primary" style="background-color: #8B5A2B; border-color: #8B5A2B;">
-                    검색
-                </button>
-            </form>
+        <!-- 광고 -->
+        <div class="ad-space" style="text-align: center; padding: 20px; background-color: #f5f5f5; border-radius: 8px; margin-bottom: 50px;">
+            <p>광고</p>
+            <!-- 여기 광고 이미지나 광고 코드 삽입 -->
         </div>
 
-        <!-- 테이블 -->
-        <section class="py-5">
-            <style>
-                table {
-                    width: 80%;
-                    margin: auto;
-                    border-collapse: collapse;
-                    background: url('/images/hanji_texture.png') no-repeat center;
-                    background-size: cover;
-                    font-family: 'Gowun Batang', serif;
-                    border-radius: 12px;
-                    overflow: hidden;
-                    border: 4px solid #D9B999;
-                    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.15);
-                }
+        <!-- 검색 폼 -->
+        <form th:action="@{/freequestion/}" method="get" class="text-center mb-4" style="display: flex; justify-content: center; gap: 10px;">
+            <select name="searchType" style="padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+                <option value="title" th:selected="${searchType == 'title'}">제목</option>
+                <option value="content" th:selected="${searchType == 'content'}">내용</option>
+                <option value="both" th:selected="${searchType == 'both'}">제목+내용</option>
+            </select>
+            <input type="text" name="kw" placeholder="검색어 입력" th:value="${kw}"
+                   style="width: 300px; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+            <button type="submit" style="padding: 8px 16px; border: none; background: #D5C9C1; color: white; border-radius: 5px;">검색</button>
+        </form>
 
-                thead {
-                    background: #EED3B6;
-                    color: #5E3A1D;
-                    font-weight: bold;
-                    text-transform: uppercase;
-                    font-size: 18px;
-                }
+        <!-- 정렬 버튼 -->
+        <div class="d-flex justify-content-start mb-3" style="margin-left: 130px;">
+            <a th:href="@{|/freequestion/?sort=recent|}"
+               class="btn btn-sm"
+               th:classappend="${sort == 'recent'} ? 'btn-dark' : 'btn-outline-dark'">최신글</a>
+            <a th:href="@{|/freequestion/?sort=popular|}"
+               class="btn btn-sm"
+               th:classappend="${sort == 'popular'} ? 'btn-danger' : 'btn-outline-danger'">인기글</a>
+        </div>
 
-                th, td {
-                    padding: 16px;
-                    text-align: center;
-                    border-bottom: 2px solid #D9B999;
-                }
+        <!-- 게시글 테이블 -->
+        <table style="width: 80%; margin: auto; border-collapse: collapse; border-top: 2px solid #444; margin-bottom: 20px;">
+            <thead>
+            <tr style="background: #f5f5f5; border-bottom: 1px solid #ccc;">
+                <th style="padding: 12px;">번호</th>
+                <th style="padding: 12px;">제목</th>
+                <th style="padding: 12px;">작성자</th>
+                <th style="padding: 12px;">작성일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="freeQuestion, iterStat : ${pageing.content}" style="border-bottom: 1px solid #eee;">
+                <!-- 오름차순 번호 출력 -->
+                <td style="padding: 12px; text-align: center;" th:text="${iterStat.index + 1}"></td>
+                <td style="padding: 12px;">
+                    <a th:href="@{|/freequestion/detail/${freeQuestion.frboSeq}|}" th:text="${freeQuestion.frboTitle}" style="color: #333; text-decoration: none;"></a>
+                </td>
+                <td style="padding: 12px; text-align: center;" th:text="${freeQuestion.freeAuthor?.nickname}"></td>
+                <td style="padding: 12px; text-align: center;" th:text="${#temporals.format(freeQuestion.frboRegDate, 'yyyy-MM-dd')}"></td>
+            </tr>
+            </tbody>
+        </table>
 
-                tbody tr:hover {
-                    background: rgba(255, 239, 204, 0.6);
-                }
+        <!-- 글 작성 버튼 -->
+        <div class="text-end mb-3">
+            <a th:href="@{/freequestion/form}" style="padding: 10px 20px; background: #D5C9C1; color: white; text-decoration: none; border-radius: 5px;">글 작성</a>
+        </div>
 
-                td:first-child {
-                    font-weight: bold;
-                    color: #774936;
-                }
+        <!-- 페이지네이션 -->
+        <ul class="pagination d-flex justify-content-center align-items-center flex-grow-1 me-auto">
+            <li class="page-item" th:classappend="${!pageing.hasPrevious} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${pageing.number-1}|}" aria-label="Previous">〈</a>
+            </li>
 
-                table, th:first-child, td:first-child {
-                    border-top-left-radius: 12px;
-                    border-bottom-left-radius: 12px;
-                }
+            <li th:each="i : ${#numbers.sequence(0, pageing.totalPages - 1)}"
+                class="page-item"
+                th:classappend="${pageing.number == i} ? 'active'">
+                <a class="page-link" th:href="@{|?page=${i}|}" th:text="${i + 1}"></a>
+            </li>
 
-                table, th:last-child, td:last-child {
-                    border-top-right-radius: 12px;
-                    border-bottom-right-radius: 12px;
-                }
+            <li class="page-item" th:classappend="${!pageing.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${pageing.number+1}|}" aria-label="Next">〉</a>
+            </li>
+        </ul>
 
-                @media (max-width: 768px) {
-                    th, td {
-                        padding: 12px;
-                        font-size: 14px;
-                    }
-                }
-            </style>
-
-            <table>
-
-                <tbody>
-                <tr th:each="freeQuestion : ${pageing}">
-                    <td>
-                        <!-- 썸네일이 존재하면 이미지를 표시 -->
-                        <img th:if="${freeQuestion.frbothumbnailUrl != null}"
-                             th:src="@{${freeQuestion.frbothumbnailUrl}}"
-                             alt="썸네일 이미지"
-                             style="width: 60px; height: 50px; object-fit: cover;">
-                    </td>
-
-                    <td>
-                        <a th:href="@{|/freequestion/detail/${freeQuestion.frboSeq}|}" th:text="${freeQuestion.frboTitle}"></a>
-                    </td>
-                    <td><span th:if="${freeQuestion.freeAuthor != null}" th:text="${freeQuestion.freeAuthor.nickname}"></span></td>
-                    <td th:text="${#temporals.format(freeQuestion.getFrboRegDate(),'yyyy-MM-dd')}"></td>
-                </tr>
-                </tbody>
-            </table>
-
-            <!-- 글 작성 버튼 -->
-            <div class="text-end my-3">
-                <a th:href="@{/freequestion/form}" class="btn btn-primary" style="background-color: #8B5A2B; border-color: #8B5A2B;">
-                    글 작성
-                </a>
-            </div>
-
-            <!-- 페이지네이션 -->
-            <style>
-                .pagination {
-                    display: flex;
-                    justify-content: center;
-                    padding: 10px;
-                    background-color: #FAF3E0;
-                    border-radius: 8px;
-                    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-                }
-
-                .page-item {
-                    margin: 0 5px;
-                }
-
-                .page-link {
-                    width: 40px;
-                    height: 40px;
-                    font-size: 16px;
-                    font-weight: bold;
-                    color: #8B5A2B;
-                    background: #FCE8D5;
-                    border: 2px solid #D9B999;
-                    border-radius: 50%;
-                    text-decoration: none;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                .page-item.active .page-link {
-                    background: #C29263;
-                    color: white;
-                }
-
-                .page-link:hover {
-                    background: #EED3B6;
-                }
-
-                .page-item.disabled .page-link {
-                    background: #EFEFEF;
-                    color: #B5B5B5;
-                    cursor: not-allowed;
-                }
-            </style>
-
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <li class="page-item" th:classappend="${!pageing.hasPrevious} ? 'disabled'">
-                        <a class="page-link" th:href="@{|?page=${pageing.number-1}|}" aria-label="Previous">〈</a>
-                    </li>
-
-                    <li th:each="i : ${#numbers.sequence(0, pageing.totalPages - 1)}"
-                        class="page-item"
-                        th:classappend="${pageing.number == i} ? 'active'">
-                        <a class="page-link" th:href="@{|?page=${i}|}" th:text="${i + 1}"></a>
-                    </li>
-
-                    <li class="page-item" th:classappend="${!pageing.hasNext} ? 'disabled'">
-                        <a class="page-link" th:href="@{|?page=${pageing.number+1}|}" aria-label="Next">〉</a>
-                    </li>
-                </ul>
-            </nav>
-
-        </section>
     </div>
 </main>
 </html>

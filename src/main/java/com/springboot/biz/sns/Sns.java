@@ -1,10 +1,8 @@
 package com.springboot.biz.sns;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.springboot.biz.user.HUser;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -24,4 +22,14 @@ public class Sns{
     private String snsLink;  //SNS URL 경로
 
     private String snsImageName;  //파일 이름
+
+    private String snsCommentTitle;
+
+    private String snsCommentContent;
+
+    private String snsTag;
+
+    @ManyToOne
+    private HUser userId;  //유저 아이디(FK)
+
 }
