@@ -53,10 +53,10 @@ public class MgController {
             return "notionForm";  // Return back to the form page
         }
 
-        // Call service to handle creating the notion and save the file
+        // Call service to handle creating the notion and save the file41616156
         this.mgService.create(mgNotionForm.getNotionTitle(), mgNotionForm.getNotionContent(), file);
 
-        // Redirect to the notion listing page after success
+        // Redirect to the notion listing page after success15615615
         return "redirect:/notion/";
     }
 
