@@ -1,25 +1,11 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-
-    <!-- 상단 바 -->
-    <div style="background-color: #F4E9E3">
-        <div class="container py-2">
-            <span style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px"> 한 끝 > 맛집 소개 </span>
-        </div>
+    <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
+        <h2 class="text-center text-white py-2 font-bold-style">맛집 소개</h2>
     </div>
-
-    <!-- 본문 -->
-    <div class="container mt-5">
-
-        <!-- 상단 로고 -->
-        <div class="text-center mb-4">
-            <img th:src="@{/images/total/밥그릇.png}" width="5%">
-        </div>
-
-        <!-- 타이틀 -->
-        <h2 class="text-center py-2" style="font-weight: bold;">맛집 소개</h2>
+    <div class="container">
+        <section class="py-5">
 
         <!-- 카드형 리스트 -->
         <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
