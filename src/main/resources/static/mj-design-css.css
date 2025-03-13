@@ -245,7 +245,7 @@
 
 
 .root-list-card-container {
-    width: calc(30% + 30px); /* 한 줄에 3개 */
+    width: calc(30% + 33px); /* 한 줄에 3개 */
     min-width: 300px;
     margin: 10px 0px 10px 10px;
     display: flex;

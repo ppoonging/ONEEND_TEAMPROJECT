@@ -1,21 +1,14 @@
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
-
-    <!-- 상단 네비 -->
-    <div style="background-color: #F4E9E3;">
-        <div class="container py-2">
-            <span style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px;">맛광 커뮤니티 > 상세보기</span>
-        </div>
+    <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
+        <h2 class="text-center text-white py-2 font-bold-style">공지사항</h2>
     </div>
-
-    <!-- 본문 -->
-    <div class="container mt-5">
+    <div class="container">
 
         <!-- 상단 로고 -->
         <div class="text-center">
             <img th:src="@{/images/total/logo.png}" width="120" class="rounded">
         </div>
-
         <!-- 타이틀 -->
         <h2 class="text-center py-4" style="font-weight: bold; color: #B4A99C; font-family: 'MapoGoldenPier', serif;">상세보기</h2>
 
@@ -59,10 +52,8 @@
                         삭제
                     </a>
                 </div>
-
             </div>
         </section>
-
     </div>
 
 </main>

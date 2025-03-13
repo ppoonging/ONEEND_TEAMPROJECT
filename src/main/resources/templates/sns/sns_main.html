@@ -1,58 +1,51 @@
 <html layout:decorate="~{layout}">
-    <main layout:fragment="content">
-        <!--상단-->
-        <div style="background-color: #F4E9E3">
-            <div class="container py-2">
-
-                <!--수정해야할 부분-->
-                <span class="" style="color: #777; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">SNS</span>
-
-            </div>
-        </div>
-        <div class="container mt-5">
-            <div class="text-center">
-                <img th:src="@{/images/total/bab.png}" width="100">
-            </div>
-
-            <!--수정해야할 부분-->
-            <!--title-->
-            <h2 class="text-center py-2">SNS</h2>
-            <!--content-->
-            <section class="py-5">
-                <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
-                <div>
-                    <!--유튜브 영상-->
-                    <div style="height: 550px; background-color: #75b798;">
-                            <div class="embed-responsive embed-responsive-16by9">
-                                <iframe width="100%" height="550px" src="https://www.youtube.com/embed/ELq_V8PF2tc?si=iLgTiQmCEnzV5WUG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                            </div>
+<main layout:fragment="content">
+    <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
+        <h2 class="text-center text-white py-2 font-bold-style">SNS</h2>
+    </div>
+    <div class="container">
+        <!--수정해야할 부분-->
+        <!--content-->
+        <section class="py-2">
+            <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+            <div>
+                <!--유튜브 영상-->
+                <div style="height: 550px; background-color: #75b798;">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe width="100%" height="550px"
+                                src="https://www.youtube.com/embed/ELq_V8PF2tc?si=iLgTiQmCEnzV5WUG"
+                                title="YouTube video player" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
-                    <hr style="margin: 50px 0px">
-                    <!--sns 카드-->
-                    <div class="pt-6">
-                        <div class="row">
-                            <div th:each="snsList : ${snsList}" class="col-md-4 mb-4">
-                                <div style="width: 100%;" class="sns-card">
-                                        <a th:href="@{${snsList.snsLink}}" style="text-decoration: none; color: black">
-                                            <img th:src="@{${snsList.snsImagePath}}" class="sns-card-image">
-                                            <p class="sns-card-title" th:text="${snsList.snsCommentTitle}"></p>
-                                            <p class="sns-card-body" th:text="${snsList.snsCommentContent}"></p>
-                                            <p class="sns-footer" th:text="${snsList.snsTag}"></p>
-                                        </a>
-                                </div>
-                                <div class="d-flex justify-content-end mt-2">
-                                    <a sec:authorize="hasRole('ADMIN')" th:href="@{|/sns/form/modify/${snsList.snsSeq}|}" class="btn btn-sm btn-outline-secondary">수정</a>
-                                </div>
-
+                </div>
+                <hr style="margin: 50px 0px">
+                <!--sns 카드-->
+                <div class="pt-6">
+                    <div class="row">
+                        <div th:each="snsList : ${snsList}" class="col-md-4 mb-4">
+                            <div style="width: 100%;" class="sns-card">
+                                <a th:href="@{${snsList.snsLink}}" style="text-decoration: none; color: black">
+                                    <img th:src="@{${snsList.snsImagePath}}" class="sns-card-image">
+                                    <p class="sns-card-title" th:text="${snsList.snsCommentTitle}"></p>
+                                    <p class="sns-card-body" th:text="${snsList.snsCommentContent}"></p>
+                                    <p class="sns-footer" th:text="${snsList.snsTag}"></p>
+                                </a>
                             </div>
+                            <div class="d-flex justify-content-end mt-2">
+                                <a sec:authorize="hasRole('ADMIN')" th:href="@{|/sns/form/modify/${snsList.snsSeq}|}"
+                                   class="btn btn-sm btn-outline-secondary">수정</a>
+                            </div>
+
                         </div>
                     </div>
                 </div>
+            </div>
 
-            </section>
-        </div>
+        </section>
+    </div>
 
-    </main>
+</main>
 
 </html>
 <link rel="stylesheet" type="text/css" th:href="@{/mj-design-css.css}">

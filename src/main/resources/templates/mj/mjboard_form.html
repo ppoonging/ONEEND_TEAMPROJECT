@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
+    <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
+        <h2 class="text-center text-white py-2 font-bold-style">맛집 소개</h2>
+    </div>
+    <div class="container">
 
-    <!--CSRF 토큰 -->
-    <meta name="_csrf" th:content="${_csrf.token}" />
-    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+        <!-- 블로그형 카드 스타일 -->
+        <div class="card shadow-sm p-4" style="border-radius: 16px; background-color: #fff;">
+          
+          <h2 class="mb-4" style="font-weight: bold; font-size: 28px; text-align: center;">맛집 소개 등록</h2>
 
-    <!-- 본문 -->
-    <div class="container mt-5">
-        <h2 class="text-center py-3">맛집 등록</h2>
-
+        <!--CSRF 토큰 -->
+        <meta name="_csrf" th:content="${_csrf.token}" />
+        <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+          
         <!--폼 시작 -->
         <form th:action="@{/mjboard/create}" method="post" enctype="multipart/form-data" th:object="${mjboardForm}" id="mjForm">
             <!-- 제목 입력 -->

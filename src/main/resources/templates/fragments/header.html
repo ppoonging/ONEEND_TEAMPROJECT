@@ -1,4 +1,4 @@
-<header th:fragment="header" style="background-color: #fff;" id="header" class="pt-3 sticky-top">
+<header th:fragment="header" id="header" class="bg-white pt-3 border-bottom sticky-top shadow-sm">
     <div class="container d-flex justify-content-end">
         <span th:text="${#authentication.name} + ' 님'" sec:authorize="isAuthenticated()" style=" font-size: 14px; color: #777; transform: translateY(1.8px)" class="px-2"></span>
         <a th:href="@{/users/signup}" sec:authorize="isAnonymous()" style="text-decoration: none">
@@ -15,14 +15,10 @@
 
     <!--네비바-->
     <div id="navbar" class="container-fluid" style="background-color: white;">
-        <nav class="navbar navbar-expand-lg border-bottom w-100">
+        <nav class="navbar navbar-expand-lg w-100">
             <div class="container">
-                <a class="" th:href="@{/}">
-                    <img th:src="@{/images/total/logo.png}" width="80%"></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <a class="me-3" th:href="@{/}">
+                    <img th:src="@{/images/total/logo.png}" width="90%"></a>
                 <div class="collapse navbar-collapse" id="navbarScroll">
                     <ul class="navbar-nav me-auto my-2 my-lg-0" style="--bs-scroll-height: 169px;">
                         <li class="nav-item dropdown">
@@ -72,13 +68,13 @@
                             <!--팀 소개-->
                             <li class="col fs-4 pt-1" >
                                 <a href="#" style="color: #333">
-                                    <i class="bi bi-hand-index-thumb-fill" style="color: #555"></i>
+                                    <i class="bi bi-hand-index-thumb-fill" style="color: #ecd0c4"></i>
                                 </a>
                             </li>
                             <!--채팅-->
                             <li class="col fs-4 pt-1" style="transform: translateX(3px)">
                                 <a href="#" style="color: #333">
-                                    <i class="bi bi-chat-dots-fill" style="color: #555"></i>
+                                    <i class="bi bi-chat-dots-fill" style="color: #4c80e4"></i>
                                 </a>
                             </li>
                             <!--회원-->

@@ -14,6 +14,13 @@
 }
 
 @font-face {
+    font-family: 'ONE-Mobile-Title';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-Title.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
     font-family: 'Jal_Haru';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/Jal_Haru.woff') format('woff');
     font-weight: normal;
@@ -35,7 +42,8 @@ ul {
 
 /* 기본 폰트 */
 html > body {
-    font-family: "Jal_Haru","HakgyoansimWoojuR";
+    font-family: "NEXON Lv1 Gothic OTF";
+    font-weight: bold;
 
 }
 
@@ -81,8 +89,27 @@ a {
     }
 }
 
+#header {
+    font-family: "NEXON Lv1 Gothic OTF";
+    font-weight: bold;
+}
+
+.navbar {
+    margin-bottom: 5px;
+}
+
+.page-total-main-bg {
+    background-color: #C8AB8F;
+    height: 10em;
+}
+
+.font-bold-style {
+    font-family: "ONE-Mobile-Title";
+}
+
 
 /* ---------------------------------------- */
+
 
 
 
