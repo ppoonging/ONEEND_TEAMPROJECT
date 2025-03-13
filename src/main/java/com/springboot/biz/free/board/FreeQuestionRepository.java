@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 
 public interface FreeQuestionRepository extends JpaRepository<FreeQuestion, Integer> {
 
@@ -29,4 +31,11 @@ public interface FreeQuestionRepository extends JpaRepository<FreeQuestion, Inte
                                                 @Param("contentKw") String contentKw,
                                                 Pageable pageable);
 
+    @Query("SELECT q FROM FreeQuestion q LEFT JOIN q.freeCnt cnt " +
+            "WHERE (q.frboTitle LIKE %:kw% OR q.frboContent LIKE %:kw%) " +
+            "GROUP BY q " +
+            "ORDER BY COUNT(cnt) DESC")
+    Page<FreeQuestion> findAllByRecommend(@Param("kw") String kw,
+                                          @Param("searchType") String searchType,
+                                          Pageable pageable);
 }

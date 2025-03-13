@@ -1,9 +1,10 @@
 const delete_elements = document.getElementsByClassName("delete");
-Array.from(delete_elements).forEach(function(element) {
-    element.addEventListener('click',function(){
-        if(confirm("정말로 삭제하시겠습니까?")){
-            location.href=this.dataset.uri;
-        };
+Array.from(delete_elements).forEach(function (element) {
+    element.addEventListener('click', function () {
+        if (confirm("정말로 삭제하시겠습니까?")) {
+            location.href = this.dataset.uri;
+        }
+        ;
     });
 });
 
@@ -14,9 +15,11 @@ document.addEventListener("DOMContentLoaded", function () {
     if (imageElement) {
         setInterval(() => {
             imageElement.src = imageElement.src.split("?")[0] + "?t=" + new Date().getTime();
-        }, 5000); 
+        }, 5000);
     }
 });
+
+
 
 
 

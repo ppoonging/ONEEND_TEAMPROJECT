@@ -10,7 +10,10 @@ import lombok.NonNull;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -30,18 +33,20 @@ public class Mjboard {
     @Column(length = 100)
     private String mjTitle;   //제목
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT") // 긴 내용을 저장학 위해서 변경함.
     private String mjContent;  //내용
 
     private LocalDateTime mjRegDate;
 
-    private Integer mjRecommend; //맛집소개 추천
+   /* private Integer mjRecommend;*/ //맛집소개 추천
 
     private LocalDateTime mjModifyDate;  //맛집소개 수정일
 
-    @Column(columnDefinition = "Integer default 0")
+    @Column(columnDefinition = "integer default 0", nullable = false)
     @NonNull
     private Integer mjCnt;  //맛집 조회수
+
+    private String mjthumbnaiurl; //썸네일
 
     private String mjFilePath;  //맛집소개 파일업로드
 
@@ -49,6 +54,12 @@ public class Mjboard {
 
     @OneToMany(mappedBy = "mjBoard", cascade = CascadeType.REMOVE)
     private List<MjAnswer> mjAanswerList;
+
+    @ManyToMany
+    private Set<HUser> recommendUsers = new HashSet<>();
+//맛집소개 추천
+
+
 
 
 }

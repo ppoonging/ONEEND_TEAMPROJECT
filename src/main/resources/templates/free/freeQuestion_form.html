@@ -1,134 +1,27 @@
 <!DOCTYPE html>
 
+
+
 <html layout:decorate="~{layout}">
-<head>
-    <meta charset="UTF-8">
-    <title>글 등록</title>
-    <style>
-        /* 상단 헤더 스타일 */
-        .header {
-            background-color: #F4E9E3;
-            padding: 15px 0;
-        }
-        .header span {
-            font-family: 'MapoGoldenPier', serif;
-            font-size: 18px;
-            color: #D87C61;
-            padding-left: 10px;
-        }
-
-        /* 폼 레이아웃 */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* 제목 스타일 */
-        h2 {
-            font-family: 'MapoGoldenPier', serif;
-            color: #D87C61;
-            font-size: 32px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        h5 {
-            font-family: 'MapoGoldenPier', serif;
-            font-size: 28px;
-            color: #D87C61;
-            border-bottom: 2px solid #D87C61;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-
-        /* 폼 필드 스타일 */
-        .form-label {
-            font-family: 'MapoGoldenPier', serif;
-            font-size: 18px;
-            color: #333;
-        }
-
-        .form-control {
-            font-size: 16px;
-            padding: 12px;
-            border: 1px solid #D87C61;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        /* 파일 업로드 스타일 */
-        .form-control[type="file"] {
-            padding: 8px;
-        }
-
-        /* 등록 버튼 스타일 */
-        .btn-primary {
-            background-color: #D87C61;
-            color: #fff;
-            font-family: 'MapoGoldenPier', serif;
-            font-size: 18px;
-            padding: 12px 24px;
-            border-radius: 8px;
-            border: none;
-            width: 100%;
-            max-width: 200px;
-            margin-top: 20px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
-</head>
-
 <main layout:fragment="content">
-    <!-- 상단 헤더 -->
-    <div class="header">
-        <div class="container">
-            <span>맛광 커뮤니티 > 자유게시판</span>
+    <!-- 상단 -->
+    <div style="background-color: #F4E9E3; border-bottom: 3px solid #D87C61;">
+        <div class="container py-2">
+            <span style="color: #777; font-family: 'MapoGoldenPier', sans-serif; font-size: 18px; padding-left: 10px;">
+                한끝 커뮤니티 > 자유게시판 > 글 등록
+            </span>
         </div>
     </div>
 
-    <div class="container mt-5">
-        <div class="text-center">
-            <img th:src="@{/images/total/기와.png}" width="100">
-        </div>
 
-        <h2>글 등록</h2>
 
-        <!-- 글 등록 폼 -->
-        <h5 class="my-3">글 등록</h5>
-        <form method="post" th:object="${freeQuestionForm}" enctype="multipart/form-data">
-
-            <!-- 제목 입력 필드 -->
-            <div class="mb-3">
-                <label for="frboTitle" class="form-label">제목</label>
-                <input type="text" id="frboTitle" th:field="*{frboTitle}" class="form-control">
-            </div>
-
-            <!-- 내용 입력 필드 -->
-            <div class="mb-3">
-                <label for="frboContent" class="form-label">내용</label>
-                <textarea rows="15" id="frboContent" th:field="*{frboContent}" class="form-control"></textarea>
-            </div>
-
-            <!-- 파일 업로드 -->
-            <div class="mb-3">
-                <label for="file" class="form-label">파일 업로드</label>
-                <input type="file" name="file" id="file" class="form-control">
-            </div>
-
-            <!-- 등록 버튼 -->
-            <input type="submit" value="등록하기" class="btn btn-primary">
-        </form>
-    </div>
-</main>
-=======
 <html lang="ko">
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>자유게시판 질문 등록</title>
+    <title>글 등록</title>
+
 
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -147,11 +40,11 @@
 </head>
 <body>
 <div class="container my-5">
-    <h2 class="mb-4">자유게시판 질문 등록</h2>
+    <h2 class="mb-4">글 등록</h2>
 
     <form method="post" action="/freequestion/form" enctype="multipart/form-data" th:object="${freeQuestionForm}">
-        <!-- CSRF 토큰 -->
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <!-- CSRF 토큰 (반드시 추가) -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
         <!-- 제목 입력 -->
         <div class="form-group">
@@ -161,24 +54,26 @@
             <small class="text-danger" th:if="${#fields.hasErrors('frboTitle')}" th:errors="*{frboTitle}"></small>
         </div>
 
-        <!-- 내용 입력 (Summernote 에디터 사용) -->
+        <!-- 내용 입력 -->
         <div class="form-group">
             <label for="frboContent">내용</label>
-            <!-- 써머노트 텍스트 에디터로 변환될 textarea -->
             <textarea name="frboContent" id="summernote" class="form-control" rows="10" required
                       th:text="${freeQuestionForm.frboContent}"></textarea>
             <small class="text-danger" th:if="${#fields.hasErrors('frboContent')}" th:errors="*{frboContent}"></small>
         </div>
 
-        <!-- 파일 업로드 -->
-        <div class="form-group">
+        <!-- 파일 업로드 (숨김 처리) -->
+        <div class="form-group" style="display: none;">
             <label for="file">첨부 파일</label>
             <input type="file" name="file" id="file" class="form-control-file">
         </div>
 
         <!-- 제출 버튼 -->
-        <button type="submit" class="btn btn-primary">저장하기</button>
+        <button type="submit" style="padding: 8px 16px; background: #D5C9C1; color: white; border: none; border-radius: 5px;">
+            글 등록
+        </button>
     </form>
+
 </div>
 
 <!-- Bootstrap JS -->
@@ -205,5 +100,4 @@
     });
 </script>
 </body>
-
 </html>

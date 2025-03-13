@@ -3,11 +3,16 @@ package com.springboot.biz.root.rootAdmin;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springboot.biz.DataNotFoundException;
+import com.springboot.biz.root.rootUser.RootAuth;
+import com.springboot.biz.root.rootUser.RootAuthList;
+import com.springboot.biz.user.HUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -65,9 +70,11 @@ public class RootService {
             JsonNode itemsNode = rootNode.path("items");
             for (JsonNode itemNode : itemsNode) {
                 Map<String, String> restaurant = new HashMap<>();
-                restaurant.put("title", itemNode.path("title").asText()); // 장소 이름
+                restaurant.put("title", itemNode.path("title").asText().replaceAll("<b>|</b>", "").replaceAll("&amp;", "&")); // 장소 이름
                 restaurant.put("address", itemNode.path("address").asText());
                 restaurant.put("roadAddress", itemNode.path("roadAddress").asText());// 장소 주소
+                restaurant.put("link", itemNode.path("link").asText());// 장소 상세 정보 url
+                restaurant.put("category", itemNode.path("category").asText());// 장소 분류 정보
 
                 double latitude = Double.parseDouble(itemNode.path("mapy").asText()) / 1e7;
                 double longitude = Double.parseDouble(itemNode.path("mapx").asText()) / 1e7;
@@ -90,19 +97,33 @@ public class RootService {
         return this.rootRepository.findAll();
     }
 
-    public void save(String title, List<RootListDTO> rootListDTO) {
+    public void delete(Integer rootSeq) {
+        List<RootList> rootList = this.rootListRepository.findByRootId(rootSeq);
+        for(RootList rel : rootList) {
+            Integer seq = rel.getRoot().getRootSeq();
+            if(Objects.equals(seq, rootSeq)){
+                this.rootListRepository.deleteById(seq);
+            }
+        }
+        this.rootRepository.deleteById(rootSeq);
+    }
+
+    public void save(String title, boolean rootState, List<RootListDTO> rootListDTO, HUser user) {
         Root root = new Root();
         root.setRootTitle(title);
-
+        root.setUserId(user);
 
         // System.out.println("service"+rootListDTO.get(1).getRoadaddress());
 
         List<RootList> rootList = new ArrayList<>();
 
+        root.setRootState(rootState);
         root.setRootList(rootList);
         root.setRootDate(LocalDateTime.now());
 
         this.rootRepository.save(root);
+
+        Integer index = 1;
 
         for(RootListDTO rel : rootListDTO) {
             RootList list = RootList.builder()
@@ -112,12 +133,64 @@ public class RootService {
                     .rootListRodeAddress(rel.getRoadaddress())
                     .rootListLatitude(rel.getLatitude())
                     .rootListLongitude(rel.getLongitude())
+                    .rootListLink(rel.getLink())
+                    .rootListCategory(rel.getCategory())
+                    .rootListIndex(index++)
+                    .userId(user)
+                    .build();
+
+            this.rootListRepository.save(list);
+
+        }
+
+    }
+
+    @Transactional
+    public void modify(Integer rootSeq, String title, boolean rootState, List<RootListDTO> rootListDTO, HUser user) {
+        Root root = rootRepository.findById(rootSeq)
+                .orElseThrow(() -> new IllegalArgumentException("수정할 데이터가 없습니다."));
+
+        root.setRootTitle(title);
+        root.setRootModifyDate(LocalDateTime.now());
+        root.setRootState(rootState);
+
+        // 기존 RootList 모두 삭제
+        rootListRepository.deleteByRoot(root);
+
+        int index = 1;
+        for (RootListDTO rel : rootListDTO) {
+            RootList list = RootList.builder()
+                    .root(root)
+                    .rootListTitle(rel.getTitle())
+                    .rootListAddress(rel.getAddress())
+                    .rootListRodeAddress(rel.getRoadaddress())
+                    .rootListLatitude(rel.getLatitude())
+                    .rootListLongitude(rel.getLongitude())
+                    .rootListLink(rel.getLink())
+                    .rootListCategory(rel.getCategory())
+                    .rootListIndex(index++)
+                    .userId(user)
                     .build();
 
             this.rootListRepository.save(list);
         }
 
+        rootRepository.save(root);
     }
+
+    public List<RootList> getRootList(Integer rootSeq) {
+        return rootListRepository.findByRootId(rootSeq);
+    }
+
+    public Root get(Integer rootSeq) {
+        Optional<Root> root = this.rootRepository.findById(rootSeq);
+        if(root.isPresent()) {
+            return root.get();
+        }
+
+       throw new DataNotFoundException("루트 데이터가 없습니다.");
+    }
+
 
 
 }

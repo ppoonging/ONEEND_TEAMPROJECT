@@ -47,7 +47,18 @@ dependencies {
 
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+        // 이메일 전송을 위한 Spring Boot 기본 의존성 (JavaMailSender 포함)
+        implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+        // JavaMail API (Spring Boot 3.x 이상 사용 시 필요)
+        implementation 'jakarta.mail:jakarta.mail-api:2.1.2' // ✅ 유지
+
+
 }
+
+
+
 
 tasks.named('test') {
     useJUnitPlatform()

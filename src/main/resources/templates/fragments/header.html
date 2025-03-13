@@ -1,10 +1,15 @@
 <header th:fragment="header" style="background-color: #fff;" id="header" class="pt-3 sticky-top">
     <div class="container d-flex justify-content-end">
-        <a th:href="@{/users/signup}" style="text-decoration: none">
+        <span th:text="${#authentication.name} + ' 님'" sec:authorize="isAuthenticated()" style=" font-size: 14px; color: #777; transform: translateY(1.8px)" class="px-2"></span>
+        <a th:href="@{/users/signup}" sec:authorize="isAnonymous()" style="text-decoration: none">
             <span style="border-right: 1px solid #ccc; font-size: 14px; color: #777;" class="px-2">회원가입 </span>
         </a>
-        <a th:href="@{/users/login}" style="text-decoration: none">
+
+        <a th:href="@{/users/login}" sec:authorize="isAnonymous()"  style="text-decoration: none">
             <span class="px-2" style="font-size: 14px; color: #777;">로그인</span>
+        </a>
+        <a th:href="@{/users/logout}" sec:authorize="isAuthenticated()"  style="text-decoration: none">
+            <span class="px-2" style="font-size: 14px; color: #777;">로그아웃</span>
         </a>
     </div>
 
@@ -32,8 +37,7 @@
                         </li>
                         <!--맛광레시피-->
                         <li class="nav-item dropdown">
-                            <a class="nav-link me-5 fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                맛집
+                            <a class="nav-link me-5 fs-5" th:href="@{/mjboard/list}">맛집</a> <!-- 이렇게 수정 -->
                             </a>
                         </li>
                         <li class="nav-item dropdown">
@@ -55,7 +59,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" th:href="@{/notion/}">공지사항</a></li>
-                                <li><a class="dropdown-item" th:href="@{/inquriy/}">Q&A</a></li>
+                                <li><a class="dropdown-item" th:href="@{/customer/}">Q&A</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -80,12 +84,14 @@
                             <!--회원-->
                             <li class="col fs-3 pt-1">
                                 <div type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
-                                    <i class="bi bi-person-fill" style="color: #555"></i>
+                                    <i class="bi bi-person-fill" style="color: #555" th:attr="data-bs-title=${#authentication.name}"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-placement="top" sec:authorize="isAuthenticated()"></i>
                                 </div>
                                 <div class="collapse bg-white" id="collapseExample2" style="position: absolute; border: 1px solid #eee; border-radius: 10%; transform: translateX(-35%)" >
                                     <div class="py-2" style="font-size: 13px; display: flex; flex-flow: column; text-wrap: nowrap">
                                        <a th:href="@{/users/myPage}" class="coll py-1 px-3" style="color: #333; text-decoration: none">마이페이지</a>
-                                       <a href="#" class="coll py-1 px-3" style="color: #333; text-decoration: none;">내 글 목록</a>
+                                       <a th:href="@{/favorite/my}" class="coll py-1 px-3" style="color: #333; text-decoration: none;">내 글 목록</a>
                                     </div>
                                 </div>
                             </li>
@@ -96,6 +102,15 @@
             </div>
         </nav>
     </div>
+    <script th:inline="javascript" layout:fragment="script">
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+        });
+    </script>
 </header>
+
 
 
