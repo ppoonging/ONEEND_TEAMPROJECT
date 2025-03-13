@@ -1,4 +1,4 @@
-/* From Uiverse.io by vinodjangid07 */
+/* weather.css */
 .weather-card-container {
     width: fit-content;
     position: relative;
@@ -16,7 +16,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 20px 10px;
-    border-radius: 10px;
+    border-radius: 0; /* 각진 카드 */
     backdrop-filter: blur(30px);
     background-color: rgba(65, 65, 65, 0.308);
     border: 1px solid rgba(255, 255, 255, 0.089);
@@ -25,20 +25,20 @@
 
 .weather-city {
     font-weight: 700;
-    font-size: 0.9em;
+    font-size: 1.1rem;
     letter-spacing: 1.2px;
     color: white;
 }
 
 .weather-summary {
     font-weight: 500;
-    font-size: 0.7em;
+    font-size: 0.9em;
     letter-spacing: 1.2px;
     color: rgb(34, 151, 215);
 }
 
 .weather-temp {
-    font-size: 1.8em;
+    font-size: 2rem;
     color: white;
 }
 
@@ -79,19 +79,9 @@
     color: rgb(197, 197, 197);
 }
 
-.weather-card-container::before {
-    width: 100px;
-    height: 100px;
-    content: "";
-    position: absolute;
-    background-color: rgb(144, 161, 255);
-    z-index: -1;
-    border-radius: 50%;
-    left: 100px;
-    top: 50px;
-    transition: all 1s;
-}
-
-.weather-card-container:hover::before {
-    transform: translate(-50px, 50px);
+/* 아이콘 크기 및 스타일 */
+.weather-icon {
+    display: block;
+    margin: 15px 0;
+    border-radius: 5px;
 }
