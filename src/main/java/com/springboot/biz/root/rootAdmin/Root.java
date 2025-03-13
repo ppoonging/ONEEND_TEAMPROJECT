@@ -40,5 +40,7 @@ public class Root {
 //        }
 //    }
 
+    private boolean rootState;
+
 
 }
