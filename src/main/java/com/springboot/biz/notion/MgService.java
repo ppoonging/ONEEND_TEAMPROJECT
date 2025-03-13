@@ -63,18 +63,32 @@ public class MgService {
         this.mgRepository.save(q);
     }
 
-    public void modify(MgNotion mgNotion, String notionTitle, String notionContent) {
+    public void modify(MgNotion mgNotion, String notionTitle, String notionContent, MultipartFile file)throws Exception  {
         mgNotion.setNotionTitle(notionTitle);
         mgNotion.setNotionContent(notionContent);
         mgNotion.setModifyDate(LocalDateTime.now());
+
+
+        if (!file.isEmpty()) {
+            String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files";
+            UUID uuid = UUID.randomUUID();
+            String frboFileName = uuid + "_" + file.getOriginalFilename();
+
+            // 파일 저장
+            File saveFile = new File(projectPath, frboFileName);
+            file.transferTo(saveFile);
+
+            // 파일 정보 저장 (기존 파일 대체)
+            mgNotion.setFrboFilePath("/files/" + frboFileName);
+            mgNotion.setFrboFileName(frboFileName);
+        }
+
         this.mgRepository.save(mgNotion);
     }
 
     public void delete(MgNotion mgNotion) {
         this.mgRepository.delete(mgNotion);
     }
-
-
 
 
 }

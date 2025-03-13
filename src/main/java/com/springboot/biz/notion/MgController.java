@@ -70,13 +70,13 @@ public class MgController {
     }
 
     @PostMapping("/modify/{notionSeq}")
-    public String Modify(@Valid MgNotionForm mgNotionForm, BindingResult bindingResult, @PathVariable("notionSeq") Integer notionSeq) {
+    public String Modify(@Valid MgNotionForm mgNotionForm, BindingResult bindingResult, @PathVariable("notionSeq") Integer notionSeq, @RequestParam("file") MultipartFile file)throws Exception {
         if(bindingResult.hasErrors()) {
             return "notionForm";
         }
         MgNotion mgNotion = this.mgService.getMgNotion(notionSeq);
 
-        this.mgService.modify(mgNotion, mgNotionForm.getNotionTitle(), mgNotionForm.getNotionContent());
+        this.mgService.modify(mgNotion, mgNotionForm.getNotionTitle(), mgNotionForm.getNotionContent(), file);
         return String.format("redirect:/notion/detail/%s", notionSeq);
     }
 
