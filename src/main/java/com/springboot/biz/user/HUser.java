@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -44,12 +45,25 @@ public class HUser {
 
     private LocalDateTime createDate;   //만든날짜
 
-    private HUserRole role;  //유저권한
+    private String role;  //유저권한
 
     private boolean active = true;
+
+
 
     @Column(name = "reset_token", nullable = true)
     private String resetToken;  //토큰 값
 
+
+    //추천 기능위해 추가
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HUser hUser = (HUser) o;
+        return Objects.equals(userSeq, hUser.userSeq);
+    }
+    public int hashCode() {
+        return Objects.hash(userSeq);
+    }
 
 }

@@ -17,7 +17,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HUserSerevice {
     private final HUserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
+
 
 
     public HUser create(String username, String password, String nickname, String email,
@@ -49,21 +51,21 @@ public class HUserSerevice {
 
 
 
-    /*추가 사용자 정보조회*/
-    public HUser getUserById(Integer userSeq) {
-        return userRepository.findById(userSeq)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. ID: " + userSeq));
 
-    }
-
-    public Integer getLoggedInUserSeq() {
-        return 1; // seq번호 나중에 바꿔줘야함
-    }
-
+    // username으로 유저 조회
     public HUser getUserByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new DataNotFoundException("사용자를 찾을 수 없습니다."));
     }
+
+    // ID로 유저 조회
+    public HUser getUserById(Integer userSeq) {
+        return userRepository.findById(userSeq)
+                .orElseThrow(() -> new DataNotFoundException("사용자를 찾을 수 없습니다. ID: " + userSeq));
+    }
+
+
+
 
     public void modify(HUser hUser, String nickname, String email, String phoneNumber, String address) {
         hUser.setNickname(nickname);

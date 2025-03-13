@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -53,18 +54,10 @@ public class FreeQuestion {
     @ManyToOne
     private HUser freeAuthor;//작성자 
 
-
-    // 👍 좋아요 & 👎 싫어요 필드 추가 추가함
-    @Column(nullable = false, columnDefinition = "int default 0")
-    private Integer frboLike = 0;
-
-    @Column(nullable = false, columnDefinition = "int default 0")
-    private Integer frboDislike = 0;
+    
+    @ManyToMany
+    private Set<HUser> freeCnt;//추천
 
 
 
-    /*@ManyToOne
-    private Set<> freeCnt; 추천*/
-
-   /* private int freeImg;*/
 }
