@@ -5,6 +5,7 @@ import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -24,6 +25,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -41,10 +43,32 @@ public class MjboardController {
                        @PageableDefault(size = 6, sort = "mjRegDate", direction = Sort.Direction.DESC) Pageable pageable,
                        @RequestParam(value = "kw", defaultValue = "") String kw) {
 
+        // 각 게시글의 mjSeq를 키로, 추출한 이미지 URL을 값으로 저장할 Map 생성
         Map<String, Object> result = mjboardService.getList(pageable, kw);
-        model.addAttribute("paging", result.get("paging"));
+        Page<Mjboard> paging = (Page<Mjboard>) result.get("paging");
+
+        // 각 게시글에서 이미지 URL 추출 후, mjSeq를 키로 하는 Map에 저장
+        Map<Integer, String> imageUrlMap = new HashMap<>();
+        for (Mjboard board : paging) {
+            String content = board.getMjContent();
+            String imageUrl = null;
+            if (content != null && content.contains("<img")) {
+                int srcIndex = content.indexOf("src=\"");
+                if (srcIndex != -1) {
+                    int start = srcIndex + 5; // "src=\""의 길이
+                    int end = content.indexOf("\"", start);
+                    if (end != -1) {
+                        imageUrl = content.substring(start, end);
+                    }
+                }
+            }
+            imageUrlMap.put(board.getMjSeq(), imageUrl);
+        }
+
+        model.addAttribute("paging", paging);
         model.addAttribute("starCountMap", result.get("starCountMap"));
         model.addAttribute("kw", kw);
+        model.addAttribute("imageUrlMap", imageUrlMap);
         return "mj/mjboard_list";
     }
 
@@ -74,11 +98,24 @@ public class MjboardController {
     @GetMapping("/detail/{mjSeq}")
     public String detail(Model model, @PathVariable("mjSeq") Integer mjSeq) {
         Mjboard mjboard = mjboardService.getMjboard(mjSeq);
+        String imageUrl = null;
+        if (mjboard.getMjContent() != null && mjboard.getMjContent().contains("<img")) {
+            int srcIndex = mjboard.getMjContent().indexOf("src=");
+            if (srcIndex != -1) {
+                srcIndex = mjboard.getMjContent().indexOf("\"", srcIndex) + 1;
+                int endIndex = mjboard.getMjContent().indexOf("\"", srcIndex);
+                if (endIndex != -1) {
+                    imageUrl = mjboard.getMjContent().substring(srcIndex, endIndex);
+                }
+            }
+        }
+        model.addAttribute("imageUrl", imageUrl);
         model.addAttribute("mjanswerForm", new MjAnswerForm());
         model.addAttribute("mjreplyForm", new MjAnswerForm());
         model.addAttribute("mjboard", mjboard);
         return "mj/mjboard_detail";
     }
+
 
     // 썸머노트 이미지 업로드
     @PreAuthorize("isAuthenticated()")
@@ -89,7 +126,7 @@ public class MjboardController {
         return ResponseEntity.ok(Collections.singletonMap("url", imageUrl));
     }
 
-    // 외부 이미지 업로드 (수정 X, 네가 준 코드 그대로, 다만 import 필요)
+    // 외부 이미지 업로드
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/uploadExternalImage")
     @ResponseBody
@@ -111,7 +148,7 @@ public class MjboardController {
         return Collections.singletonMap("url", "/files/mj/" + fileName);
     }
 
-    // 추천 (리다이렉트 방식 그대로 유지, 네가 준 코드 그대로)
+    // 추천
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/mjRecommend/{mjSeq}")
     public String recommend(@PathVariable("mjSeq") Integer mjSeq, Principal principal) {

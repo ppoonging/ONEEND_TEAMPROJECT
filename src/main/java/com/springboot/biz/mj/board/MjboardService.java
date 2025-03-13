@@ -44,9 +44,9 @@ public class MjboardService {
         File saveFile = new File(projectPath, mjFileName);
         file.transferTo(saveFile);
 
-        String thumbnailFileName = "thumb_" + mjFileName;
+        /*String thumbnailFileName = "thumb_" + mjFileName;
         File thumbnailFile = new File(projectPath, thumbnailFileName);
-        mjthumbnailService.createThumbnail(saveFile, thumbnailFile);
+        mjthumbnailService.createThumbnail(saveFile, thumbnailFile);*/
 
         Mjboard mj = new Mjboard();
         mj.setMjFilePath("/files/mj/" + mjFileName);

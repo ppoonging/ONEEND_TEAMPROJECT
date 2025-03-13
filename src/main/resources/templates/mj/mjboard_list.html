@@ -9,10 +9,20 @@
         <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
             <div class="col" th:each="mjboard : ${paging}">
                 <div class="card h-100">
-                    <img th:src="@{${mjboard.mjFilePath}}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    <!-- 썸네일에 링크 추가 -->
+                    <a th:href="@{/mjboard/detail/{id}(id=${mjboard.mjSeq})}">
+                        <img th:if="${imageUrlMap[mjboard.mjSeq] != null}"
+                             th:src="${imageUrlMap[mjboard.mjSeq]}"
+                             class="card-img-top"
+                             style="height:200px; object-fit:cover;"
+                             alt="썸네일">
+                    </a>
+
                     <div class="card-body">
                         <h5 class="card-title">
-                            <a th:href="@{/mjboard/detail/{id}(id=${mjboard.mjSeq})}" th:text="${mjboard.mjTitle}"></a>
+                            <a style="text-decoration: none; color: black"
+                               th:href="@{/mjboard/detail/{id}(id=${mjboard.mjSeq})}"
+                               th:text="${mjboard.mjTitle}"></a>
                         </h5>
                         <p class="card-text">조회수: <span th:text="${mjboard.mjCnt}"></span></p>
                         <p class="card-text">👍 추천: <span th:text="${#lists.size(mjboard.recommendUsers)}"></span></p>
@@ -22,23 +32,38 @@
                                   th:classappend="${star <= starCountMap[mjboard.mjSeq]} ? 'text-warning' : 'text-secondary'"
                                   class="bi bi-star-fill"></span>
                         </p>
+
+                        <!-- 작성자, 작성일자 (아이콘 변경 및 유지) -->
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                            <small class="text-muted">
+                                <i class="bi bi-person-fill"></i>
+                                <span th:text="${mjboard.userId.nickname}"></span>
+                            </small>
+                            <small class="text-muted">
+                                <i class="bi bi-calendar-week"></i>
+                                <span th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd HH:mm')}"></span>
+                            </small>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 검색창 -->
-        <div class="input-group my-4">
-            <input type="text" id="search_kw" class="form-control" th:value="${kw}" placeholder="검색어 입력">
-            <button class="btn btn-warning" type="button" id="btn_search">검색</button>
-        </div>
 
-        <!-- 맛집 등록 버튼 -->
-        <div class="text-end">
-            <a th:href="@{/mjboard/create}" class="btn btn-danger">맛집 등록</a>
-        </div>
+            <!-- 검색창 (작게 + 중앙 정렬) -->
+            <div class="d-flex justify-content-center my-4">
+                <div class="input-group" style="max-width: 300px;">
+                    <input type="text" id="search_kw" class="form-control form-control-sm" th:value="${kw}" placeholder="검색어 입력">
+                    <button class="btn btn-warning btn-sm" type="button" id="btn_search">검색</button>
+                </div>
+            </div>
 
-        <!-- 페이징 -->
+            <!-- 맛집 등록 버튼 (오른쪽 정렬 + 깔끔) -->
+            <div class="d-flex justify-content-end my-4">
+                <a th:href="@{/mjboard/create}" class="btn btn-danger btn-sm px-4">맛집 등록</a>
+            </div>
+
+
+            <!-- 페이징 -->
         <div class="d-flex justify-content-center mt-4">
             <ul class="pagination">
                 <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
