@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -46,23 +47,33 @@ public class FreeQuestionController {
         return "freequestionList_From";
     }*/
 
-    //글목록 조회
     @GetMapping("/")
     public String freeQuestionList(Model model,
                                    @RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "kw", defaultValue = "") String kw,
-                                   @RequestParam(value = "searchType", defaultValue = "both") String searchType) {
+                                   @RequestParam(value = "searchType", defaultValue = "both") String searchType,
+                                   @RequestParam(value = "sort", defaultValue = "recent") String sort) {
 
-        // 검색 결과 가져오기
-        Page<FreeQuestion> paging = freeQuestionService.getFreeQuestionList(page, kw, searchType);
+        Page<FreeQuestion> paging;
 
-        // 모델에 데이터 추가
+        // 정렬 조건에 따라 서비스 호출
+        if ("popular".equals(sort)) {
+            paging = freeQuestionService.getPopularQuestionList(page, kw, searchType); // 추천순
+        } else {
+            paging = freeQuestionService.getFreeQuestionList(page, kw, searchType); // 최신순 (기본)
+        }
+
         model.addAttribute("pageing", paging);
         model.addAttribute("kw", kw);
         model.addAttribute("searchType", searchType);
+        model.addAttribute("sort", sort); // 현재 정렬 방식 뷰에 넘기기
 
-        return "free/freequestion_list";  // 뷰 이름을 반환
+        return "free/freequestion_list";
     }
+
+
+
+
 
 
     //게시글 작성
@@ -151,6 +162,14 @@ public class FreeQuestionController {
     }
 
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/recommend/{frboSeq}")
+    public String toggleQuestionRecommend(Principal principal, @PathVariable("frboSeq") Integer frboSeq) {
+        FreeQuestion freeQuestion = this.freeQuestionService.getFreeQuestion(frboSeq);
+        HUser hUser = this.hUserSerevice.getUser(principal.getName()); // 로그인한 사용자
+        this.freeQuestionService.toggleRecommend(freeQuestion, hUser); // 추천/취소
+        return String.format("redirect:/freequestion/detail/%s", frboSeq); // 상세로 리다이렉트
+    }
 
 
 
