@@ -2,156 +2,98 @@
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
 
-    <!--상단 바 디자인 -->
-    <div style="background-color: #F4E9E3; border-bottom: 3px solid #D87C61;">
-        <div class="container py-2">
-        <span style="color: #777; font-family: 'MapoGoldenPier', sans-serif; font-size: 18px; padding-left: 10px;">
-            한끝 > 맛집소개
-        </span>
-        </div>
+    <!--CSRF 토큰 -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+    <!-- 본문 -->
+    <div class="container mt-5">
+        <h2 class="text-center py-3">맛집 등록</h2>
+
+        <!--폼 시작 -->
+        <form th:action="@{/mjboard/create}" method="post" enctype="multipart/form-data" th:object="${mjboardForm}" id="mjForm">
+            <!-- 제목 입력 -->
+            <input type="text" th:field="*{mjTitle}" placeholder="제목을 입력하세요" class="form-control mb-3" required>
+
+            <!-- 내용 (썸머노트) -->
+            <textarea th:field="*{mjContent}" id="summernote" class="form-control" placeholder="내용을 입력하세요"></textarea>
+
+            <!-- 파일 첨부 -->
+            <input type="file" name="file" class="form-control mt-3 d-none"> <!-- d-none으로 숨겨둠 -->
+        </form>
+
+        <button type="submit" form="mjForm" class="btn-naver-fixed">등록하기</button>
     </div>
 
-    <!--본문 내용 -->
-    <div class="container my-5">
+    <!--CSS 파일 연결 (네가 사용 중인 mj.css 사용) -->
+    <link rel="stylesheet" type="text/css" th:href="@{/mj.css}">
 
-        <!-- 블로그형 카드 스타일 -->
-        <div class="card shadow-sm p-4" style="border-radius: 16px; background-color: #fff;">
-
-            <h2 class="mb-4" style="font-weight: bold; font-size: 28px; text-align: center;">맛집 소개</h2>
-
-            <form th:action="@{/mjboard/create}" method="post" enctype="multipart/form-data" th:object="${mjboardForm}">
-                <!--제목 입력 -->
-                <div class="form-group mb-4">
-                    <input type="text" th:field="*{mjTitle}" id="mjTitle" class="form-control" placeholder="제목을 입력하세요"
-                           style="border-radius: 12px; padding: 15px; font-size: 18px;">
-                    <small class="text-danger" th:if="${#fields.hasErrors('mjTitle')}" th:errors="*{mjTitle}"></small>
-                </div>
-
-                <!--내용 (썸머노트 에디터) -->
-                <div class="form-group mb-4">
-                    <textarea th:field="*{mjContent}" id="summernote" class="form-control"
-                              style="border-radius: 12px;"></textarea>
-                    <small class="text-danger" th:if="${#fields.hasErrors('mjContent')}" th:errors="*{mjContent}"></small>
-                </div>
-
-                <!--파일 업로드 (반드시 추가) -->
-                <div class="form-group mb-4">
-                    <input type="file" name="file" id="file" class="form-control" style="border-radius: 12px;">
-                </div>
-
-                <!--저장 버튼 -->
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary px-5 py-2" style="font-size: 18px; border-radius: 30px;">저장하기</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!--썸머노트-->
-    <!-- jQuery (필수) -->
+    <!--썸머노트 CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <!-- Summernote CSS/JS -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-    <!-- Summernote 한국어 -->
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/lang/summernote-ko-KR.js"></script>
 
+    <!--썸머노트 기능 및 이미지 업로드 -->
     <script>
         $(document).ready(function () {
+            let csrfToken = $("meta[name='_csrf']").attr("content");
+            let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
             $('#summernote').summernote({
                 height: 300,
                 lang: 'ko-KR',
                 placeholder: '내용을 입력해주세요...',
                 callbacks: {
-                    //외부 이미지 복사 & 붙여넣기 시 자동 업로드
-                    onPaste: function (e) {
-                        setTimeout(function () {
-                            $('#summernote').next().find('img').each(function () {
-                                let $img = $(this);
-                                let src = $img.attr('src');
-                                console.log("붙여넣은 이미지 src:", src); // 디버깅 확인용
-                                // 서버에 있는 이미지면 skip
-                                if (!src.startsWith('http')) return;
-
-                                // 외부 이미지면 서버로 복사 저장
-                                $.ajax({
-                                    url: '/mjboard/uploadExternalImage',  // 컨트롤러 주소
-                                    type: 'POST',
-                                    contentType: 'application/json',
-                                    data: JSON.stringify({url: src}),  // 이미지 URL 전송
-                                    success: function (result) {
-                                        console.log("서버 저장 이미지 URL:", result.url); // 디버깅
-                                        // src 바꾸기
-                                        $img.attr('src', result.url);
-                                        // 가운데 정렬 스타일
-                                        $img.css({
-                                            'max-width': '100%',
-                                            'height': 'auto',
-                                            'display': 'block',
-                                            'margin': '0 auto'
-                                        });
-                                    },
-                                    error: function () {
-                                        alert('외부 이미지 업로드 실패');
-                                    }
-                                });
-                            });
-                        }, 10); // 10ms 지연 후 실행
-                    },
-
-                    // 직접 이미지 업로드 (드래그 & 파일 업로드)
+                    // 이미지 업로드
                     onImageUpload: function (files) {
                         let data = new FormData();
-                        data.append('file', files[0]); // 첫 번째 파일만 사용
+                        data.append('file', files[0]);
                         $.ajax({
-                            url: '/mjboard/uploadImage', // 내부 업로드 경로
+                            url: '/mjboard/uploadImage',
                             type: 'POST',
                             data: data,
                             contentType: false,
                             processData: false,
-                            success: function (url) {
-                                $('#summernote').summernote('insertImage', url.url, function ($image) {
-                                    // 스타일 적용
-                                    $image.css({
-                                        'max-width': '100%',
-                                        'height': 'auto',
-                                        'display': 'block',
-                                        'margin': '0 auto'
-                                    });
-                                });
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader(csrfHeader, csrfToken);
+                            },
+                            success: function (response) {
+                                $('#summernote').summernote('insertImage', response.url);
                             },
                             error: function () {
                                 alert('이미지 업로드 실패');
                             }
                         });
+                    },
+                    // 외부 이미지 자동 저장
+                    onPaste: function (e) {
+                        let clipboardData = e.originalEvent.clipboardData;
+                        let pastedData = clipboardData.getData('Text');
+                        if (pastedData.startsWith('http')) {
+                            $.ajax({
+                                url: '/mjboard/uploadExternalImage',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({url: pastedData}),
+                                beforeSend: function (xhr) {
+                                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                                },
+                                success: function (result) {
+                                    $('#summernote').summernote('insertImage', result.url);
+                                },
+                                error: function () {
+                                    alert('외부 이미지 업로드 실패');
+                                }
+                            });
+                            e.preventDefault();
+                        }
                     }
-                }
-            });
-
-            // 폼 저장 전 검사 (업로드 안된 외부 이미지 체크)
-            $('form').on('submit', function (e) {
-                let hasExternalImage = false;
-                $('#summernote').next().find('img').each(function () {
-                    let $img = $(this);
-                    let src = $img.attr('src');
-                    // 서버로 안올라간 외부 이미지 있으면 차단
-                    if (src.startsWith('http') && !src.includes('/files/mj/')) {
-                        hasExternalImage = true;
-                    }
-                });
-
-                if (hasExternalImage) {
-                    e.preventDefault(); // 저장 중지
-                    alert('아직 서버로 저장되지 않은 이미지가 있습니다. 잠시 후 다시 시도해주세요!');
                 }
             });
         });
     </script>
-
-
-
 
 </main>
 </html>
