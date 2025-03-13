@@ -9,27 +9,63 @@
 
     <!-- 카드형 폼 -->
     <section class="py-5">
-      <form method="post" th:object="${HUserForm}" enctype="multipart/form-data" class="p-4 shadow rounded bg-white">
+      <form method="post" th:object="${hUserForm}" enctype="multipart/form-data" class="p-4 shadow rounded bg-white">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
         <table class="table">
-          <tr class="table-white">
-            <td><label for="nickname" class="form-label"><strong>닉네임</strong></label></td>
-            <td><input type="text" id="nickname" name="nickname" class="form-control" placeholder="닉네임 입력"></td>
-          </tr>
-          <tr class="table-white">
-            <td><label for="email" class="form-label"><strong>이메일</strong></label></td>
-            <td><input type="text" id="email" name="email" class="form-control" placeholder="이메일 입력"></td>
-          </tr>
-          <tr class="table-white">
-            <td><label for="phoneNumber" class="form-label"><strong>연락처</strong></label></td>
-            <td><input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="연락처 입력"></td>
-          </tr>
-          <tr class="table-white">
-            <td><label for="address" class="form-label"><strong>주소</strong></label></td>
-            <td><input type="text" id="address" name="address" class="form-control" placeholder="주소 입력"></td>
-          </tr>
+
+            <div class="mb-4 d-flex justify-content-center align-items-center">
+            <label for="nickname" class="form-label"><strong>닉네임 :</strong></label>
+              <input type="text" id="nickname" name="nickname"
+                     th:value="*{nickname}"
+                     class="form-control"
+                     placeholder="닉네임 입력"
+                     style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
+            </div>
+
+
+          <div class="mb-4 d-flex justify-content-center align-items-center">
+            <label for="email" class="form-label"><strong>이메일 :</strong></label>
+              <input type="text" id="email" name="email"
+                     th:value="*{email}"
+                     class="form-control"
+                     placeholder="이메일 입력"
+                     style="width: 500px;"> <!--  -->
+          </div>
+
+
+          <div class="mb-4 d-flex justify-content-center align-items-center">
+            <label for="phoneNumber" class="form-label"><strong>연락처 :</strong></label>
+              <input type="text" id="phoneNumber" name="phoneNumber"
+                     th:value="*{phoneNumber}"
+                     class="form-control"
+                     placeholder="연락처 입력"
+                     style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
+          </div>
+
+
+          <div class="mb-4 d-flex justify-content-center align-items-center">
+            <label for="address" class="form-label"><strong>주소 :</strong></label>
+              <input type="text" id="address" name="address"
+                     th:value="*{address}"
+                     class="form-control"
+                     placeholder="닉네임 입력"
+                     style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
+          </div>
+
+
+          <div class="mb-4 d-flex justify-content-center align-items-center">
+            <label for="addressDetail" class="form-label"><strong>상세주소 :</strong></label>
+              <input type="text" id="addressDetail" name="addressDetail"
+                     th:value="*{addressDetail}"
+                     class="form-control"
+                     placeholder="상세주소 입력"
+                     style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
+          </div>
+
         </table>
+
+
 
         <!-- 저장 버튼 -->
         <div class="text-center mt-4">
@@ -77,6 +113,45 @@
   .form-control:focus {
     border-color: #B4A99C;
     box-shadow: 0 0 0 0.2rem rgba(180, 169, 156, 0.25);
+  }
+
+  .form-inline-wrap {
+    display: flex; /* 한 줄 배치 */
+    align-items: center; /* 높이 정렬 */
+    gap: 8px; /* ✅ 간격 최소화 (원하면 4px도 가능) */
+    margin: 10px 0; /* 위아래 여백 */
+  }
+
+  .form-inline-wrap label {
+    margin: 0;
+    font-size: 16px;
+    color: #555;
+    width: 80px; /* ✅ 고정 폭 (원하면 더 줄일 수 있음 ex. 70px) */
+    text-align: right;
+  }
+
+  .form-inline-wrap .form-control {
+    flex: 1; /* 남는 공간 다 차지 */
+    max-width: 400px; /* ✅ 인풋 최대 너비 제한 */
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 8px 12px;
+  }
+
+  .form-inline-wrap .form-control:focus {
+    border-color: #B4A99C;
+    box-shadow: 0 0 0 0.2rem rgba(180, 169, 156, 0.25);
+  }
+
+  .table-white {
+    background-color: #ffffff;
+    border: none;
+  }
+
+  .table td {
+    border: none;
+    padding: 0; /* ✅ 테이블 내부 여백 제거 */
   }
 </style>
 </html>

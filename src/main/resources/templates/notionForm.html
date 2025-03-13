@@ -4,88 +4,79 @@
         <h2 class="text-center text-white py-2 font-bold-style">공지사항</h2>
     </div>
     <div class="container">
-        <!--title-->
-        <h2 class="text-center py-2">자유게시판</h2>
         <!--content-->
         <section class="py-5">
-
-            <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
-            <div style="height: 700px">
-                <!-- **내용** -->
-
-
-
-                <h5 class="my-4 text-center border-bottom pb-3" style="color: #D5C9C1;">질문 등록</h5>
-                <form method="post" th:object="${mgNotionForm}" enctype="multipart/form-data" class="p-4 shadow-lg rounded bg-white">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-
-                    <!-- Optional: Error Messages Section -->
-                    <!-- <div th:replace="~{form_errors :: formErrorsFragment}"></div> -->
-
-                    <!-- Title Input Section -->
-                    <div class="mb-4">
-                        <label for="notionTitle" class="form-label fs-5 fw-bold text-secondary">제목</label>
-                        <input type="text" th:field="*{notionTitle}" class="form-control form-control-lg rounded-pill border-2 shadow-sm" placeholder="제목을 입력하세요" required>
-                    </div>
-
-                    <!-- Content Textarea Section -->
-                    <div class="mb-4">
-                        <label for="notionContent" class="form-label fs-5 fw-bold text-secondary">내용</label>
-                        <textarea rows="8" th:field="*{notionContent}" class="form-control form-control-lg rounded-3 border-2 shadow-sm" placeholder="내용을 입력하세요" required></textarea>
-
-                    </div>
-                    <div class="mb-4">
-                        <label for="file" class="form-label fs-5 fw-bold text-secondary">파일 업로드</label>
-                        <input type="file" name="file" class="form-control form-control-lg rounded-pill border-2 shadow-sm">
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="d-flex justify-content-center">
-                        <input type="submit" value="저장하기" class="btn custom-btn btn-lg rounded-pill px-5 py-3 shadow-lg">
-                    </div>
-
-
-                    <style>
-                        /* Custom button styling */
-                        .custom-btn {
-                            background-color: #F4E9E3; /* Light beige color */
-                            border-color: #F4E9E3;
-                            color: #333; /* Dark text color for contrast */
-                            font-size: 1.2rem;
-                            font-weight: bold;
-                            text-transform: uppercase;
-                            transition: all 0.3s ease-in-out;
-                        }
-
-                        .custom-btn:hover {
-                            background-color: #e3d4b9; /* Slightly darker beige on hover */
-                            border-color: #e3d4b9;
-                            transform: translateY(-3px); /* Slight lift effect */
-                        }
-
-                        .custom-btn:active {
-                            background-color: #c2b29e; /* Even darker beige when clicked */
-                            border-color: #c2b29e;
-                            transform: translateY(0); /* Slight press effect */
-                        }
-
-                        /* Optional: Add a smooth shadow effect */
-                        .shadow-lg {
-                            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-                        }
-                    </style>
-                </form>
+            <!-- **내용** -->
+            <h3 class="my-4 text-center border-bottom pb-3" style="color: #D5C9C1;">질문 등록</h3>
+            <form method="post" th:object="${mgNotionForm}" enctype="multipart/form-data" >
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
 
 
+                <div class="mb-4 d-flex justify-content-center align-items-center">
+                    <label for="notionTitle" class="form-label fs-5 fw-bold text-secondary mb-0 me-3" style="width: 100px; text-align: right;">제목</label>
+                    <input type="text" th:field="*{notionTitle}"
+                           class="form-control form-control-lg rounded-pill border-2 shadow-sm"
+                           placeholder="제목을 입력하세요"
+                           required
+                           style="width: 60%;">
+                </div>
+
+                <!-- Content Textarea Section -->
+                <div class="mb-4 d-flex justify-content-center align-items-start">
+                    <label for="notionContent" class="form-label fs-5 fw-bold text-secondary mb-0 me-3" style="width: 100px; text-align: right; padding-top: 12px;">내용</label>
+                    <textarea rows="8" th:field="*{notionContent}"
+                              class="form-control form-control-lg rounded-3 border-2 shadow-sm"
+                              placeholder="내용을 입력하세요"
+                              required
+                              style="width: 60%;"></textarea>
+                </div>
+
+                <!-- File Upload Section -->
+                <div class="mb-4 d-flex justify-content-center align-items-center">
+                    <label for="file" class="form-label fs-5 fw-bold text-secondary mb-0 me-3" style="width: 100px; text-align: right;">파일 업로드</label>
+                    <input type="file" name="file"
+                           class="form-control form-control-lg rounded-pill border-2 shadow-sm"
+                           style="width: 60%;">
+                </div>
+
+                <div class="mb-4 d-flex justify-content-center">
+                    <input type="submit" value="저장하기"
+                           class="btn custom-btn btn-lg rounded-pill px-5 py-3 shadow-lg">
+                </div>
 
 
+                <style>
+                    /* Custom button styling */
+                    .custom-btn {
+                        background-color: #F4E9E3; /* Light beige color */
+                        border-color: #F4E9E3;
+                        color: #333; /* Dark text color for contrast */
+                        font-size: 1.2rem;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                        transition: all 0.3s ease-in-out;
+                    }
 
-            </div>
+                    .custom-btn:hover {
+                        background-color: #e3d4b9; /* Slightly darker beige on hover */
+                        border-color: #e3d4b9;
+                        transform: translateY(-3px); /* Slight lift effect */
+                    }
 
-            <!--하단 줄 (필요에 따라 사용)-->
-            <hr style="margin-top: 50px">
-            <!--pagination-->
+                    .custom-btn:active {
+                        background-color: #c2b29e; /* Even darker beige when clicked */
+                        border-color: #c2b29e;
+                        transform: translateY(0); /* Slight press effect */
+                    }
+
+                    /* Optional: Add a smooth shadow effect */
+                    .shadow-lg {
+                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                    }
+                </style>
+            </form>
+
 
         </section>
     </div>

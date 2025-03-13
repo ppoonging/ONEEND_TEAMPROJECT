@@ -53,10 +53,10 @@ public class MgController {
             return "notionForm";  // Return back to the form page
         }
 
-        // Call service to handle creating the notion and save the file
+        // Call service to handle creating the notion and save the file41616156
         this.mgService.create(mgNotionForm.getNotionTitle(), mgNotionForm.getNotionContent(), file);
 
-        // Redirect to the notion listing page after success
+        // Redirect to the notion listing page after success15615615
         return "redirect:/notion/";
     }
 
@@ -70,13 +70,13 @@ public class MgController {
     }
 
     @PostMapping("/modify/{notionSeq}")
-    public String Modify(@Valid MgNotionForm mgNotionForm, BindingResult bindingResult, @PathVariable("notionSeq") Integer notionSeq) {
+    public String Modify(@Valid MgNotionForm mgNotionForm, BindingResult bindingResult, @PathVariable("notionSeq") Integer notionSeq, @RequestParam("file") MultipartFile file)throws Exception {
         if(bindingResult.hasErrors()) {
             return "notionForm";
         }
         MgNotion mgNotion = this.mgService.getMgNotion(notionSeq);
 
-        this.mgService.modify(mgNotion, mgNotionForm.getNotionTitle(), mgNotionForm.getNotionContent());
+        this.mgService.modify(mgNotion, mgNotionForm.getNotionTitle(), mgNotionForm.getNotionContent(), file);
         return String.format("redirect:/notion/detail/%s", notionSeq);
     }
 

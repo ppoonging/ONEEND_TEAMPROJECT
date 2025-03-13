@@ -1,3 +1,7 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
     <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
@@ -54,10 +58,16 @@
                         <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
 
                         <!-- Link to notion details with proper styling -->
-                        <td><a th:href="@{|/notion/detail/${mgNotion.notionSeq}|}" th:text="${mgNotion.notionTitle}"></a></td>
+                        <td>
+                            <a th:href="@{|/notion/detail/${mgNotion.notionSeq}|}"
+                               th:text="${#strings.length(mgNotion.notionTitle) > 20 ? #strings.substring(mgNotion.notionTitle, 0, 7) + '...' : mgNotion.notionTitle}">
+                            </a>
+                        </td>
+
 
                         <!-- Display the notion content -->
-                        <td th:text="${mgNotion.notionContent}"></td>
+                        <td th:text="${#strings.length(mgNotion.notionContent) > 20 ? #strings.substring(mgNotion.notionContent, 0, 13) + '...' : mgNotion.notionContent}"></td>
+
 
                         <!-- Display the notion registration date -->
                         <td th:text="${#temporals.format(mgNotion.notionRegDate, 'yyyy-MM-dd HH:mm')}"></td>
@@ -75,8 +85,8 @@
 
 
 
-            <!--하단 줄 (필요에 따라 사용)-->
-            <hr style="margin-top: 50px">
+
+
             <!--pagination-->
             <div th:if="${!paging.isEmpty()}" class="pagination-bottom-center">
                 <ul class="pagination justify-content-center">
@@ -128,16 +138,42 @@
                 .pagination .page-item {
                     margin: 0 3px;
                 }
+
+                .fixed-btn {
+                    position: fixed; /* ⭐ 무조건 필요 */
+                    bottom: 30px;
+                    right: 30px;
+                    z-index: 1000;
+                    transition: background-color 0.3s ease;
+                }
+
+                .fixed-btn:hover {
+                    background-color: #b8946b;
+                }
+
             </style>
         </section>
     </div>
+    <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+        <!-- 로그인 사용자만 -->
+        <a th:href="@{/notion/create}" sec:authorize="isAuthenticated()"
+           class="btn"
+           style="background-color: #D2B48C; color: white; border: none; padding: 10px 20px; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-decoration: none;">
+            질문 등록하기
+        </a>
 
-    <a th:href="@{/notion/create}"
-       class="btn"
-       style="background-color: #D2B48C; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-decoration: none;">
-        질문 등록하기
-    </a>
+        <!-- 비로그인 사용자 -->
+        <a th:href="@{/users/login}" sec:authorize="isAnonymous()"
+           class="btn"
+           style="background-color: #D2B48C; color: white; border: none; padding: 10px 20px; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-decoration: none;">
+            질문 등록하기
+        </a>
+    </div>
+
+
+
 
 
 </main>
+</html>
 </html>
