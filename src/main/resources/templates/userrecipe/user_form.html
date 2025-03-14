@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+
+    <!-- 상단 타이틀 -->
+    <div style="background-color: #F4E9E3">
+        <div class="container py-2">
+            <span style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">
+                한식 끝판왕 > 유저 레시피 > 레시피 작성
+            </span>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+
+        <div class="text-center">
+            <img th:src="@{/images/total/bab.png}" width="5%">
+        </div>
+
+        <!-- 제목 -->
+        <h2 class="text-center py-4">레시피 작성</h2>
+
+        <!-- 카드 안에 폼 시작 -->
+        <div class="card shadow p-4" style="max-width: 800px; margin: 0 auto;">
+
+            <form method="post" th:action="@{/userrecipe/create}" th:object="${userRecipe}" enctype="multipart/form-data">
+
+                <!-- CSRF 토큰 -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                <!-- 카테고리 -->
+                <div class="mb-3">
+                    <label for="recipeCategory" class="form-label fw-bold">카테고리</label>
+                    <input type="text" th:field="*{recipeCategory}" id="recipeCategory" class="form-control"
+                           placeholder="예: 국, 찌개, 볶음" required>
+                </div>
+
+                <!-- 제목 -->
+                <div class="mb-3">
+                    <label for="userRecipeTitle" class="form-label fw-bold">제목</label>
+                    <input type="text" th:field="*{userRecipeTitle}" id="userRecipeTitle" class="form-control"
+                           placeholder="레시피 제목을 입력하세요" required>
+                </div>
+
+                <!-- 재료 및 분량 -->
+                <div class="mb-3">
+                    <label for="userrecipeIngre" class="form-label fw-bold">재료 및 분량</label>
+                    <textarea th:field="*{userrecipeIngre}" id="userrecipeIngre" class="form-control" rows="2"
+                              placeholder="예: 돼지고기 200g, 간장 3T, 마늘 1T" required></textarea>
+                </div>
+
+                <!-- 준비하기 -->
+                <div class="mb-3">
+                    <label for="userrecipeReady" class="form-label fw-bold">준비하기</label>
+                    <textarea th:field="*{userrecipeReady}" id="userrecipeReady" class="form-control" rows="2"
+                              placeholder="예: 고기 손질, 채소 씻기" required></textarea>
+                </div>
+
+                <!-- 레시피 내용 -->
+                <div class="mb-3">
+                    <label for="userRecipeContent" class="form-label fw-bold">레시피 내용</label>
+                    <textarea th:field="*{userRecipeContent}" id="userRecipeContent" class="form-control" rows="5"
+                              placeholder="레시피 과정을 상세히 입력하세요" required></textarea>
+                </div>
+
+                <!-- 이미지 업로드 -->
+                <div class="mb-3">
+                    <label for="file" class="form-label fw-bold">이미지 업로드</label>
+                    <input type="file" name="file" id="file" class="form-control">
+                </div>
+
+                <!-- 저장 버튼 -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">레시피 저장</button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- 하단 구분선 -->
+        <hr style="margin-top: 50px">
+
+    </div>
+
+</main>
+</html>

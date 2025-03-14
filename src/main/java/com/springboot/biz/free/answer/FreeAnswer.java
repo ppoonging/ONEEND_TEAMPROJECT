@@ -35,8 +35,6 @@ public class FreeAnswer {
 
     private Integer frboAnsRecommend; //답변 추천
 
-    private Integer frboAnsCommend;  //답변에 답변
-
     @ManyToOne
     private FreeQuestion freeQuestion; //관계맺기
 
