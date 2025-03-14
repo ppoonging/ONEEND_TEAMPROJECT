@@ -1,16 +1,25 @@
-
 <link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
+
+<!-- CSRF 토큰 추가 -->
+<meta th:name="_csrf" th:content="${_csrf.token}">
+<meta th:name="_csrf_header" th:content="${_csrf.headerName}">
 
 <h2 class="text-center">내가 찜한 레시피</h2>
 <div class="d-flex flex-wrap gap-3 justify-content-center mt-4">
     <div th:each="recipe : ${favoriteRecipes}" class="card custom-card" style="width: 18rem;">
-        <img th:src="@{${recipe.fmrecipeFilePath}}" class="card-img-top" alt="레시피 이미지" style="width:100%; height: 170px; object-fit: cover;">
+
         <div class="card-body">
             <h5 class="card-title" th:text="${recipe.fmrecipeTitle}"></h5>
+
             <!-- 레시피 보기 버튼 (모달 오픈 AJAX) -->
-            <button type="button" class="btn custom-btn123"
+            <button type="button" class="btn custom-btn123 mb-2"
                     th:attr="data-recipe-id=${recipe.fmrecipeSeq}"
                     onclick="openRecipeModal(this)">레시피 보기</button>
+
+            <!-- 찜 해제 버튼 (토글 AJAX) -->
+            <button type="button" class="btn custom-btn123 mb-2"
+                    th:attr="data-recipe-id=${recipe.fmrecipeSeq}"
+                    onclick="toggleFavorite(this)">★ 찜 해제</button>
         </div>
     </div>
 </div>
@@ -34,14 +43,16 @@
         <button type="button" class="btn custom-btn123" onclick="closeModal()">닫기</button>
     </div>
 </div>
+
+<!-- 모달 보기 JS -->
 <script>
     function openRecipeModal(button) {
         const recipeId = button.dataset.recipeId;
 
-        fetch('/fm/api/detail/' + recipeId)
+        //내가 만든주소 넣어줌
+        fetch('/fm/detail/' + recipeId)
             .then(response => response.json())
             .then(data => {
-                // 모달 데이터 채우기
                 document.getElementById('modalTitle').innerText = data.title;
                 document.getElementById('modalContent').innerText = data.content;
                 document.getElementById('modalIngredients').innerText = data.ingredients;
@@ -55,7 +66,6 @@
                     imageElement.style.display = 'none';
                 }
 
-                // 모달 + 오버레이 열기
                 document.getElementById('recipeModal').classList.remove('hidden');
                 document.body.classList.add('modal-open'); // 배경 흐림
             })
@@ -64,8 +74,43 @@
 
     function closeModal() {
         document.getElementById('recipeModal').classList.add('hidden');
-        document.body.classList.remove('modal-open'); // 배경 흐림 해제
+        document.body.classList.remove('modal-open'); // 배경 복원
     }
 </script>
 
+<!-- 찜하기 토글 (찜 해제) -->
+<script>
+    function toggleFavorite(button) {
+        const recipeId = button.dataset.recipeId;
 
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        fetch('/api/favorite/toggle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                [csrfHeader]: csrfToken
+            },
+            credentials: 'same-origin', // ✅ 세션 쿠키 포함
+            body: 'recipeId=' + recipeId
+        })
+            .then(response => {
+                if (response.ok) {
+                    button.textContent = '☆ 찜하기';
+                    button.classList.remove('btn-outline-warning');
+                    button.classList.add('btn-outline-secondary');
+                    alert('찜이 해제되었습니다.');
+                } else if (response.status === 403) {
+                    alert('로그인이 필요합니다.');
+                } else {
+                    alert('처리 중 오류가 발생했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('찜 토글 실패:', error);
+                alert('서버 요청 실패!');
+            });
+
+    }
+</script>

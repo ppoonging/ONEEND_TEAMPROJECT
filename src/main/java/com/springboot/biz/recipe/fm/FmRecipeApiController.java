@@ -19,7 +19,7 @@ public class FmRecipeApiController {
 
 
     /*마이페이지에 모달로 즐찾 레시피보기*/
-    @GetMapping("/api/detail/{id}")
+    @GetMapping("/detail/{id}")
     public Map<String, Object> getRecipeDetail(@PathVariable Integer id) {
         FmRecipe recipe = fmRecipeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("레시피가 존재하지 않습니다."));
@@ -30,6 +30,6 @@ public class FmRecipeApiController {
         result.put("ingredients", recipe.getFmrecipeIngre());
         result.put("ready", recipe.getFmrecipeReady());
         result.put("image", recipe.getFmrecipeFilePath());
-        return result; // JSON 형태로 반환
+        return result;
     }
 }

@@ -26,5 +26,7 @@ public class FavoriteApiController {  // 새로 만든 API 전용 컨트롤러
         return response; // JSON 반환
     }
 
+
+
 }
 
