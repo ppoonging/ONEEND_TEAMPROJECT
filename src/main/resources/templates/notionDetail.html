@@ -1,59 +1,119 @@
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
-    <!--상단-->
-    <div style="background-color: #F4E9E3; border-bottom: 3px solid #D87C61;">
-        <div class="container py-2">
-            <span style="color: #777; font-family: 'MapoGoldenPier', sans-serif; font-size: 18px; padding-left: 10px;">
-                맛광 커뮤니티 > 상세보기
-            </span>
-        </div>
+    <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
+        <h2 class="text-center text-white py-2 font-bold-style">공지사항</h2>
     </div>
+    <div class="container">
 
-    <!-- Main Content Container -->
-    <div class="container mt-5">
+        <!-- 상단 로고 -->
         <div class="text-center">
-            <img th:src="@{/images/total/logo.png}" width="140" class="rounded">
+            <img th:src="@{/images/total/logo.png}" width="120" class="rounded">
         </div>
+        <!-- 타이틀 -->
+        <h2 class="text-center py-4" style="font-weight: bold; color: #B4A99C; font-family: 'MapoGoldenPier', serif;">상세보기</h2>
 
-        <h2 class="text-center py-4" style="font-family: 'MapoGoldenPier', serif; color: #D87C61; font-size: 32px;">상세보기</h2>
+        <!-- 카드형 상세보기 -->
+        <section class="py-4">
+            <div class="p-4 shadow rounded bg-white">
 
-        <!-- Title Section with "제목" -->
-        <div class="d-flex align-items-center border-bottom py-3">
-            <span style="font-family: 'MapoGoldenPier', serif; color: #333; font-size: 28px; margin-right: 10px;">제목:</span>
-            <h2 th:text="${mgNotion.notionTitle}" style="font-family: 'MapoGoldenPier', serif; color: #333; font-size: 28px;"></h2>
-        </div>
+                <!-- 제목 -->
+                <div class="mb-4 pb-3 border-bottom">
+                    <label class="form-label" style="font-weight: bold; color: #555; font-size: 20px;">제목</label>
+                    <h3 th:text="${mgNotion.notionTitle}" style="font-size: 24px; color: #333;"></h3>
+                </div>
 
-        <div class="card my-4" style="border: 1px solid #D87C61; border-radius: 8px;">
-            <div class="card-body">
-                <!-- Content Section with "내용" -->
-                <div class="my-4">
-                    <span style="font-family: 'MapoGoldenPier', serif; color: #333; font-size: 24px;">내용</span>
-                    <div class="card-text" style="white-space: pre-line; font-family: 'Noto Sans KR', sans-serif; color: #555; font-size: 18px;">
+                <!-- 내용 -->
+                <div class="mb-4">
+                    <label class="form-label" style="font-weight: bold; color: #555; font-size: 20px;">내용</label>
+                    <div class="card-text" style="white-space: pre-line; font-family: 'Noto Sans KR', sans-serif; color: #555; font-size: 16px;">
                         <p th:text="${mgNotion.notionContent}"></p>
                     </div>
-                    <img th:if="${mgNotion.frboFilePath}"
-                         th:src="@{${mgNotion.frboFilePath} + '?t=' + ${#dates.createNow().getTime()}}"
-                         class="img-fluid rounded mb-4" alt="Uploaded Image" style="max-height: 500px; object-fit: cover;">
                 </div>
 
-
-                <div class="d-flex justify-content-end">
-                    <div class="badge bg-light text-dark p-3" style="font-size: 16px; font-family: 'MapoGoldenPier', serif;"></div>
+                <!-- 이미지 -->
+                <div th:if="${mgNotion.frboFilePath}" class="mb-4 text-center">
+                    <img th:src="@{${mgNotion.frboFilePath} + '?t=' + ${#dates.createNow().getTime()}}"
+                         class="img-fluid rounded"
+                         alt="Uploaded Image"
+                         style="max-height: 400px; object-fit: cover;">
                 </div>
 
-                <div class="my-4">
-                    <a th:href="@{|/notion/modify/${mgNotion.notionSeq}|}" class="btn btn-lg btn-outline-secondary"
-                       style="font-family: 'MapoGoldenPier', serif; font-size: 16px;" th:text="수정"></a>
+                <!-- 버튼 -->
+                <!-- 버튼 -->
+                <div class="button-group">
+                    <a th:href="@{|/notion/modify/${mgNotion.notionSeq}|}"
+                       class="btn"
+                       style="background-color: #F4E9E3; color: black; border: none; padding: 6px 15px; border-radius: 5px; font-weight: bold; margin-right: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        수정
+                    </a>
                     <a th:href="@{|/notion/delete/${mgNotion.notionSeq}|}"
-                       class="delete btn btn-lg btn-outline-danger"
-                       style="font-family: 'MapoGoldenPier', serif; font-size: 16px;" th:text="삭제"></a>
+                       class="btn delete"
+                       style="background-color: #F4E9E3; color: black; border: none; padding: 6px 15px; border-radius: 5px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        삭제
+                    </a>
                 </div>
             </div>
-        </div>
-
-
-
+        </section>
     </div>
+
 </main>
 
+<!-- 스타일 정의 -->
+<style>
+    /* 카드 안쪽 여백 */
+    .p-4 {
+        padding: 2rem !important;
+    }
+
+    /* 폰트 조정 */
+    .form-label {
+        font-size: 18px;
+    }
+
+    /* 반응형 이미지 */
+    .img-fluid {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* 버튼 호버 효과 */
+    .btn:hover {
+        opacity: 0.85;
+        transition: 0.3s ease;
+    }
+
+    <style>
+         /* 카드 안쪽 여백 */
+     .p-4 {
+         padding: 2rem !important;
+         position: relative; /* ⭐ 카드 기준으로 절대 위치 */
+     }
+
+    /* 버튼 그룹 절대 위치 */
+    .button-group {
+        position: absolute;
+        bottom: 20px; /* 카드 하단에서 20px 띄움 */
+        right: 20px; /* 카드 오른쪽에서 20px 띄움 */
+    }
+
+    /* 폰트 조정 */
+    .form-label {
+        font-size: 18px;
+    }
+
+    /* 반응형 이미지 */
+    .img-fluid {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* 버튼 호버 효과 */
+    .btn:hover {
+        opacity: 0.85;
+        transition: 0.3s ease;
+    }
+</style>
+
+
+</style>
 </html>

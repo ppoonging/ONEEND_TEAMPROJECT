@@ -80,8 +80,6 @@ public class FreeQuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/form")
-
-
   public String freeQuestionForm(FreeQuestionForm freeQuestionForm){
 
         return "free/freeQuestion_form";

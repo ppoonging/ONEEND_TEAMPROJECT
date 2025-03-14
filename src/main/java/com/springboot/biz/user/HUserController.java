@@ -100,8 +100,15 @@ public class HUserController {
         model.addAttribute("hUser", new HUser());
 
 
+
         HUser q = this.hUserSerevice.getUser(username);
         hUserForm.setNickname(q.getNickname());
+        hUserForm.setEmail(q.getEmail());
+        hUserForm.setAddress(q.getAddress());
+        hUserForm.setPhoneNumber(q.getPhoneNumber());
+        hUserForm.setAddressDetail(q.getAddressDetail());
+
+        model.addAttribute("hUserForm", hUserForm); //폼에 데이터를 넘겨야 수정 페이지에서 value로 불러올수 있음
 
         return "myPageForm";
     }
@@ -121,7 +128,7 @@ public class HUserController {
         model.addAttribute("hUser", new HUser());
 
         HUser q = this.hUserSerevice.getUser(username);
-        this.hUserSerevice.modify(q, hUserForm.getNickname(), hUserForm.getEmail(), hUserForm.getPhoneNumber(), hUserForm.getAddress());
+        this.hUserSerevice.modify(q, hUserForm.getNickname(), hUserForm.getEmail(), hUserForm.getPhoneNumber(), hUserForm.getAddress(), hUserForm.getAddressDetail());
 
         return String.format("redirect:/users/myPage", username);
     }

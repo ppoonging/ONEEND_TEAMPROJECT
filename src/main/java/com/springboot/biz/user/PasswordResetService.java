@@ -13,7 +13,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PasswordResetService {
 
-//이민정 바보
     private final HUserRepository hUserRepository;
 
 
@@ -73,4 +72,5 @@ public class PasswordResetService {
         System.out.println("토큰성공가자아아아아아아아아아아ㅏ");
         return true;
     }
+
 }

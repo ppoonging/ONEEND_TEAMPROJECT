@@ -1,104 +1,130 @@
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
-    <!--상단-->
-    <div style="background-color: #F4E9E3">
-        <div class="container py-2">
+    <!--content-->
+    <section class="">
+        <div style="background-color: #333;">
+            <div class="container">
 
-            <!--수정해야할 부분-->
-            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">소근소근 > 한식루트 인증</span>
+                <div class="row py-2">
+                    <h3 class="text-center text-white py-3 brutal-subscribe__title">ROOT EVENT</h3>
+                    <div class="row py-3">
+                        <h5 class="text-white">진행중</h5>
+                        <div th:each="root : ${root}" th:if="${root.rootState}" class="col-md-2 my-2">
+                            <!-- From Uiverse.io by satyamchaudharydev -->
+                            <a th:href="@{|/root/register/detail/${root.rootSeq}|}"
+                               style="text-decoration: none; color: #1a1d20">
+                                <div class="root-card">
+                                    <h3 class="card__title" th:text="${root.rootTitle}"></h3>
+                                    <p class="card__content">루트 자세히 보러가기 </p>
+                                    <div class="card__arrow">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="15"
+                                             width="15">
+                                            <path fill="#fff"
+                                                  d="M13.4697 17.9697C13.1768 18.2626 13.1768 18.7374 13.4697 19.0303C13.7626 19.3232 14.2374 19.3232 14.5303 19.0303L20.3232 13.2374C21.0066 12.554 21.0066 11.446 20.3232 10.7626L14.5303 4.96967C14.2374 4.67678 13.7626 4.67678 13.4697 4.96967C13.1768 5.26256 13.1768 5.73744 13.4697 6.03033L18.6893 11.25H4C3.58579 11.25 3.25 11.5858 3.25 12C3.25 12.4142 3.58579 12.75 4 12.75H18.6893L13.4697 17.9697Z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row py-3">
+                        <h5 class="text-white">종료된</h5>
+                        <div th:each="root : ${root}" th:if="${!root.rootState}" class="col-md-2 my-2 opacity-25">
+                            <!-- From Uiverse.io by satyamchaudharydev -->
+                            <a th:href="@{|/root/register/detail/${root.rootSeq}|}"
+                               style="text-decoration: none; color: #1a1d20">
+                                <div class="root-card">
+                                    <h3 class="card__title" th:text="${root.rootTitle}"></h3>
+                                    <p class="card__content">루트 자세히 보러가기 </p>
+                                    <div class="card__arrow">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="15"
+                                             width="15">
+                                            <path fill="#fff"
+                                                  d="M13.4697 17.9697C13.1768 18.2626 13.1768 18.7374 13.4697 19.0303C13.7626 19.3232 14.2374 19.3232 14.5303 19.0303L20.3232 13.2374C21.0066 12.554 21.0066 11.446 20.3232 10.7626L14.5303 4.96967C14.2374 4.67678 13.7626 4.67678 13.4697 4.96967C13.1768 5.26256 13.1768 5.73744 13.4697 6.03033L18.6893 11.25H4C3.58579 11.25 3.25 11.5858 3.25 12C3.25 12.4142 3.58579 12.75 4 12.75H18.6893L13.4697 17.9697Z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end" sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/root/register/list}" class="btn btn-sm btn-outline-secondary root-a-outline-se">목록</a>
+                    </div>
 
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="container mt-5">
-        <div class="text-center">
-            <img th:src="@{/images/total/bab.png}" width="5%">
-        </div>
+        <div class="container pt-5">
+            <h2 class="text-start py-3 mb-5 root-border-bottom">루트 인증 현황</h2>
 
-        <!--수정해야할 부분-->
-        <!--title-->
-        <h2 class="text-center py-2">한식루트 인증</h2>
-        <!--content-->
-        <section class="py-5">
-            <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
-            <div class="row mb-5">
-                <div th:each="root : ${root}" class="col-md-2 mb-3">
-                    <!-- From Uiverse.io by satyamchaudharydev -->
-                    <a th:href="@{|/root/register/detail/${root.rootSeq}|}" style="text-decoration: none; color: #1a1d20">
-                        <div class="root-card">
-                            <h3 class="card__title" th:text="${root.rootTitle}"></h3>
-                            <p class="card__content">루트 자세히 보러가기 </p>
-                            <div class="card__arrow">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="15" width="15">
-                                    <path fill="#fff" d="M13.4697 17.9697C13.1768 18.2626 13.1768 18.7374 13.4697 19.0303C13.7626 19.3232 14.2374 19.3232 14.5303 19.0303L20.3232 13.2374C21.0066 12.554 21.0066 11.446 20.3232 10.7626L14.5303 4.96967C14.2374 4.67678 13.7626 4.67678 13.4697 4.96967C13.1768 5.26256 13.1768 5.73744 13.4697 6.03033L18.6893 11.25H4C3.58579 11.25 3.25 11.5858 3.25 12C3.25 12.4142 3.58579 12.75 4 12.75H18.6893L13.4697 17.9697Z"></path>
-                                </svg>
+            <div class="col mb-3 ms-2 d-flex justify-content-start">
+                <div class="input-group w-25">
+                    <label class="input-group-text" for="search-chkCategory"
+                           style="background-color: #333; color: white">루트</label>
+                    <select class="form-select" id="search-chkCategory" name="search-chkCategory" th:value="${chkCategory}">
+                        <option selected>전체</option>
+                        <option th:if="${root.rootState}" th:each="root : ${root}" th:selected="${chkCategory == root.rootTitle}"
+                                th:text="${root.rootTitle}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="d-flex justify-content-start flex-wrap" style="margin-bottom: 50px">
+                <div th:each="rootAuth : ${rootAuthPage}" th:if="${rootAuth.root.rootState}" class="root-list-card-container">
+                    <a th:href="@{|/root/detail/${rootAuth.rootAuthSeq}|}" class="root-list-card" style="text-decoration: none; color: #333">
+                        <div class="content">
+                            <div class="d-flex justify-content-between">
+                                <p class="logo" th:text="'# ' + ${rootAuth.rootAuthSeq}"></p>
+                                <div class="d-flex">
+                                    <i class="bi bi-person-fill me-2"></i>
+                                    <p class="logo" th:text="${rootAuth.userId.username}" style="font-size: 14px"></p>
+                                </div>
+                            </div>
+
+                            <div class="root-list-box">
+                                <p class="root-category" th:text="${rootAuth.root.rootTitle}"></p>
+                            </div>
+
+                            <div class="h6" th:text="${rootAuth.rootAuthTitle}"></div>
+                            <div class="hover_content">
+                                <p th:utext="${rootAuth.rootAuthContent}"></p>
                             </div>
                         </div>
                     </a>
-
                 </div>
-            </div>
-
-
-            <div class="col">
-                <div class="input-group mb-3 w-25">
-                    <label class="input-group-text" for="search-chkCategory">루트</label>
-                    <select class="form-select" id="search-chkCategory" name="search-chkCategory" th:value="${chkCategory}">
-                        <option selected>전체</option>
-                        <option th:each="root : ${root}" th:selected="${chkCategory == root.rootTitle}" th:text="${root.rootTitle}"></option>
-                    </select>
-                </div>
-
-                <table class="w-100">
-                    <thead style="height: 45px;">
-                        <tr class="text-center" style="background-color: #D5C9C1;">
-                            <th scope="col" style="width: 10%;">No</th>
-                            <th scope="col" style="width: 20%;" class="text-start">루트</th>
-                            <th scope="col" style="width: 55%;" class="text-start">제목</th>
-                            <th scope="col" style="width: 15%;">등록일</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-group-divider">
-                        <tr th:each="rootAuth : ${rootAuthPage}" class="text-center border-bottom" style="height: 45px;">
-                            <td th:text="${rootAuth.rootAuthSeq}"></td>
-                            <td th:text="${rootAuth.root.getRootTitle()}" class="text-start"></td>
-                            <td class="text-start"><a th:href="@{|/root/detail/${rootAuth.rootAuthSeq}|}" th:text="${rootAuth.rootAuthTitle}"></a></td>
-                            <td th:text="${#temporals.format(rootAuth.rootAuthDate,'YYYY-MM-dd HH:mm')} "></td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
 
             <!--하단 줄 (필요에 따라 사용)-->
-            <hr style="margin-top: 50px">
             <!--pagination-->
-                <div class="w-100 d-flex justify-content-end" >
-                    <ul class="pagination d-flex justify-content-center align-items-center flex-grow-1 me-auto" th:if="${rootAuthPage.totalPages > 1}">
-                        <li class="page-item" th:classappend="${!rootAuthPage.hasPrevious} ? 'disabled'">
-                            <a class="page-link" href="javascript:void(0);" th:data-page="${rootAuthPage.number -1}" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item" th:each="page : ${#numbers.sequence(0, rootAuthPage.totalPages -1)}"
-                            th:if="${page >= rootAuthPage.number -2 and page <= rootAuthPage.number +2}"
-                            th:classappend="${page==rootAuthPage.number} ? 'active'">
-                            <a class="page-link" href="javascript:void(0);" th:data-page="${page}" th:text="${page +1}"></a>
-                        </li>
+            <div class="w-100 d-flex justify-content-end">
+                <ul class="pagination d-flex justify-content-center align-items-center flex-grow-1 me-auto" th:if="${rootAuthPage.totalPages > 1}">
+                    <li class="page-item" th:classappend="${!rootAuthPage.hasPrevious} ? 'disabled'">
+                        <a class="page-link" href="javascript:void(0);" th:data-page="${rootAuthPage.number -1}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:each="page : ${#numbers.sequence(0, rootAuthPage.totalPages -1)}"
+                        th:if="${page >= rootAuthPage.number -2 and page <= rootAuthPage.number +2}"
+                        th:classappend="${page==rootAuthPage.number} ? 'active'">
+                        <a class="page-link" href="javascript:void(0);" th:data-page="${page}" th:text="${page +1}"></a>
+                    </li>
 
-                        <li class="page-item" th:classappend="${!rootAuthPage.hasNext} ? 'disabled'">
-                            <a class="page-link" href="javascript:void(0);" th:data-page="${rootAuthPage.number +1}" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <a th:href="@{/root/form}" class="btn root-btn-style mb-3">글 작성</a>
-                </div>
-                <form th:action="@{/root/list}" method="get" id="search-form">
-                    <input type="hidden" id="page" name="page" th:value="${rootAuthPage.number}">
-                    <input type="hidden" id="chkCategory" name="chkCategory" th:value="${chkCategory}">
-                </form>
+                    <li class="page-item" th:classappend="${!rootAuthPage.hasNext} ? 'disabled'">
+                        <a class="page-link" href="javascript:void(0);" th:data-page="${rootAuthPage.number +1}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+                <a th:href="@{/root/form}" sec:authorize="isAuthenticated()"  class="btn root-btn-style mb-3">글 작성</a>
+            </div>
+        </div>
 
-        </section>
-    </div>
+        <form th:action="@{/root/list}" method="get" id="search-form">
+            <input type="hidden" id="page" name="page" th:value="${rootAuthPage.number}">
+            <input type="hidden" id="chkCategory" name="chkCategory" th:value="${chkCategory}">
+        </form>
+
+    </section>
+
     <script layout:fragment="script" type="text/javascript">
 
         // 루트 카테고리 선택 시
@@ -111,16 +137,17 @@
         // 페이지
         const page_element = document.getElementsByClassName('page-link');
 
-        Array.from(page_element).forEach(function (el){
-            el.addEventListener("click", function (){
+        Array.from(page_element).forEach(function (el) {
+            el.addEventListener("click", function () {
                 document.getElementById("page").value = this.dataset.page;
                 document.getElementById('search-form').submit();
             })
         })
 
 
-
     </script>
 
 </main>
+
 </html>
+<link rel="stylesheet" type="text/css" th:href="@{/mj-design-css.css}">

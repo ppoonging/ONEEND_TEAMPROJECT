@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
-
-    <!-- 상단 네비게이션 -->
-    <div class="py-3 px-4 mb-4 border-bottom bg-light">
-        <span class="small text-muted">한끝 커뮤니티 > 자유게시판 > 상세보기</span>
+    <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
+        <h2 class="text-center text-white py-2 font-bold-style">자유게시판</h2>
     </div>
-
-    <!-- 본문 영역 -->
-    <div class="container my-4">
+    <div class="container">
 
         <!-- 제목 -->
         <h2 class="border p-3 mb-3 bg-light rounded" style="font-size: 20px;">[[${freeQuestion.frboTitle}]]</h2>

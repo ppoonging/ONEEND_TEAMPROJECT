@@ -21,8 +21,10 @@ public class HUser {
     @Column(unique = true)    //아이디 글자수 제한???
     private String username;
 
+    @Column(nullable = false)
     private String password;  //비밀번호
 
+    @Column(nullable = false)
     private String nickname;//이름
 
     @Column(unique = true)
@@ -45,12 +47,13 @@ public class HUser {
 
     private LocalDateTime createDate;   //만든날짜
 
-
     private String role;  //유저권한
 
 
     private boolean active = true;
 
+    @Column
+    private String profileImage; // 네이버 프로필 이미지 저장
 
 
     @Column(name = "reset_token", nullable = true)

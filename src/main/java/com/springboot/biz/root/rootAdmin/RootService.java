@@ -108,16 +108,16 @@ public class RootService {
         this.rootRepository.deleteById(rootSeq);
     }
 
-    public void save(String title, List<RootListDTO> rootListDTO, HUser user) {
+    public void save(String title, boolean rootState, List<RootListDTO> rootListDTO, HUser user) {
         Root root = new Root();
         root.setRootTitle(title);
         root.setUserId(user);
-
 
         // System.out.println("service"+rootListDTO.get(1).getRoadaddress());
 
         List<RootList> rootList = new ArrayList<>();
 
+        root.setRootState(rootState);
         root.setRootList(rootList);
         root.setRootDate(LocalDateTime.now());
 
@@ -140,18 +140,19 @@ public class RootService {
                     .build();
 
             this.rootListRepository.save(list);
-//            index++;
+
         }
 
     }
 
     @Transactional
-    public void modify(Integer rootSeq, String title, List<RootListDTO> rootListDTO, HUser user) {
+    public void modify(Integer rootSeq, String title, boolean rootState, List<RootListDTO> rootListDTO, HUser user) {
         Root root = rootRepository.findById(rootSeq)
                 .orElseThrow(() -> new IllegalArgumentException("수정할 데이터가 없습니다."));
 
         root.setRootTitle(title);
         root.setRootModifyDate(LocalDateTime.now());
+        root.setRootState(rootState);
 
         // 기존 RootList 모두 삭제
         rootListRepository.deleteByRoot(root);

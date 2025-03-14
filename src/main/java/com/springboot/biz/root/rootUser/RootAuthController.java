@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -68,12 +69,14 @@ public class RootAuthController {
         return "/root/user/root_list_user";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/form/delete/{rootAuthSeq}")
     public String delete(@PathVariable("rootAuthSeq") Long rootAuthSeq){
         this.rootAuthService.delete(rootAuthSeq);
         return "redirect:/root/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/form")
     public String getRootForm(@RequestParam(value = "rootSeq", required = false) Integer rootSeq, Model model, RootAuthDTO rootAuthDTO) {
         List<Root> root = rootService.getList();
@@ -90,6 +93,7 @@ public class RootAuthController {
         return "root/user/root_form_user";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/form/save")
     public String formSave(Principal principal, @Valid @ModelAttribute RootAuthDTO rootAuthDTO, BindingResult bindingResult, Model model) throws IOException {
 
@@ -133,8 +137,9 @@ public class RootAuthController {
         return "redirect:/root/list";
     }
 
+
     @GetMapping("/detail/{rootAuthSeq}")
-    public String detail(@PathVariable("rootAuthSeq") Long rootAuthSeq, Model model, Principal principal) {
+    public String detail(@PathVariable("rootAuthSeq") Long rootAuthSeq, Model model) {
 
         // 인증 유저
         RootAuth rootAuth = this.rootAuthService.get(rootAuthSeq);
@@ -144,9 +149,9 @@ public class RootAuthController {
         Root root = rootAuth.getRoot();
         List<RootList> rootList = root.getRootList();
 
-        HUser user = this.hUserSerevice.getUser(principal.getName());
 
-        model.addAttribute("user",user);
+
+
         model.addAttribute("rootAuthList", rootAuthList);
         model.addAttribute("rootAuth", rootAuth);
         model.addAttribute("rootList", rootList);
@@ -155,6 +160,7 @@ public class RootAuthController {
     }
 
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/form/modify/{rootAuthSeq}")
     public String formModify(@PathVariable("rootAuthSeq") Long rootAuthSeq, Model model, RootAuthDTO rootAuthDTO, Principal principal) {
 
@@ -202,6 +208,7 @@ public class RootAuthController {
         return "/root/user/root_form_user";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/form/modify/{rootAuthSeq}")
     public String modify(@PathVariable("rootAuthSeq") Long rootAuthSeq, RootAuthDTO rootAuthDTO,
                          BindingResult bindingResult, Model model, Principal principal) throws IOException {

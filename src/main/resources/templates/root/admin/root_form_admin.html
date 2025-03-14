@@ -1,201 +1,214 @@
 <html layout:decorate="~{layout}">
-    <main layout:fragment="content">
-        <!--상단-->
-        <div style="background-color: #F4E9E3">
-            <div class="container py-2">
-
-                <!--수정해야할 부분-->
-                <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">소근소근 > 한식루트 인증</span>
-
-            </div>
-        </div>
-        <div class="container mt-5">
-            <div class="text-center">
-                <img th:src="@{/images/total/bab.png}" width="5%">
-            </div>
+<main layout:fragment="content">
+    <!--상단-->
+    <div style="background-color: #F4E9E3">
+        <div class="container py-2">
 
             <!--수정해야할 부분-->
-            <!--title-->
-            <h2 class="text-center py-2 mj">한식루트 인증 등록</h2>
-            <!--content-->
-            <section class="py-5">
+            <span class=""
+                  style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">소근소근 > 한식루트 인증</span>
 
-                <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
-                <div>
+        </div>
+    </div>
+    <div class="container mt-5">
+        <div class="text-center">
+            <img th:src="@{/images/total/bab.png}" width="5%">
+        </div>
 
-                    <!--제목, 주소검색-->
-                    <form th:action="@{/root/register/form/save}" th:object="${rootDTO}" id="register-form" method="post" class="needs-validation" novalidate>
-                        <div class="mb-2 row">
-                            <label for="title" class="col-sm-1 col-form-label">제목</label>
-                            <div class="col-sm-11">
-                                <input type="text" id="title" name="title" th:field="*{title}" class="form-control" required>
-                                <div class="invalid-feedback">
-                                    제목을 입력해주세요.
-                                </div>
+        <!--수정해야할 부분-->
+        <!--title-->
+        <h2 class="text-center py-2 mj">한식루트 인증 등록</h2>
+        <!--content-->
+        <section class="py-5">
+
+            <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+            <div>
+                <div class="d-flex justify-content-end mb-2">
+                    <label class="switch">
+                        <input type="checkbox" id="rootStateToggle" th:checked="${root.rootState} == true">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!--제목, 주소검색-->
+                <form th:action="@{/root/register/form/save}" th:object="${rootDTO}" id="register-form" method="post"
+                      class="needs-validation" novalidate>
+                    <div class="mb-2 row">
+                        <label for="title" class="col-sm-1 col-form-label">제목</label>
+                        <div class="col-sm-11">
+                            <input type="text" id="title" name="title" th:field="*{title}" class="form-control"
+                                   required>
+                            <div class="invalid-feedback">
+                                제목을 입력해주세요.
                             </div>
                         </div>
+                    </div>
 
-                        <div class="mb-3 row">
-                            <label for="query" class="col-sm-1 col-form-label">주소 검색</label>
-                            <div class="col-sm-10">
-                                <input type="text" id="query" name="query" th:value="${query}" class="form-control">
-                            </div>
-                            <div class="col-1 d-grid">
-                                <button type="button" id="search-submit" class="btn btn-outline-primary">검색</button>
-                            </div>
+                    <div class="mb-3 row">
+                        <label for="query" class="col-sm-1 col-form-label">주소 검색</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="query" name="query" th:value="${query}" class="form-control">
                         </div>
+                        <div class="col-1 d-grid">
+                            <button type="button" id="search-submit" class="btn btn-outline-primary">검색</button>
+                        </div>
+                    </div>
 
-                        <div class="d-flex justify-content-between h-100">
+                    <div class="d-flex justify-content-between h-100">
 
-                            <!--left-->
-                            <div class="d-flex flex-column justify-content-between" style="width: 60%;">
-                                <!--top-->
-                                <div id="map" style="width: 100%; min-height: 500px; flex-grow: 1;"></div>
-                                <!--bottom-->
-                                <div style="width: 100%;" class="pt-1 root-li">
-                                    <ul class="d-flex mb-0 flex-wrap px-4 py-1" id="rootSelectList">
-                                        <li></li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <!--right-->
-                            <div class="h-100" style="width: 35%;">
-                                <h6>검색 리스트</h6>
-                                <ul id="searchResultList" class="h-100 p-0 mb-0">
-                                    <li id="search-data-list" th:each="searchData : ${searchData}" >
-                                    <!--검색 리스트 공간-->
-                                    </li>
+                        <!--left-->
+                        <div class="d-flex flex-column justify-content-between" style="width: 60%;">
+                            <!--top-->
+                            <div id="map" style="width: 100%; min-height: 500px; flex-grow: 1;"></div>
+                            <!--bottom-->
+                            <div style="width: 100%;" class="pt-1 root-li">
+                                <ul class="d-flex mb-0 flex-wrap px-4 py-1" id="rootSelectList">
+                                    <li></li>
                                 </ul>
                             </div>
                         </div>
-                        <input type="hidden" id="form-mod" name="formMod" th:value="${rootSeq != null ? 'modify' : 'save'}">
-                        <input type="hidden" id="rootListData" name="rootList">
-                        <div class="d-flex justify-content-between mt-3">
-                            <input type="button" id="map-button" class="btn btn-outline-secondary" value="루트 확인">
-                            <input type="button" id="form-submit" name="form-submit" value="저장" class="btn btn-primary">
-                            <input type="hidden" id="rootSeq" name="rootSeq" th:value="${rootSeq}">
+
+                        <!--right-->
+                        <div class="h-100" style="width: 35%;">
+                            <h6>검색 리스트</h6>
+                            <ul id="searchResultList" class="h-100 p-0 mb-0">
+                                <li id="search-data-list" th:each="searchData : ${searchData}">
+                                    <!--검색 리스트 공간-->
+                                </li>
+                            </ul>
                         </div>
-                    </form>
+                    </div>
+                    <input type="hidden" id="form-mod" name="formMod" th:value="${rootSeq != null ? 'modify' : 'save'}">
+                    <input type="hidden" id="rootListData" name="rootList">
+                    <input type="hidden" id="rootState" name="rootState" th:value="${root.rootState}">
+                    <input type="hidden" id="rootSeq" name="rootSeq" th:value="${rootSeq}">
+                    <div class="d-flex justify-content-end mt-3">
+                        <input type="button" id="map-button" class="btn btn-outline-secondary" value="루트 확인">
+                        <a th:href="@{/root/register/list}" class="btn btn-outline-secondary root-a-outline-se mx-2">목록</a>
+                        <input type="button" id="form-submit" name="form-submit" value="저장" class="btn btn-outline-secondary root-a-outline-se">
+                    </div>
+                </form>
 
-                    <form id="searchForm" th:action="@{/root/register/form/search}" method="get">
-                        <input type="hidden" id="hiddenQuery" name="query">
-                    </form>
+                <form id="searchForm" th:action="@{/root/register/form/search}" method="get">
+                    <input type="hidden" id="hiddenQuery" name="query">
+                </form>
 
-                </div>
-            </section>
-        </div>
+            </div>
+        </section>
+    </div>
 
-        <script th:inline="javascript" layout:fragment="script">
-            let locations = /*[[${searchData}]]*/ [];
-            let map;
-            let marker;
-            let polyline;
-            let rootList = /*[[${rootList}]]*/ [];
+    <script th:inline="javascript" layout:fragment="script">
+        let locations = /*[[${searchData}]]*/ [];
+        let map;
+        let marker;
+        let polyline;
+        let rootList = /*[[${rootList}]]*/ [];
+        let rootState = /*[[${root.rootState}]]*/ [];
 
 
-            // 페이지 로드 시 동작
-            document.addEventListener("DOMContentLoaded", () => {
-                checkboxState();
+        // 페이지 로드 시 동작
+        document.addEventListener("DOMContentLoaded", () => {
+            checkboxState();
 
-                let isModify = rootList && rootList.length > 0;
+            let isModify = rootList && rootList.length > 0;
 
-                const savedLat = sessionStorage.getItem("mapCenterLat");
-                const savedLng = sessionStorage.getItem("mapCenterLng");
+            const savedLat = sessionStorage.getItem("mapCenterLat");
+            const savedLng = sessionStorage.getItem("mapCenterLng");
 
-                let center;
-                if (isModify) {
-                    console.log("지금 여긴가?")
+            let center;
+            if (isModify) {
+                console.log("지금 여긴가?")
 
-                    center = getCenter(rootList);
-                    console.log("흠" + center);
-                }else if (savedLat && savedLng) {
-                    center = new naver.maps.LatLng(parseFloat(savedLat), parseFloat(savedLng));
-                    console.log("저장된 중심으로 맵 초기화", center);
-                } else {
-                    console.log("여긴 어디?")
-                    center = new naver.maps.LatLng(37.5666805, 126.9784147); // 기본값
+                center = getCenter(rootList);
+                console.log("흠" + center);
+            } else if (savedLat && savedLng) {
+                center = new naver.maps.LatLng(parseFloat(savedLat), parseFloat(savedLng));
+                console.log("저장된 중심으로 맵 초기화", center);
+            } else {
+                console.log("여긴 어디?")
+                center = new naver.maps.LatLng(37.5666805, 126.9784147); // 기본값
+            }
+
+
+            // 맵 초기화
+            setMap(center);
+
+            if (isModify) {
+                console.log("수정")
+                updateDrawPolyline(rootList);
+
+                sessionStorage.setItem("checkRoot", JSON.stringify(rootList));
+                updateSelectList();
+            } else {
+                if (sessionStorage.getItem("savedCheckRoot")) {
+                    console.log("작성")
+                    sessionStorage.setItem("checkRoot", sessionStorage.getItem("savedCheckRoot"));
+                    sessionStorage.removeItem("savedCheckRoot");
+                    checkboxState();  // 체크박스 다시 적용
+                    updateSelectList();  // 리스트 다시 업데이트
+                    drawPolyline();  // 경로 다시 그리기
                 }
+            }
 
-                // 맵 초기화
-                setMap(center);
+            // 제목 유지
+            const savedTitle = sessionStorage.getItem("savedTitle");
+            if (savedTitle) {
+                document.getElementById("title").value = savedTitle;
+            }
+        });
 
-                if (isModify) {
-                    console.log("수정")
-                    updateDrawPolyline(rootList);
+        // 주소 검색 동작
+        document.getElementById("search-submit").addEventListener("click", function () {
+            // const query = document.getElementById("query").value;
+            //
+            // // 검색 시 결과가 없을 경우
+            // if(query.length === 0) {
+            //     alert("검색 결과가 없습니다. 정확한 키워드를 입력해주세요.")
+            // }
+            //
+            // const center = map.getCenter();
+            // sessionStorage.setItem("mapCenterLat", center.lat());
+            // sessionStorage.setItem("mapCenterLng", center.lng());
+            //
+            // sessionStorage.setItem("savedCheckRoot", sessionStorage.getItem("checkRoot"));
+            // document.getElementById("hiddenQuery").value = query;
+            // document.getElementById("searchForm").submit();
 
-                    sessionStorage.setItem("checkRoot", JSON.stringify(rootList));
-                    updateSelectList();
-                } else {
-                    if (sessionStorage.getItem("savedCheckRoot")) {
-                        console.log("작성")
-                        sessionStorage.setItem("checkRoot", sessionStorage.getItem("savedCheckRoot"));
-                        sessionStorage.removeItem("savedCheckRoot");
-                        checkboxState();  // 체크박스 다시 적용
-                        updateSelectList();  // 리스트 다시 업데이트
-                        drawPolyline();  // 경로 다시 그리기
-                    }
-                }
+            const query = document.getElementById("query").value;
 
-                // 제목 유지
-                const savedTitle = sessionStorage.getItem("savedTitle");
-                if (savedTitle) {
-                    document.getElementById("title").value = savedTitle;
-                }
-            });
+            if (query.trim().length === 0) {
+                alert("검색어를 입력하세요.");
+                return;
+            }
 
-            // 주소 검색 동작
-            document.getElementById("search-submit").addEventListener("click", function () {
-                // const query = document.getElementById("query").value;
-                //
-                // // 검색 시 결과가 없을 경우
-                // if(query.length === 0) {
-                //     alert("검색 결과가 없습니다. 정확한 키워드를 입력해주세요.")
-                // }
-                //
-                // const center = map.getCenter();
-                // sessionStorage.setItem("mapCenterLat", center.lat());
-                // sessionStorage.setItem("mapCenterLng", center.lng());
-                //
-                // sessionStorage.setItem("savedCheckRoot", sessionStorage.getItem("checkRoot"));
-                // document.getElementById("hiddenQuery").value = query;
-                // document.getElementById("searchForm").submit();
-
-                const query = document.getElementById("query").value;
-
-                if(query.trim().length === 0) {
-                    alert("검색어를 입력하세요.");
-                    return;
-                }
-
-                fetch(`/root/register/form/search?query=${encodeURIComponent(query)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("검색결과", data);
-                        updateSearchResult(data); // 받아온 데이터로 화면 갱신
-                    })
-                    .catch(error => {
-                        console.error("검색 실패:", error);
-                        alert("검색 중 오류가 발생했습니다.");
-                    });
+            fetch(`/root/register/form/search?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("검색결과", data);
+                    updateSearchResult(data); // 받아온 데이터로 화면 갱신
+                })
+                .catch(error => {
+                    console.error("검색 실패:", error);
+                    alert("검색 중 오류가 발생했습니다.");
+                });
 
 
-            });
+        });
 
-            function updateSearchResult(searchData) {
-                const listContainer = document.getElementById("searchResultList");
-                listContainer.innerHTML = ""; // 초기화
+        function updateSearchResult(searchData) {
+            const listContainer = document.getElementById("searchResultList");
+            listContainer.innerHTML = ""; // 초기화
 
-                if (searchData.length === 0) {
-                    listContainer.innerHTML = "<li>검색 결과가 없습니다.</li>";
-                    return;
-                }
+            if (searchData.length === 0) {
+                listContainer.innerHTML = "<li>검색 결과가 없습니다.</li>";
+                return;
+            }
 
-                searchData.forEach(data => {
-                    const li = document.createElement('li');
-                    li.classList.add('d-flex', 'flex-row', 'p-2', 'h-100', 'root-li');
+            searchData.forEach(data => {
+                const li = document.createElement('li');
+                li.classList.add('d-flex', 'flex-row', 'p-2', 'h-100', 'root-li');
 
-                    li.innerHTML = `
+                li.innerHTML = `
                             <div class="my-2 p-2" style="width: 90%;">
                                 <h6 style="font-weight: bold; cursor: pointer;" name="click-address"
                                     data-lat="${data.latitude}" data-lng="${data.longitude}">${data.title}</h6>
@@ -220,211 +233,212 @@
                             </div>
                     `;
 
-                    listContainer.appendChild(li);
-                });
+                listContainer.appendChild(li);
+            });
 
-                // 새로 그린 요소에 다시 이벤트 등록
-                CheckboxEvents();
-                clickAddressEvents();
-            }
+            // 새로 그린 요소에 다시 이벤트 등록
+            CheckboxEvents();
+            clickAddressEvents();
+        }
 
-            function CheckboxEvents() {
-                document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
-                    checkbox.addEventListener("change", function () {
-                        const obj = {
-                            title: checkbox.dataset.title,
-                            address: checkbox.dataset.address,
-                            roadaddress: checkbox.dataset.roadaddress,
-                            latitude: checkbox.dataset.latitude,
-                            longitude: checkbox.dataset.longitude,
-                            link: checkbox.dataset.link,
-                            category: checkbox.dataset.category,
-                        };
-                        let sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
-                        if (this.checked) {
-                            if (!sessionChkData.some(item => item.title === obj.title)) sessionChkData.push(obj);
+        function CheckboxEvents() {
+            document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
+                checkbox.addEventListener("change", function () {
+                    const obj = {
+                        title: checkbox.dataset.title,
+                        address: checkbox.dataset.address,
+                        roadaddress: checkbox.dataset.roadaddress,
+                        latitude: checkbox.dataset.latitude,
+                        longitude: checkbox.dataset.longitude,
+                        link: checkbox.dataset.link,
+                        category: checkbox.dataset.category,
+                    };
+                    let sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
+                    if (this.checked) {
+                        if (!sessionChkData.some(item => item.title === obj.title)) sessionChkData.push(obj);
 
-                            const lat = parseFloat(obj.latitude);
-                            const lng = parseFloat(obj.longitude);
-                            const position = new naver.maps.LatLng(lat, lng);
-                            map.setCenter(position);
-                            map.setZoom(17);
-
-                            if (marker) marker.setMap(null);
-                            marker = new naver.maps.Marker({
-                                position: position,
-                                map: map,
-                                icon: {
-                                    content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
-                                    anchor: new naver.maps.Point(10, 40)
-                                },
-                                animation: naver.maps.Animation.BOUNCE
-                            });
-
-                        } else {
-                            sessionChkData = sessionChkData.filter(item => item.title !== obj.title);
-                        }
-                        sessionStorage.setItem("checkRoot", JSON.stringify(sessionChkData));
-                        updateSelectList();
-                        drawPolyline();
-                    });
-                });
-            }
-
-            function clickAddressEvents() {
-                document.querySelectorAll('h6[name="click-address"]').forEach((data) => {
-                    data.addEventListener("click", function () {
-                        const lat = parseFloat(data.dataset.lat);
-                        const lng = parseFloat(data.dataset.lng);
+                        const lat = parseFloat(obj.latitude);
+                        const lng = parseFloat(obj.longitude);
                         const position = new naver.maps.LatLng(lat, lng);
                         map.setCenter(position);
                         map.setZoom(17);
+
                         if (marker) marker.setMap(null);
                         marker = new naver.maps.Marker({
                             position: position,
                             map: map,
-                            icon: { content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`, anchor: new naver.maps.Point(10, 40) },
+                            icon: {
+                                content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
+                                anchor: new naver.maps.Point(10, 40)
+                            },
                             animation: naver.maps.Animation.BOUNCE
                         });
+
+                    } else {
+                        sessionChkData = sessionChkData.filter(item => item.title !== obj.title);
+                    }
+                    sessionStorage.setItem("checkRoot", JSON.stringify(sessionChkData));
+                    updateSelectList();
+                    drawPolyline();
+                });
+            });
+        }
+
+        function clickAddressEvents() {
+            document.querySelectorAll('h6[name="click-address"]').forEach((data) => {
+                data.addEventListener("click", function () {
+                    const lat = parseFloat(data.dataset.lat);
+                    const lng = parseFloat(data.dataset.lng);
+                    const position = new naver.maps.LatLng(lat, lng);
+                    map.setCenter(position);
+                    map.setZoom(17);
+                    if (marker) marker.setMap(null);
+                    marker = new naver.maps.Marker({
+                        position: position,
+                        map: map,
+                        icon: {
+                            content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
+                            anchor: new naver.maps.Point(10, 40)
+                        },
+                        animation: naver.maps.Animation.BOUNCE
                     });
                 });
-            }
+            });
+        }
 
 
+        // 검색 시 타이틀 초기화 방지
+        document.getElementById("title").addEventListener("input", function () {
+            sessionStorage.setItem("savedTitle", this.value);
+        });
 
 
-            // 검색 시 타이틀 초기화 방지
-            document.getElementById("title").addEventListener("input", function () {
-                sessionStorage.setItem("savedTitle", this.value);
+        // 맵 초기 설정
+        function setMap(center) {
+
+            console.log("동작")
+            console.log("rootList", rootList)
+            console.log("비교: " + center)
+            map = new naver.maps.Map("map", {
+                center: center,
+                zoom: 16,
+                zoomControl: true,
+                mapTypeControl: true
             });
 
+            if (rootList && rootList.length > 0) {
+                const bounds = new naver.maps.LatLngBounds();
+                rootList.forEach(data => bounds.extend(new naver.maps.LatLng(data.latitude, data.longitude)));
+                map.fitBounds(bounds);
+            }
+        }
 
-            // 맵 초기 설정
-            function setMap(center) {
+        // title 체크 시 지도/마커
+        // document.querySelectorAll('h6[name="click-address"]').forEach((data) => {
+        //     data.addEventListener("click", function () {
+        //         const lat = parseFloat(data.dataset.lat);
+        //         const lng = parseFloat(data.dataset.lng);
+        //         const position = new naver.maps.LatLng(lat, lng);
+        //
+        //         map.setCenter(position);
+        //         map.setZoom(17);
+        //
+        //         if (marker) marker.setMap(null);
+        //
+        //         marker = new naver.maps.Marker({
+        //             position: position,
+        //             map: map,
+        //             icon: {
+        //                 content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
+        //                 anchor: new naver.maps.Point(10, 40)
+        //             },
+        //             animation: naver.maps.Animation.BOUNCE
+        //         });
+        //
+        //
+        //     });
+        // });
 
-                console.log("동작")
-                console.log("rootList", rootList)
-                console.log("비교: " + center)
-                map = new naver.maps.Map("map", {
-                    center: center,
-                    zoom: 16,
-                    zoomControl: true,
-                    mapTypeControl: true
-                });
+        // 체크박스 이벤트 처리
+        // document.querySelectorAll('input[name="checkbox"]').forEach((checkbox, index) => {
+        //     checkbox.addEventListener("change", function () {
+        //         const obj = {
+        //             title: checkbox.dataset.title,
+        //             address: checkbox.dataset.address,
+        //             roadaddress: checkbox.dataset.roadaddress,
+        //             latitude: checkbox.dataset.latitude,
+        //             longitude: checkbox.dataset.longitude,
+        //             link: checkbox.dataset.link,
+        //             category: checkbox.dataset.category,
+        //         }
+        //         // console.log(typeof obj);
+        //         let sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
+        //         // console.log(typeof sessionChkData);
+        //         if (this.checked) {
+        //             // some 하나라도
+        //             if (!sessionChkData.some(item => item.title === obj.title)) {
+        //                 sessionChkData.push(obj);
+        //
+        //             }
+        //
+        //             map.setCenter(new naver.maps.LatLng(obj.latitude, obj.longitude))
+        //
+        //         } else {
+        //             // 체크되지 않았으면 지우기
+        //             sessionChkData = sessionChkData.filter(item => item.title !== obj.title);
+        //             // removeSelectStorage(obj);
+        //         }
+        //
+        //         sessionStorage.setItem("checkRoot", JSON.stringify(sessionChkData));
+        //         updateSelectList();
+        //         drawPolyline();
+        //
+        //
+        //     });
+        // });
 
-                if(rootList && rootList.length > 0){
-                    const bounds = new naver.maps.LatLngBounds();
-                    rootList.forEach(data => bounds.extend(new naver.maps.LatLng(data.latitude, data.longitude)));
-                    map.fitBounds(bounds);
-                }
+        // 체크박스 상태
+        function checkboxState() {
+
+            let sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
+
+            document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
+                checkbox.checked = sessionChkData.some(item => item.title === checkbox.dataset.title);
+            });
+        }
+
+
+        // 리스트에 값 넣기
+        function updateSelectList() {
+            const rootSelectList = document.getElementById("rootSelectList");
+            rootSelectList.innerHTML = "";
+            const sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
+
+            if (sessionChkData.length === 0) {
+                rootSelectList.innerHTML = "<li> 위치를 추가하세요 </li>";
+                return;
             }
 
-            // title 체크 시 지도/마커
-            // document.querySelectorAll('h6[name="click-address"]').forEach((data) => {
-            //     data.addEventListener("click", function () {
-            //         const lat = parseFloat(data.dataset.lat);
-            //         const lng = parseFloat(data.dataset.lng);
-            //         const position = new naver.maps.LatLng(lat, lng);
-            //
-            //         map.setCenter(position);
-            //         map.setZoom(17);
-            //
-            //         if (marker) marker.setMap(null);
-            //
-            //         marker = new naver.maps.Marker({
-            //             position: position,
-            //             map: map,
-            //             icon: {
-            //                 content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
-            //                 anchor: new naver.maps.Point(10, 40)
-            //             },
-            //             animation: naver.maps.Animation.BOUNCE
-            //         });
-            //
-            //
-            //     });
-            // });
+            sessionChkData.forEach((item) => {
+                const li = document.createElement("li");
 
-            // 체크박스 이벤트 처리
-            // document.querySelectorAll('input[name="checkbox"]').forEach((checkbox, index) => {
-            //     checkbox.addEventListener("change", function () {
-            //         const obj = {
-            //             title: checkbox.dataset.title,
-            //             address: checkbox.dataset.address,
-            //             roadaddress: checkbox.dataset.roadaddress,
-            //             latitude: checkbox.dataset.latitude,
-            //             longitude: checkbox.dataset.longitude,
-            //             link: checkbox.dataset.link,
-            //             category: checkbox.dataset.category,
-            //         }
-            //         // console.log(typeof obj);
-            //         let sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
-            //         // console.log(typeof sessionChkData);
-            //         if (this.checked) {
-            //             // some 하나라도
-            //             if (!sessionChkData.some(item => item.title === obj.title)) {
-            //                 sessionChkData.push(obj);
-            //
-            //             }
-            //
-            //             map.setCenter(new naver.maps.LatLng(obj.latitude, obj.longitude))
-            //
-            //         } else {
-            //             // 체크되지 않았으면 지우기
-            //             sessionChkData = sessionChkData.filter(item => item.title !== obj.title);
-            //             // removeSelectStorage(obj);
-            //         }
-            //
-            //         sessionStorage.setItem("checkRoot", JSON.stringify(sessionChkData));
-            //         updateSelectList();
-            //         drawPolyline();
-            //
-            //
-            //     });
-            // });
+                const cleanTitle = item.title;
+                li.textContent = cleanTitle;
+                li.classList.add("root-list-style");
 
-            // 체크박스 상태
-            function checkboxState() {
+                // 삭제 버튼 추가
+                const removeBtn = document.createElement("button");
 
-                let sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
+                const icon = document.createElement("i");
+                icon.classList.add("bi", "bi-x");
 
-                document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
-                    checkbox.checked = sessionChkData.some(item => item.title === checkbox.dataset.title);
+                removeBtn.appendChild(icon);
+                removeBtn.classList.add("root-remove-btn-style");
+
+                removeBtn.addEventListener("click", (event) => {
+                    event.stopPropagation(); // 부모 요소(li)의 클릭 이벤트 방지
+                    removeSelectStorage(item);
                 });
-            }
-
-
-            // 리스트에 값 넣기
-            function updateSelectList() {
-                const rootSelectList = document.getElementById("rootSelectList");
-                rootSelectList.innerHTML = "";
-                const sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
-
-                if (sessionChkData.length === 0) {
-                    rootSelectList.innerHTML = "<li> 위치를 추가하세요 </li>";
-                    return;
-                }
-
-                sessionChkData.forEach((item) => {
-                    const li = document.createElement("li");
-
-                    const cleanTitle = item.title;
-                    li.textContent = cleanTitle;
-                    li.classList.add("root-list-style");
-
-                    // 삭제 버튼 추가
-                    const removeBtn = document.createElement("button");
-
-                    const icon = document.createElement("i");
-                    icon.classList.add("bi", "bi-x");
-
-                    removeBtn.appendChild(icon);
-                    removeBtn.classList.add("root-remove-btn-style");
-
-                    removeBtn.addEventListener("click", (event) => {
-                        event.stopPropagation(); // 부모 요소(li)의 클릭 이벤트 방지
-                        removeSelectStorage(item);
-                    });
 
                 li.appendChild(removeBtn);
 
@@ -441,40 +455,40 @@
         }
 
 
-            document.getElementById("rootSelectList").addEventListener("click", function (event) {
+        document.getElementById("rootSelectList").addEventListener("click", function (event) {
 
-                // contains : 지정한 문자열 포함하는 요소 선택 / closest : 선택한 요소 포함하면서 가장 가까운 상위 요소 선택
-                if (event.target.classList.contains("root-list-style") || event.target.closest(".root-list-style")) {
-                    const ele = event.target.closest(".root-list-style");
-                    const lat = parseFloat(ele.dataset.latitude);
-                    const lng = parseFloat(ele.dataset.longitude);
-                    const position = new naver.maps.LatLng(lat, lng);
+            // contains : 지정한 문자열 포함하는 요소 선택 / closest : 선택한 요소 포함하면서 가장 가까운 상위 요소 선택
+            if (event.target.classList.contains("root-list-style") || event.target.closest(".root-list-style")) {
+                const ele = event.target.closest(".root-list-style");
+                const lat = parseFloat(ele.dataset.latitude);
+                const lng = parseFloat(ele.dataset.longitude);
+                const position = new naver.maps.LatLng(lat, lng);
 
-                    // console.log(lat);
-                    // console.log(lng);
+                // console.log(lat);
+                // console.log(lng);
 
-                    map.setCenter(position);
-                    map.setZoom(17);
+                map.setCenter(position);
+                map.setZoom(17);
 
-                    if (marker) {
-                        marker.setMap(null);
-                    }
-                    
-                    // 체크 시 해당 좌표 마커
-                    marker = new naver.maps.Marker({
-                        position:position,
-                        map: map,
-                        icon: {
-                            content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
-                            anchor: new naver.maps.Point(10, 40)
-                        },
-                        animation: naver.maps.Animation.BOUNCE
-                    });
-
-
+                if (marker) {
+                    marker.setMap(null);
                 }
 
-            })
+                // 체크 시 해당 좌표 마커
+                marker = new naver.maps.Marker({
+                    position: position,
+                    map: map,
+                    icon: {
+                        content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
+                        anchor: new naver.maps.Point(10, 40)
+                    },
+                    animation: naver.maps.Animation.BOUNCE
+                });
+
+
+            }
+
+        })
 
 
         // 로컬스토리지에서 값 삭제하는 함수
@@ -483,8 +497,8 @@
             sessionChkData = sessionChkData.filter(item => item.title !== value.title);
             sessionStorage.setItem("checkRoot", JSON.stringify(sessionChkData));
 
-            document.querySelectorAll('input[name="checkbox"]').forEach((chk)=>{
-                if(chk.dataset.title === value.title) chk.checked = false;
+            document.querySelectorAll('input[name="checkbox"]').forEach((chk) => {
+                if (chk.dataset.title === value.title) chk.checked = false;
             })
             updateSelectList();
             drawPolyline();
@@ -496,7 +510,7 @@
 
             const path = sessionChkData.map(data => new naver.maps.LatLng(data.latitude, data.longitude))
 
-            if(polyline) polyline.setMap(null);
+            if (polyline) polyline.setMap(null);
 
             polyline = new naver.maps.Polyline({
                 map: map,
@@ -524,66 +538,64 @@
             });
         }
 
-            // 수정 -> 라인 그리기
-            function updateDrawPolyline(line) {
+        // 수정 -> 라인 그리기
+        function updateDrawPolyline(line) {
 
-                if (!line || line.length === 0) return;
+            if (!line || line.length === 0) return;
 
-                const path = line.map((data)=>{
-                    console.log(data.latitude);
-                    const lat = parseFloat(data.latitude);
-                    const lng = parseFloat(data.longitude);
-                    return new naver.maps.LatLng(lat, lng)
-                })
+            const path = line.map((data) => {
+                console.log(data.latitude);
+                const lat = parseFloat(data.latitude);
+                const lng = parseFloat(data.longitude);
+                return new naver.maps.LatLng(lat, lng)
+            })
 
-                if(polyline) polyline.setMap(null);
+            if (polyline) polyline.setMap(null);
 
-                polyline = new naver.maps.Polyline({
+            polyline = new naver.maps.Polyline({
+                map: map,
+                path: path,
+                strokeColor: '#FE2E2E',
+                strokeStyle: 'stroke',
+                strokeWeight: 2
+            });
+
+            addMarkers(line);
+        }
+
+        // 마커 추가
+        function addMarkers(line) {
+            if (window.markers) {
+                window.markers.forEach(marker => marker.setMap(null));
+            }
+            window.markers = [];
+
+            // 순서대로 마커 추가
+            line.forEach(data => {
+                const marker = new naver.maps.Marker({
+                    position: new naver.maps.LatLng(data.latitude, data.longitude),
                     map: map,
-                    path: path,
-                    strokeColor: '#FE2E2E',
-                    strokeStyle: 'stroke',
-                    strokeWeight: 2
+                    icon: {
+                        content: `<img width="30" height="30" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
+                        anchor: new naver.maps.Point(14, 20)
+                    }
                 });
-
-                addMarkers(line);
-            }
-
-            // 마커 추가
-            function addMarkers(line) {
-                if (window.markers) {
-                    window.markers.forEach(marker => marker.setMap(null));
-                }
-                window.markers = [];
-
-                // 순서대로 마커 추가
-                line.forEach(data => {
-                    const marker = new naver.maps.Marker({
-                        position: new naver.maps.LatLng(data.latitude, data.longitude),
-                        map: map,
-                        icon: {
-                            content: `<img width="30" height="30" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
-                            anchor: new naver.maps.Point(14, 20)
-                        }
-                    });
-                    window.markers.push(marker);
-                });
-            }
+                window.markers.push(marker);
+            });
+        }
 
         // 루트 중앙 이동
-        document.getElementById("map-button").addEventListener("click", function (){
+        document.getElementById("map-button").addEventListener("click", function () {
             console.log("click")
             const sessionChkData = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
 
-            const path = sessionChkData.map((data)=>{
+            const path = sessionChkData.map((data) => {
                 console.log(data)
                 return new naver.maps.LatLng(data.latitude, data.longitude)
             })
 
-            // list 의 중앙값
             const center = getCenter(sessionChkData);
 
-            // 중심 이동
             map.setCenter(center);
 
             // 경로에 맞게 줌 자동 조정
@@ -611,6 +623,26 @@
             return new naver.maps.LatLng(latSum / cnt, lngSum / cnt);
         }
 
+        // 루트 활성화
+        // document.getElementById("rootStateToggle").addEventListener("change", function () {
+        //
+        //     let rootState = false;
+        //
+        //     if (this.checked) {
+        //         rootState = true;
+        //     } else {
+        //         rootState = false;
+        //     }
+        //
+        //     document.getElementById("rootState").value = rootState;
+        // });
+
+        document.getElementById("rootStateToggle").addEventListener("change", function () {
+            const rootState = this.checked;
+            document.getElementById("rootState").value = rootState;
+            console.log("rootState: ", rootState);
+        });
+
         // 저장
         document.getElementById("form-submit").addEventListener("click", function () {
             console.log("click");
@@ -624,11 +656,11 @@
             const rootSeq = document.getElementById("rootSeq").value;
 
 
-            if(!saveForm.checkValidity()) {
+            if (!saveForm.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
 
-            }else {
+            } else {
                 sessionStorage.removeItem("checkRoot");
                 sessionStorage.removeItem("savedTitle")
                 sessionStorage.removeItem("mapCenterLat");
@@ -645,39 +677,11 @@
             }
             saveForm.classList.add('was-validated');
 
-
         });
 
-        // fetch 로 처리
-        // document.getElementById("form-submit").addEventListener("click", function () {
-        //     let title = document.getElementById("title").value;
-        //     let rootList = JSON.parse(sessionStorage.getItem("checkRoot")) || [];
-        //     console.log(rootList);
-        //
-        //     fetch("/root/register/form/save", {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             "Accept": "application/json"
-        //         },
-        //         body: JSON.stringify({
-        //             title: title,
-        //             rootList: rootList
-        //         })
-        //     })
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             console.log("성공fe", data);
-        //             sessionStorage.removeItem("checkRoot");
-        //             sessionStorage.removeItem("savedTitle")
-        //
-        //             window.location.href = "/root/register/save";
-        //         })
-        //         .catch(err => console.log("실패fe", err))
-        //
-        //
-        // })
 
     </script>
-    </main>
+</main>
+
 </html>
+<link rel="stylesheet" type="text/css" th:href="@{/mj-design-css.css}">
