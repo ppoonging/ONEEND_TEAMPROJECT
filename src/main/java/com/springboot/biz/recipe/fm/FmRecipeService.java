@@ -30,7 +30,7 @@ public class FmRecipeService {
                              MultipartFile file) throws IOException {
 
         /*ㄱ경로*/
-       String imgPath = System.getProperty("user.dir")+"/src/main/resources/static/files";
+       String imgPath = System.getProperty("user.dir")+"/src/main/resources/static/files/fmrecipe/";
 
         UUID uuid = UUID.randomUUID();
 
@@ -47,7 +47,7 @@ public class FmRecipeService {
         fR.setFmrecipeIngre(fmrecipeIngre);
         fR.setFmrecipeReady(fmrecipeReady);
         fR.setFmrecipeContent(fmrecipeContent);
-        fR.setFmrecipeFilePath("/files/" + fmrecipeFileName );
+        fR.setFmrecipeFilePath("/files/fmrecipe/" + fmrecipeFileName );
         fR.setFmrecipeFileName(fmrecipeFileName);
         fR.setFmrecipeRegDate(LocalDateTime.now());
 

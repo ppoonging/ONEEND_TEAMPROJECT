@@ -13,54 +13,6 @@
                 <div class="border" style="width: 65%; height: 600px;">지도</div>
                 <div class="border" style="width: 30%; height: 600px;">
                         <aside class="h-100">
-                            <div class="btn-group" role="group" aria-label="Location buttons">
-                                <a href="/weather?location=Seoul" class="btn btn-primary btn-sm">서울</a>
-                                <a href="/weather?location=Incheon" class="btn btn-primary btn-sm">인천</a>
-                            </div>
-
-
-                            <!-- From Uiverse.io 날씨어플-->
-                            <div class="weather-card-container" th:if="${weatherData}">
-                                <div class="weather-card">
-
-                                    <!-- 도시명 -->
-                                    <p class="weather-city" th:text="${weatherData.name}">도시명</p>
-
-                                    <!-- 날씨 설명 (맑음, 흐림 등) -->
-                                    <p class="weather-summary" th:text="${weatherData.weather[0].description}">날씨 설명</p>
-
-                                    <!-- 날씨 아이콘 -->
-                                    <svg
-                                            class="weather"
-                                            version="1.1"
-                                            id="Layer_1"
-                                            x="0px"
-                                            y="0px"
-                                            width="50px"
-                                            height="50px"
-                                            viewBox="0 0 100 100"
-                                            xml:space="preserve"
-                                    >
-         <!-- 날씨 아이콘 (자동으로 날씨에 맞는 이미지로 바뀜) -->
-<img th:src="${weatherIcon}" alt="날씨 아이콘" width="100px" height="100px">
-
-        </svg>
-
-
-                                    <!-- 현재 온도 -->
-                                    <p class="weather-temp" th:text="${weatherData.main.temp + ' °C'}">32°C</p>
-
-                                    <!-- 추가 상세 정보 (날짜, 습도 등) -->
-                                    <div style="margin-top: 15px; padding: 10px; width: 100%;">
-                                        <p style="font-size: 0.8rem; margin: 5px 0;">날짜 : <span
-                                                th:text="${today}">오늘 날짜</span></p>
-                                        <p style="font-size: 0.8rem; margin: 5px 0;">습도 : <span
-                                                th:text="${weatherData.main.humidity}">60</span> %</p>
-                                    </div>
-
-                                </div>
-                            </div>
-
 
 
                             <!-- 상세 날씨 정보 추가 -->
@@ -118,7 +70,61 @@
                 기타
             </div>
         </section>
+
+        <body>
+        <div class="btn-group" role="group" aria-label="Location buttons">
+            <a href="/weather?location=Seoul" class="btn btn-primary btn-sm">서울</a>
+            <a href="/weather?location=Incheon" class="btn btn-primary btn-sm">인천</a>
+        </div>
+
+        <!-- 오른쪽 상단 자연스러운 날씨 카드 -->
+        <div class="weather-card-container" id="weatherCard" th:if="${weatherData}">
+            <div class="weather-card">
+                <p class="weather-city" th:text="${weatherData.name}">도시명</p>
+                <!-- 아이콘 -->
+                <img th:src="${weatherIcon}" alt="날씨 아이콘" class="weather-icon">
+
+                <!-- 온도, 설명 -->
+                <div class="weather-info">
+                    <p class="weather-temp" th:text="${weatherData.main.temp + ' °C'}">32°C</p>
+                    <p class="weather-summary" th:text="${weatherData.weather[0].description}">맑음</p>
+                </div>
+
+                <!-- 날짜, 습도 -->
+                <div class="weather-details">
+                    <p>날짜 : <span th:text="${today}">2025-03-13</span></p>
+                    <p>습도 : <span th:text="${weatherData.main.humidity}">25</span> %</p>
+                </div>
+            </div>
+        </div>
+
+        </body>
     </main>
+    <!-- From Uiverse.io 날씨어플-->
+
+    <!-- ✅ 고정 날씨 카드: 꼭 <main> 바깥 -->
+
 </html>
 
 <link rel="stylesheet" type="text/css" th:href="@{/weather.css}">
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+const weatherCard = document.getElementById('weatherCard');
+let lastScrollY = window.scrollY;
+
+window.addEventListener('scroll', function() {
+// 현재 스크롤 위치
+const currentScrollY = window.scrollY;
+
+// 이동할 위치  처음~나중에 까지 120까지 먹힘
+const targetTop = currentScrollY + 120;
+
+// 부드럽게 이동 (CSS transition이 알아서 처리)
+weatherCard.style.top = targetTop + 'px';
+
+// 현재 위치 저장 (필요 시 사용)
+lastScrollY = currentScrollY;
+});
+});
+</script>
