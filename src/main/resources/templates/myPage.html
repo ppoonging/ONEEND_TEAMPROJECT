@@ -8,15 +8,7 @@
         <section class="py-3">
             <!-- **내용** -->
 
-            <html lang="ko">
-            <head>
-                <!-- Required meta tags -->
-                <meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-                <!-- Bootstrap CSS -->
-                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-                <title>마이페이지</title>
 
                 <style>
                     /* Circle image styling */
@@ -71,9 +63,7 @@
                         color: #007bff;
                     }
 
-                    .container {
-                        margin-top: 50px;
-                    }
+
 
                     /* Align text to the left for specific rows */
                     .left-align {
@@ -82,8 +72,8 @@
 
                     /* Layout adjustments */
                     .left-column {
-                        width: 30%;  /* Adjust the width of the left column */
-                        padding-right: 30px;
+                        width: 15%;  /* Adjust the width of the left column */
+                        padding-right: 10px;
                     }
 
                     .right-column {
@@ -93,6 +83,11 @@
                     /* Flex container to align left and right columns */
                     .flex-container {
                         display: flex;
+                        justify-content: center; /* 수평 중앙 정렬 */
+                        align-items: flex-start; /* 위에서부터 시작 (혹은 center로 수직 중앙 정렬 가능) */
+                        gap: 20px; /* 좌우 간격 */
+                        margin: 0 auto; /* 수평 중앙 */
+                        width: auto; /* 필요한 만큼만 공간 사용 */
                     }
 
                     /* Info edit button at the bottom-right corner */
@@ -113,8 +108,16 @@
                     .info-edit-btn:hover {
                         background-color: #e0d1c4;  /* Button hover color */
                     }
+                    .profile-card {
+                        padding: 25px;
+                        background-color: #f8f9fa;
+                        border-radius: 10px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        margin-top: 20px;
+                        width: 600px; /* 고정 너비 추가 */
+                    }
                 </style>
-            </head>
+
 
             <body>
             <div class="container">
@@ -126,8 +129,10 @@
                 <!-- Flex container to split content -->
                 <div class="flex-container">
                     <!-- Left column for phone and boyfriend -->
-                    <div class="left-column">
 
+
+
+                    <div class="left-column">
                             <table class="table">
                                 <tr class="table-white left-align">
                                     <td>
@@ -166,7 +171,8 @@
 
                     </div>
 
-                    <!-- Right column for profile image and other info -->
+
+
                     <div class="right-column">
 
                         <div class="profile-card">
@@ -200,6 +206,7 @@
                                 </tr>
                             </table>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -213,7 +220,7 @@
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
             </body>
-            </html>
+
 
 
         </section>

@@ -14,53 +14,53 @@
 
         <table class="table">
 
-            <div class="mb-4 d-flex justify-content-center align-items-center">
-            <label for="nickname" class="form-label"><strong>닉네임 :</strong></label>
-              <input type="text" id="nickname" name="nickname"
-                     th:value="*{nickname}"
-                     class="form-control"
-                     placeholder="닉네임 입력"
-                     style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
-            </div>
-
-
           <div class="mb-4 d-flex justify-content-center align-items-center">
-            <label for="email" class="form-label"><strong>이메일 :</strong></label>
-              <input type="text" id="email" name="email"
-                     th:value="*{email}"
-                     class="form-control"
-                     placeholder="이메일 입력"
-                     style="width: 500px;"> <!--  -->
+            <label for="nickname" class="form-label col-sm-1"><strong>&nbsp;&nbsp;&nbsp;닉네임</strong></label>
+            <input type="text" id="nickname" name="nickname"
+                   th:value="*{nickname}"
+                   class="form-control col-sm-5"
+                   placeholder="닉네임 입력"
+                   style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
           </div>
 
 
           <div class="mb-4 d-flex justify-content-center align-items-center">
-            <label for="phoneNumber" class="form-label"><strong>연락처 :</strong></label>
-              <input type="text" id="phoneNumber" name="phoneNumber"
-                     th:value="*{phoneNumber}"
-                     class="form-control"
-                     placeholder="연락처 입력"
-                     style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
+            <label for="email" class="form-label col-sm-1"><strong>&nbsp;&nbsp;&nbsp;이메일</strong></label>
+            <input type="text" id="email" name="email"
+                   th:value="*{email}"
+                   class="form-control col-sm-5"
+                   placeholder="이메일 입력"
+                   style="width: 500px;"> <!--  -->
           </div>
 
 
           <div class="mb-4 d-flex justify-content-center align-items-center">
-            <label for="address" class="form-label"><strong>주소 :</strong></label>
-              <input type="text" id="address" name="address"
-                     th:value="*{address}"
-                     class="form-control"
-                     placeholder="닉네임 입력"
-                     style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
+            <label for="phoneNumber" class="form-label col-sm-1"><strong>&nbsp;&nbsp;&nbsp;연락처</strong></label>
+            <input type="text" id="phoneNumber" name="phoneNumber"
+                   th:value="*{phoneNumber}"
+                   class="form-control col-sm-5"
+                   placeholder="연락처 입력"
+                   style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
           </div>
 
 
           <div class="mb-4 d-flex justify-content-center align-items-center">
-            <label for="addressDetail" class="form-label"><strong>상세주소 :</strong></label>
-              <input type="text" id="addressDetail" name="addressDetail"
-                     th:value="*{addressDetail}"
-                     class="form-control"
-                     placeholder="상세주소 입력"
-                     style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
+            <label for="address" class="form-label col-sm-1"><strong>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;주소</strong></label>
+            <input type="text" id="address" name="address"
+                   th:value="*{address}"
+                   class="form-control col-sm-5"
+                   placeholder="닉네임 입력"
+                   style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
+          </div>
+
+
+          <div class="mb-4 d-flex justify-content-center align-items-center">
+            <label for="addressDetail" class="form-label col-sm-1"><strong>상세주소 </strong></label>
+            <input type="text" id="addressDetail" name="addressDetail"
+                   th:value="*{addressDetail}"
+                   class="form-control col-sm-5"
+                   placeholder="상세주소 입력"
+                   style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
           </div>
 
         </table>
