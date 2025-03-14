@@ -30,7 +30,7 @@ public class FreeAnswerController {
 
 
 
-
+/*ㄹㄴㅇㄹㅇㄴㄹㄴㅁㄹㄴㅇㄻㄴㅇㄹㄴ*/
     @PostMapping("/create/{frboSeq}")
     public String createFreeAnswer(@PathVariable("frboSeq") Integer frboSeq,
                                    @Valid FreeAnswerForm freeAnswerForm,
