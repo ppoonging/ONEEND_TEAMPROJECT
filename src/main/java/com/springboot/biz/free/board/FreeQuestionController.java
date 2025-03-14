@@ -108,6 +108,7 @@ public class FreeQuestionController {
 
         FreeQuestion freeQuestion = this.freeQuestionService.getFreeQuestion(frboSeq);
         model.addAttribute("freeQuestion",freeQuestion);
+
         return "free/freeQuestion_detail";
 
     }
