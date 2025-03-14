@@ -58,6 +58,8 @@ public class MjboardService {
         mj.setMjRegDate(LocalDateTime.now());
         mj.setUserId(hUser);
         mj.setMjCnt(0);
+
+        // map
         mj.setMjMapTitle(mjMapTitle);
         mj.setMjMapAddress(mjMapAddress);
         mj.setMjMapRodeAddress(mjMapRodeAddress);
@@ -88,9 +90,20 @@ public class MjboardService {
     }
 
     // 수정
-    public void modify(Mjboard mjboard, String mjTitle, String mjContent) {
+    public void modify(Mjboard mjboard, String mjTitle, String mjContent, String mjMapTitle, String mjMapAddress, String mjMapRodeAddress, Double mjMapLatitude,
+                       Double mjMapLongitude, String mjMapLink, String mjMapCategory) {
+
         mjboard.setMjTitle(mjTitle);
         mjboard.setMjContent(mjContent);
+
+        //map
+        mjboard.setMjMapTitle(mjMapTitle);
+        mjboard.setMjMapAddress(mjMapAddress);
+        mjboard.setMjMapRodeAddress(mjMapRodeAddress);
+        mjboard.setMjMapLatitude(mjMapLatitude);
+        mjboard.setMjMapLongitude(mjMapLongitude);
+        mjboard.setMjMapLink(mjMapLink);
+        mjboard.setMjMapCategory(mjMapCategory);
         mjboardRepository.save(mjboard);
     }
 
@@ -109,5 +122,11 @@ public class MjboardService {
             recommendUsers.add(user);
         }
         mjboardRepository.save(mjboard);
+    }
+
+    // 데이터만 가져오기
+
+    public List<Mjboard> getList() {
+        return this.mjboardRepository.findAll();
     }
 }

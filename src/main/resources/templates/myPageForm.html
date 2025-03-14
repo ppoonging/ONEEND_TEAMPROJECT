@@ -15,50 +15,52 @@
         <table class="table">
 
             <div class="mb-4 d-flex justify-content-center align-items-center">
-            <label for="nickname" class="form-label"><strong>닉네임 :</strong></label>
+            <label for="nickname" class="form-label col-sm-1"><strong>닉네임 &nbsp;&nbsp;&nbsp;:</strong></label>
               <input type="text" id="nickname" name="nickname"
                      th:value="*{nickname}"
-                     class="form-control"
+                     class="form-control col-sm-5"
                      placeholder="닉네임 입력"
                      style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
             </div>
 
 
           <div class="mb-4 d-flex justify-content-center align-items-center">
-            <label for="email" class="form-label"><strong>이메일 :</strong></label>
+            <label for="email" class="form-label col-sm-1"><strong>이메일 &nbsp;&nbsp;&nbsp;:</strong></label>
               <input type="text" id="email" name="email"
                      th:value="*{email}"
-                     class="form-control"
+                     class="form-control col-sm-5"
                      placeholder="이메일 입력"
                      style="width: 500px;"> <!--  -->
           </div>
 
 
           <div class="mb-4 d-flex justify-content-center align-items-center">
-            <label for="phoneNumber" class="form-label"><strong>연락처 :</strong></label>
+            <label for="phoneNumber" class="form-label col-sm-1"><strong>연&nbsp;&nbsp;락&nbsp;&nbsp;처&nbsp;:</strong></label>
               <input type="text" id="phoneNumber" name="phoneNumber"
                      th:value="*{phoneNumber}"
-                     class="form-control"
+                     class="form-control col-sm-5"
                      placeholder="연락처 입력"
                      style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
           </div>
 
 
           <div class="mb-4 d-flex justify-content-center align-items-center">
-            <label for="address" class="form-label"><strong>주소 :</strong></label>
+            <label for="address" class="form-label col-sm-0" ><strong>주 소</strong></label>
+            <span class="me-2">:</span>
               <input type="text" id="address" name="address"
                      th:value="*{address}"
-                     class="form-control"
+                     class="form-control col-sm-5"
                      placeholder="닉네임 입력"
                      style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
           </div>
 
 
           <div class="mb-4 d-flex justify-content-center align-items-center">
-            <label for="addressDetail" class="form-label"><strong>상세주소 :</strong></label>
+            <label for="addressDetail" class="form-label col-sm-1"><strong>상세주소</strong></label>
+            <span class="me-2">:</span>
               <input type="text" id="addressDetail" name="addressDetail"
                      th:value="*{addressDetail}"
-                     class="form-control"
+                     class="form-control col-sm-5"
                      placeholder="상세주소 입력"
                      style="width: 500px;"> <!-- ✅ 고정 길이로 깔끔하게 -->
           </div>

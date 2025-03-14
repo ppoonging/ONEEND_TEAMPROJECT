@@ -166,6 +166,13 @@ public class MjboardController {
         Mjboard board = mjboardService.getMjboard(mjSeq);
         form.setMjTitle(board.getMjTitle());
         form.setMjContent(board.getMjContent());
+        form.setMjMapTitle(board.getMjMapTitle());
+        form.setMjMapAddress(board.getMjMapAddress());
+        form.setMjMapRodeAddress(board.getMjMapRodeAddress());
+        form.setMjMapLatitude(board.getMjMapLatitude());
+        form.setMjMapLongitude(board.getMjMapLongitude());
+        form.setMjMapLink(board.getMjMapLink());
+        form.setMjMapCategory(board.getMjMapCategory());
         model.addAttribute("mjboard", board);
         return "mj/mjboardModify_form";
     }
@@ -176,7 +183,8 @@ public class MjboardController {
     public String modify(@Valid MjboardForm form, BindingResult bindingResult, @PathVariable Integer mjSeq) {
         if (bindingResult.hasErrors()) return "mj/mjboardModify_form";
         Mjboard board = mjboardService.getMjboard(mjSeq);
-        mjboardService.modify(board, form.getMjTitle(), form.getMjContent());
+        mjboardService.modify(board, form.getMjTitle(), form.getMjContent(), form.getMjMapTitle(), form.getMjMapAddress(), form.getMjMapRodeAddress(),
+                form.getMjMapLatitude(), form.getMjMapLongitude(), form.getMjMapLink(), form.getMjMapCategory());
         return "redirect:/mjboard/list";
     }
 

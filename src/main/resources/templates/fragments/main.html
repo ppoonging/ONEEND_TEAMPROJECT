@@ -10,7 +10,10 @@
         <!--지도/랭킹/날씨-->
         <section id="section2" class="container pt-5">
             <div class="d-flex justify-content-between">
-                <div class="border" style="width: 65%; height: 600px;">지도</div>
+                <!--지도-->
+                <div class="border" style="width: 65%; height: 600px;">
+                    <div id="map" style="width: 100%; min-height: 600px;"></div>
+                </div>
                 <div class="border" style="width: 30%; height: 600px;">
                         <aside class="h-100">
                             <div class="btn-group" role="group" aria-label="Location buttons">
@@ -122,3 +125,71 @@
 </html>
 
 <link rel="stylesheet" type="text/css" th:href="@{/weather.css}">
+
+
+<script th:inline="javascript">
+    let map;
+    let markerList = [];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const weatherCard = document.getElementById('weatherCard');
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', function() {
+            // 현재 스크롤 위치
+            const currentScrollY = window.scrollY;
+
+            // 이동할 위치  처음~나중에 까지 120까지 먹힘
+            const targetTop = currentScrollY + 120;
+
+            // 부드럽게 이동 (CSS transition이 알아서 처리)
+            weatherCard.style.top = targetTop + 'px';
+
+            // 현재 위치 저장 (필요 시 사용)
+            lastScrollY = currentScrollY;
+        });
+
+        setMap(new naver.maps.LatLng(37.5665, 126.9780)); // 기본 지도 위치
+
+    });
+
+    function setMap(center) {
+        map = new naver.maps.Map("map", {
+            center: center,
+            zoom: 13,
+            zoomControl: true,
+            mapTypeControl: true
+        });
+
+        // 지도에 마커 여러개 찍기
+        /* [[${mjboard}]] JSON 변환 방식 */
+        let mjboard = /*[[${mjboard}]]*/ [];
+
+        mjboard.forEach(board => {
+            let markerPosition = new naver.maps.LatLng(board.mjMapLatitude, board.mjMapLongitude);
+
+            let marker = new naver.maps.Marker({
+                position: markerPosition,
+                map: map
+            });
+
+            let contentString = `
+                <div style="border:1px solid #ccc; padding:10px; border-radius:10px;">
+                    <h5>${board.mjMapTitle || '제목 없음'}</h5>
+                    <p>${board.mjMapAddress || '주소 없음'}</p>
+                    <a href="${board.mjMapLink || '#'}" target="_blank">자세히 보기</a>
+                </div>
+            `;
+
+            let infowindow = new naver.maps.InfoWindow({
+                content: contentString
+            });
+
+            naver.maps.Event.addListener(marker, "click", function () {
+                infowindow.open(map, marker);
+            });
+
+            markerList.push(marker); // 필요 시 마커 리스트 저장
+        });
+    }
+</script>

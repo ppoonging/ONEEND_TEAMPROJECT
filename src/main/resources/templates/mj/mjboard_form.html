@@ -1,21 +1,28 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout}">
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 <main layout:fragment="content">
     <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
         <h2 class="text-center text-white py-2 font-bold-style">맛집 소개</h2>
     </div>
     <div class="container">
-        <section class="py-5">
+        <section class="py-5 mb-5">
             <!-- 블로그형 카드 스타일 -->
             <div class="card shadow-sm p-4" style="border-radius: 16px; background-color: #fff;">
 
                 <h2 class="mb-4" style="font-weight: bold; font-size: 28px; text-align: center;">맛집 소개 등록</h2>
-                <div class="d-flex justify-content-end mb-2">
+
+                <!-- Map 위치 등록 버튼 -->
+                <div class="d-flex justify-content-end align-items-center mb-2">
+                    <div id="locationSelect" class="d-none">
+                        <img width="24" height="24" src="https://img.icons8.com/skeuomorphism/32/map-marker.png" alt="map-marker" class="me-1"/>
+                        <span class="me-3" style="color: #ec8d53; font-size: 13px; transform: translateY(4px)">위치 선택 완료!</span>
+                        <span class="me-3" id="locationSelectText"></span>
+                    </div>
                     <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">위치 등록</button>
                 </div>
 
                 <!--CSRF 토큰 -->
-                <meta name="_csrf" th:cont ent="${_csrf.token}"/>
+                <meta name="_csrf" th:content="${_csrf.token}"/>
                 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
                 <!--폼 시작 -->
@@ -80,7 +87,6 @@
                     <input type="hidden" name="mjMapLongitude" id="mjMapLongitude" th:field="*{mjMapLongitude}">
                     <input type="hidden" name="mjMapLink" id="mjMapLink" th:field="*{mjMapLink}">
                     <input type="hidden" name="mjMapCategory" id="mjMapCategory" th:field="*{mjMapCategory}">
-
 
                 </form>
 
@@ -169,6 +175,7 @@
     <script th:inline="javascript" layout:fragment="script">
 
         let map;
+        let marker;
 
         // 모달
         document.addEventListener("DOMContentLoaded", () => {
@@ -199,11 +206,6 @@
                 mapTypeControl: true
             });
 
-            // if (rootList && rootList.length > 0) {
-            //     const bounds = new naver.maps.LatLngBounds();
-            //     rootList.forEach(data => bounds.extend(new naver.maps.LatLng(data.latitude, data.longitude)));
-            //     map.fitBounds(bounds);
-            // }
         }
 
 
@@ -290,7 +292,7 @@
                 const link = selected.dataset.link;
                 const category = selected.dataset.category;
 
-                console.log("선택된 장소:", title, address, latitude, longitude); // 확인용
+                console.log("장소:", title, address, latitude, longitude);
 
                 // hidden input에 값 저장
                 document.getElementById('mjMapTitle').value = title;
@@ -300,7 +302,31 @@
                 document.getElementById('mjMapLongitude').value = longitude;
                 document.getElementById('mjMapLink').value = link;
                 document.getElementById('mjMapCategory').value = category;
+
+                console.log("선택완료?")
+                const check = document.getElementById("locationSelect");
+                check.classList.remove('d-none');
+                check.classList.add('d-flex');
+                const checkText = document.getElementById("locationSelectText");
+                checkText.textContent = title;
+
+                const position = new naver.maps.LatLng(latitude, longitude);
+                map.setCenter(position);
+                map.setZoom(18);
+
+                if (marker) marker.setMap(null);
+                    marker = new naver.maps.Marker({
+                        position: position,
+                        map: map,
+                        icon: {
+                            content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
+                            anchor: new naver.maps.Point(10, 40)
+                        },
+                        animation: naver.maps.Animation.BOUNCE
+                    });
+
             }
+
         });
 
 
