@@ -1,0 +1,110 @@
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+
+    <!-- 상단 -->
+    <div style="background-color: #F4E9E3">
+        <div class="container py-2">
+            <span style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">
+                한끝 커뮤니티 > 유저 레시피
+            </span>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+
+        <!-- 상단 이미지 -->
+        <div class="text-center">
+            <img th:src="@{/images/total/bab.png}" width="5%">
+        </div>
+
+        <!-- 타이틀 -->
+        <h2 class="text-center py-4">유저 레시피</h2>
+
+        <!--카테고리 경로-->
+        <div class="category5-menu my-4 text-center">
+            <a th:href="@{/userrecipe/list(category='')}" class="category5-btn">전체</a>
+            <a th:href="@{/userrecipe/list(category='구이')}" class="category5-btn">구이</a>
+            <a th:href="@{/userrecipe/list(category='밥')}" class="category5-btn">밥</a>
+            <a th:href="@{/userrecipe/list(category='국')}" class="category5-btn">국</a>
+            <a th:href="@{/userrecipe/list(category='김치')}" class="category5-btn">김치</a>
+        </div>
+
+
+
+
+        <!-- 카드 리스트 -->
+        <div id="recipe-list" class="d-flex flex-wrap gap-3 justify-content-center mt-4">
+            <div th:each="user : ${paging}"
+                 class="card custom-card"
+                 style="width: 16rem; height: 20rem; overflow: hidden; cursor: pointer;"
+                 th:attr="data-modal-id='modal' + ${user.userRecipeSeq}">
+                <img th:if="${user.userRecipeFilePath != null}" th:src="@{'/files/userRecipe/' + ${user.userRecipeFileName}}"
+                     class="card-img-top"
+                     style="width: 100%; height: 60%; object-fit: cover;"
+                     alt="이미지">
+                <div class="card-body d-flex align-items-center justify-content-center">
+                    <h5 class="card-title text-center" th:text="${user.userRecipeTitle}"></h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- 로그인 유저만 작성 가능 -->
+        <div class="d-flex justify-content-end my-4">
+            <a class="btn btn-primary btn-lg ml-auto" sec:authorize="isAuthenticated()" th:href="@{/userrecipe/create}">등록</a>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination d-flex justify-content-center align-items-center">
+                <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${paging.number - 1}|}">〈</a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(0, paging.totalPages - 1)}"
+                    class="page-item"
+                    th:classappend="${paging.number == i} ? 'active'">
+                    <a class="page-link" th:href="@{|?page=${i}|}" th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${paging.number + 1}|}">〉</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 모달 (리스트 돌면서 생성) -->
+        <div th:each="user : ${paging}" th:id="'modal' + ${user.userRecipeSeq}" class="custom-modal hidden">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" th:text="${user.userRecipeTitle}"></h5>
+                        <span class="custom-close-btn" data-modal-close>&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <img th:if="${user.userRecipeFilePath != null}" th:src="@{'/files/userRecipe/' + ${user.userRecipeFileName}}"
+                             class="img-fluid mb-3 modal-img"  alt="이미지">
+                        <p><strong>작성자:</strong> <span th:text="${user.userId.nickname}"></span></p>
+                        <p><strong>조회수:</strong> <span th:text="${user.userRecipeCnt}"></span></p>
+                        <p><strong>재료 및 분량:</strong> <span th:text="${user.userrecipeIngre}"></span></p>
+                        <p><strong>준비하기:</strong> <span th:text="${user.userrecipeReady}"></span></p>
+                        <p><strong>레시피 내용:</strong> <span th:text="${user.userRecipeContent}"></span></p>
+                        <p><strong>등록일:</strong> <span th:text="${#temporals.format(user.userRecipeRegDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-between">
+                        <!-- ❤️ 추천 버튼 -->
+                        <form th:action="@{/userrecipe/recommend/{id}(id=${user.userRecipeSeq})}" method="post">
+                            <button type="submit" class="btn btn-outline-danger">
+                                ❤️ 추천 (<span th:text="${user.recipeRecommend}">0</span>)
+                            </button>
+                        </form>
+                        <button type="button" class="btn custom-btn123 custom-close-btn" data-modal-close>닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 스타일 + 모달 JS -->
+        <link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
+        <script th:src="@{/fmRecipeModal.js}"></script>
+
+    </div>
+</main>
+</html>

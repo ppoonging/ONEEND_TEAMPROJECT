@@ -1,6 +1,5 @@
-package com.springboot.biz.recipe.user.board;
+package com.springboot.biz.recipe.user;
 
-import com.springboot.biz.recipe.user.answer.UserRecipeAnswer;
 import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -41,8 +40,13 @@ public class UserRecipe {
 
     private String userRecipeFileName;  //파일,이미지 이름
 
-    @OneToMany(mappedBy = "userRecipe", cascade = CascadeType.REMOVE)
-    private List<UserRecipeAnswer> recipeAnswersList;
+    @Column(columnDefinition = "TEXT")
+    private String userrecipeIngre;  //재료 분량
+
+    @Column(columnDefinition = "TEXT")
+    private String userrecipeReady;  //준비하기
+
+
 
 
 
