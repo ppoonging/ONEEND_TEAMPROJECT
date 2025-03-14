@@ -55,3 +55,35 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    const favoriteButtons = document.querySelectorAll(".favorite-btn");
+
+    favoriteButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const recipeId = this.dataset.recipeId;
+            fetch("/api/favorite/toggle", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    [csrfHeader]: csrfToken
+                },
+                body: "recipeId=" + recipeId
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error); // 로그인 필요 안내
+                    } else {
+                        this.textContent = data.isFavorite ? "★ 찜 해제" : "☆ 찜하기";
+                    }
+                })
+                .catch(error => console.error("찜하기 실패:", error));
+        });
+    });
+});
