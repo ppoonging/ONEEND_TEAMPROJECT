@@ -134,6 +134,46 @@
 }
 
 
+/* map */
+.root-li {
+    background: rgb(246, 246, 246);
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
+.custom-infowindow {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background: white;
+    max-width: 300px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+/* 말풍선 꼬리 */
+.custom-infowindow::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+    display: block;
+    width: 0;
+}
+
+#locationSelectText {
+    font-size: 13px;
+    transform: translateY(3px);
+    padding: 5px 8px;
+    border: 1px solid #fff;
+    background-color: #ec8d53;
+    border-radius: 20px;
+    color: #fff;
+}
+
+
 
 
 

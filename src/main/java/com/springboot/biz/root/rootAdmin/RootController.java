@@ -3,6 +3,7 @@ package com.springboot.biz.root.rootAdmin;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springboot.biz.map.MapService;
 import com.springboot.biz.root.rootUser.RootAuth;
 import com.springboot.biz.root.rootUser.RootAuthDTO;
 import com.springboot.biz.root.rootUser.RootAuthListDTO;
@@ -31,7 +32,7 @@ public class RootController {
 
     private final RootService rootService;
     private final HUserSerevice hUserSerevice;
-
+    private final MapService mapService;
 
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -67,22 +68,11 @@ public class RootController {
         return "/root/admin/root_detail_admin";
     }
 
-//    @GetMapping("/form/search")
-//    public String search(@RequestParam(value = "query", defaultValue = "") String query, Model model, RootDTO rootDTO){
-//        if(!query.isEmpty()) {
-//            List<Map<String, String>> searchData = rootService.search(query);
-//            System.out.println(searchData);
-//            model.addAttribute("searchData", searchData);
-//            model.addAttribute("query", query);
-//        }
-//        return "/root/admin/root_form_admin";
-//    }
-
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/form/search")
     @ResponseBody
     public List<Map<String, String>> search(@RequestParam String query) {
-        return rootService.search(query); // JSON 형태로 반환
+        return mapService.search(query); // JSON 형태로 반환
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

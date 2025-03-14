@@ -59,6 +59,21 @@ public class Mjboard {
     private Set<HUser> recommendUsers = new HashSet<>();
 //맛집소개 추천
 
+    // map 관련
+    private String mjMapTitle;  //목적지명
+
+    private String mjMapAddress;  //주소
+
+    private String mjMapRodeAddress; //도로명
+
+    private Double mjMapLatitude;  //위도
+
+    private Double mjMapLongitude;  //경도
+
+    private String mjMapLink; // 장소 정보 url
+
+    private String mjMapCategory; // 장소 분류
+
 
 
 
