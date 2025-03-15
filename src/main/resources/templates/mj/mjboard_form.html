@@ -14,8 +14,8 @@
                 <!-- Map 위치 등록 버튼 -->
                 <div class="d-flex justify-content-end align-items-center mb-2">
                     <div id="locationSelect" class="d-none">
-                        <img width="24" height="24" src="https://img.icons8.com/skeuomorphism/32/map-marker.png" alt="map-marker" class="me-1"/>
-                        <span class="me-3" style="color: #ec8d53; font-size: 13px; transform: translateY(4px)">위치 선택 완료!</span>
+                        <img width="24" height="24" src="https://img.icons8.com/skeuomorphism/32/map-marker.png" alt="map-marker" class="me-1" style="transform: translateY(8px)"/>
+                        <span class="me-3" style="color: #ec8d53; font-size: 13px; transform: translateY(10px)">위치 선택 완료!</span>
                         <span class="me-3" id="locationSelectText"></span>
                     </div>
                     <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">위치 등록</button>
@@ -95,7 +95,7 @@
                 </form>
 
 
-                <button type="submit" form="mjForm" class="btn-naver-fixed">등록하기</button>
+                <button type="submit" form="mjForm" id="submit" class="btn-naver-fixed">등록하기</button>
             </div>
 
             <!--CSS 파일 연결 -->
@@ -191,6 +191,15 @@
                 }
             })
 
+            document.querySelector('form').addEventListener('submit', function (e) {
+                const lat = document.getElementById('mjMapLatitude').value;
+                const lng = document.getElementById('mjMapLongitude').value;
+
+                if (!lat || !lng) {
+                    alert("위치를 등록해주세요!");
+                    e.preventDefault();
+                }
+            });
 
         });
 

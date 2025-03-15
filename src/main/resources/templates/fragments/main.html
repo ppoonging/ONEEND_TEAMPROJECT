@@ -114,7 +114,13 @@
 
 <script th:inline="javascript">
     let map;
+    let mjboard = /*[[${mjboard}]]*/ [];
     let markerList = [];
+
+    let imageUrlMap = /*[[${imageUrlMap}]]*/ {};
+
+    console.log("있니?" + mjboard);
+
 
     document.addEventListener('DOMContentLoaded', function() {
         const weatherCard = document.getElementById('weatherCard');
@@ -134,48 +140,102 @@
             lastScrollY = currentScrollY;
         });
 
-        setMap(new naver.maps.LatLng(37.5665, 126.9780)); // 기본 지도 위치
+        setMap(new naver.maps.LatLng(36.751351, 128.0316113)); // 기본 지도 위치
+
+        let addressList = mjboard.map(data => data.mjMapAddress);
+        let uniqueRegions = extractUniqueRegions(addressList);
+        console.log("추출된 지역 리스트: ", uniqueRegions);
 
     });
 
+    // map
     function setMap(center) {
         map = new naver.maps.Map("map", {
             center: center,
-            zoom: 13,
+            zoom: 7,
             zoomControl: true,
             mapTypeControl: true
         });
 
-        // 지도에 마커 여러개 찍기
-        /* [[${mjboard}]] JSON 변환 방식 */
-        let mjboard = /*[[${mjboard}]]*/ [];
+        if(mjboard){
+            mjboard.forEach(data => {
+                let location = new naver.maps.LatLng(data.mjMapLatitude, data.mjMapLongitude);
+                let imgSrc = imageUrlMap[data.mjSeq] ? imageUrlMap[data.mjSeq] : '/images/total/default.png';
 
-        mjboard.forEach(board => {
-            let markerPosition = new naver.maps.LatLng(board.mjMapLatitude, board.mjMapLongitude);
+                const marker = new naver.maps.Marker({
+                    position: location,
+                    map: map,
+                    icon: {
+                        content: `<img width="40" height="40" src="https://img.icons8.com/stickers/100/marker.png" alt="marker"/>`,
+                        anchor: new naver.maps.Point(20, 20)
+                    }
+                });
 
-            let marker = new naver.maps.Marker({
-                position: markerPosition,
-                map: map
+                const contentString = `
+                        <div class="iw_inner" style="
+                            border-radius: 10px;
+                            border: 1px solid #ccc;
+                            background: white;
+                            max-width: 900px;
+                            padding: 15px;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+
+                        ">
+                        <div class="d-flex">
+                            <img src="${imgSrc}"
+                                     class="card-img-top me-3"
+                                     style="width: 80px; height: 80px; object-fit:cover;"
+                                 alt="썸네일">
+                            <div>
+                                <h5 style="font-size: 13px;" class="font-bold-style">${data.mjMapTitle}</h5>
+                                <h6 style="font-size: 11px; color: #555">${data.mjMapAddress}</h6>
+                                <p class="mb-1" style="font-size: 11px;">${data.mjMapRodeAddress}</p>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <a href="/mjboard/detail/${data.mjSeq}"
+                                style="font-size: 13px;
+                                transform: translateY(3px);
+                                padding: 5px 8px;
+                                border: 1px solid #fff;
+                                background-color: #ec8d53;
+                                border-radius: 20px;
+                                color: #fff;">자세히 보기</a>
+                        </div>
+
+                    </div>`;
+
+                const infowindow = new naver.maps.InfoWindow({
+                    content: contentString,
+                    maxWidth: 550,
+                    backgroundColor: "none",
+                    borderColor: "none",
+                });
+
+                naver.maps.Event.addListener(marker, "click", function () {
+                    map.setCenter(location);
+                    map.setZoom(11);
+                    infowindow.open(map, marker);
+                });
+
+                markerList.push(marker);
             });
 
-            let contentString = `
-                <div style="border:1px solid #ccc; padding:10px; border-radius:10px;">
-                    <h5>${board.mjMapTitle || '제목 없음'}</h5>
-                    <p>${board.mjMapAddress || '주소 없음'}</p>
-                    <a href="${board.mjMapLink || '#'}" target="_blank">자세히 보기</a>
-                </div>
-            `;
+            console.log("마커 총 갯수:", markerList.length);
 
-            let infowindow = new naver.maps.InfoWindow({
-                content: contentString
-            });
 
-            naver.maps.Event.addListener(marker, "click", function () {
-                infowindow.open(map, marker);
-            });
+        }
 
-            markerList.push(marker); // 필요 시 마커 리스트 저장
+    }
+
+    function extractUniqueRegions(addressList) {
+        const regionSet = new Set();
+        addressList.forEach(address => {
+            // 주소에서 시/도만 추출 (예: '서울시 강남구' -> '서울')
+            let region = address.substring(0, 2); // ex: 서울, 부산, 경기
+            regionSet.add(region);
         });
+        return Array.from(regionSet); // 배열로 반환
     }
 
 </script>

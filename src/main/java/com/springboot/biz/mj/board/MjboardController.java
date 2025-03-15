@@ -46,6 +46,8 @@ public class MjboardController {
         Map<String, Object> result = mjboardService.getList(pageable, kw);
         Page<Mjboard> paging = (Page<Mjboard>) result.get("paging");
 
+        String defaultImageUrl = "/images/total/default.png";
+
         // 각 게시글에서 이미지 URL 추출 후, mjSeq를 키로 하는 Map에 저장
         Map<Integer, String> imageUrlMap = new HashMap<>();
         for (Mjboard board : paging) {
@@ -61,6 +63,10 @@ public class MjboardController {
                     }
                 }
             }
+            if (imageUrl == null || imageUrl.trim().isEmpty()) {
+                imageUrl = defaultImageUrl;
+            }
+
             imageUrlMap.put(board.getMjSeq(), imageUrl);
         }
 
