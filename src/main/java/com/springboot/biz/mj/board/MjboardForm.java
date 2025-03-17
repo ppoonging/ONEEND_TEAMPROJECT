@@ -21,16 +21,16 @@ public class MjboardForm {
     private MultipartFile file;
 
     // map 관련
+    @NotEmpty(message = "위치를 등록해주세요")
     private String mjMapTitle;  //목적지명
 
     private String mjMapAddress;  //주소
 
     private String mjMapRodeAddress; //도로명
 
-    @NotEmpty(message = "위치를 등록해주세요")
+
     private Double mjMapLatitude;  //위도
 
-    @NotEmpty(message = "위치를 등록해주세요")
     private Double mjMapLongitude;  //경도
 
     private String mjMapLink; // 장소 정보 url

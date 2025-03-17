@@ -129,4 +129,9 @@ public class MjboardService {
     public List<Mjboard> getList() {
         return this.mjboardRepository.findAll();
     }
+
+    // top 9 가져오기
+    public List<Mjboard> getTop9ByView() {
+        return mjboardRepository.findTop9ByOrderByMjCntDesc();
+    }
 }
