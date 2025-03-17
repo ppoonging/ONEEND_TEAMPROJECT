@@ -1,7 +1,6 @@
 package com.springboot.biz.root.rootUser;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.springboot.biz.root.rootAdmin.Root;
 import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.*;

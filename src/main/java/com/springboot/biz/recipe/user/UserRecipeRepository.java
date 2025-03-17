@@ -20,4 +20,5 @@ public interface UserRecipeRepository extends JpaRepository<UserRecipe, Integer>
     Page<UserRecipe> findByKeywordAndCategory(@Param("kw") String kw,
                                               @Param("category") String category,
                                               Pageable pageable);
+
 }

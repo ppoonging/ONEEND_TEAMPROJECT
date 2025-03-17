@@ -1,36 +1,23 @@
 <html layout:decorate="~{layout}">
     <main layout:fragment="content" style="background-color: white;">
         <!--상단-->
-        <section id="section1" class="text-center " style="height: 400px; background-color: #c0bcbc" >
-            <h1 class="py-5">한식이란?</h1>
-            <span>우리나라 고유의 음식이나 식사</span><br><br>
-            <span>한식 열풍 #불고기 #김치 #떡볶이</span>
+        <section id="section1" class="text-center " style="height: 450px; background-color: #c0bcbc" >
+            <img width="100%" height="100%" class="opacity-50" th:src="@{/images/main/main-image-1.jpg}">
         </section>
 
         <!--지도/랭킹/날씨-->
         <section id="section2" class="container pt-5">
 
             <ul class="nav nav-tabs" id="regionTab">
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link active" aria-current="page" href="#">Active</a>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" href="#">Link</a>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" href="#">Link</a>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>-->
-<!--                </li>-->
+
             </ul>
 
             <div class="d-flex justify-content-between">
                 <!--지도-->
-                <div style="width: 65%; height: 600px;">
-                    <div id="map" style="width: 100%; min-height: 600px;"></div>
+                <div style="width: 65%; height: 700px;">
+                    <div id="map" style="width: 100%; min-height: 690px;"></div>
                 </div>
-                <div style="width: 30%; height: 600px;">
+                <div style="width: 30%; height: 700px;">
                         <aside class="h-100">
 
 
@@ -63,11 +50,14 @@
                                             <p style="font-size: 1rem; margin: 5px 0;">날씨 : <span th:text="${weatherData.weather[0].description}"></span></p>
                                         </div>
 -->
-                            <div class="calign-middle p-4" style="height: 45%; border: 1px solid #eee; border-radius: 15%; background-color: #f5f5f5">
-                                <h6 class="border-bottom mb-4 pb-2 text">소요시간 확인하기</h6>
-                                <form id="directionsForm">
-                                    <div class="mb-1">
-                                        <div class="row mb-2 d-flex justify-content-center">
+                            <div class="calign-middle" style="height: 40%; border-bottom: 1px solid #eee">
+                                <div class="d-flex justify-content-start">
+                                    <h5 class="bold mb-3 ps-2 brutal-subscribe__title me-2" style="font-weight: bold">맛집에서 맛집으로</h5>
+                                    <img width="40" height="40" src="https://img.icons8.com/external-flat-wichaiwi/64/external-food-soft-power-flat-wichaiwi.png" alt="external-food-soft-power-flat-wichaiwi"/>
+                                </div>
+                                <form id="directionsForm" class="p-2">
+                                    <div class="mb-1" style="height: 100px;">
+                                        <div class="row mb-3 d-flex justify-content-center">
                                             <label class="col-sm-2 text-center me-1" style="font-size: 14px; padding: 0.3em 0.5em; border: 1px solid #fff; background-color: #C8AB8F; border-radius: 20px; color: #fff;">출발</label>
                                             <input type="hidden" id="start">
                                             <input class="col-sm-8 border-0" type="text" id="startValue" PLACEHOLDER="지도에서 출발지 선택" readonly>
@@ -80,7 +70,7 @@
                                     </div>
                                     <p class="text-end" style="font-size: 11px; color: #555">(자동차 기준)</p>
                                     <div class="d-flex justify-content-end">
-                                        <button type="submit" id="search-submit" class="cssbuttons-io-button">
+                                        <button type="submit" id="search-submit" class="cssbuttons-io-button mb-2">
                                             최적 거리 보기
                                             <div class="icon">
                                                 <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -89,19 +79,58 @@
                                                 </svg>
                                             </div>
                                         </button>
-<!--                                        <button type="submit" id="search-submit" class="btn btn-sm">길찾기</button>-->
                                     </div>
+                                    <div id="info" class="fs-6 text-center text-danger mb-3"></div> <!-- 거리, 소요시간 표시 -->
                                 </form>
-                                <div id="info" class="mb-1 mt-2 fs-6 text-center text-danger"></div> <!-- 거리, 소요시간 표시 -->
                             </div>
 
-                            <div class="align-bottom" style="height: 33.3%">
-                                <div>
-                                    <h6>맛집 인기순</h6>
+                            <div class="align-bottom mt-3" style="height: 60%">
+                                <div class="p-2">
+                                    <div class="d-flex justify-content-start">
+                                        <h5 class="bold mb-3 ps-2 brutal-subscribe__title me-2" style="font-weight: bold">레시피 추천</h5>
+                                        <img width="40" height="40" src="https://img.icons8.com/pulsar-color/48/cookbook.png" alt="cookbook"/>
+
+                                    </div>
+                                    <div class="container-recipe">
+                                        <div class="mb-2 card-recipe">
+                                            <div class="w-100 d-flex justify-content-center align-items-center">
+                                                <span class="d-inline-block" style="width: 10%">1</span>
+                                                <span class="d-inline-block" style="width: 30%">국</span>
+                                                <span class="d-inline-block" style="width: 50%">김치찌개</span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2 card-recipe">
+                                            <div class="w-100 d-flex justify-content-center align-items-center">
+                                                <span class="d-inline-block" style="width: 10%">2</span>
+                                                <span class="d-inline-block" style="width: 30%">국</span>
+                                                <span class="d-inline-block" style="width: 50%">김치찌개</span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2 card-recipe">
+                                            <div class="w-100 d-flex justify-content-center align-items-center">
+                                                <span class="d-inline-block" style="width: 10%">3</span>
+                                                <span class="d-inline-block" style="width: 30%">국</span>
+                                                <span class="d-inline-block" style="width: 50%">김치찌개</span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2 card-recipe">
+                                            <div class="w-100 d-flex justify-content-center align-items-center">
+                                                <span class="d-inline-block" style="width: 10%">4</span>
+                                                <span class="d-inline-block" style="width: 30%">국</span>
+                                                <span class="d-inline-block" style="width: 50%">김치찌개</span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2 card-recipe">
+                                            <div class="w-100 d-flex justify-content-center align-items-center">
+                                                <span class="d-inline-block" style="width: 10%">5</span>
+                                                <span class="d-inline-block" style="width: 30%">국</span>
+                                                <span class="d-inline-block" style="width: 50%">김치찌개</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </aside>
-
                 </div>
             </div>
         </section>
@@ -109,7 +138,7 @@
         <!--게시판-->
         <section id="section3" class="container pt-5 mt-5">
             <h3>#인기 맛집</h3>
-            <div class="row" style="height: 500px">
+            <div class="row" style="height: 450px">
                 <!-- Swiper -->
                 <div class="swiper mySwiper">
                     <div class="swiper-wrapper">
@@ -118,9 +147,9 @@
                                 <a th:href="@{'/mjboard/detail/' + ${board.mjSeq}}" style="text-decoration: none;">
                                     <img th:src="${imageUrlMap[board.mjSeq]} ? ${imageUrlMap[board.mjSeq]} : '/images/total/default.png'"
                                          alt="썸네일"
-                                         style="width: 300px; height: 300px; object-fit: cover; border-radius: 10px;">
+                                         style="width: 90%; height: 80%; object-fit: cover; border-radius: 10px;">
                                     <h5 th:text="${board.mjTitle}" style="margin-top: 10px; color: black;"></h5>
-                                    <p th:text="${board.mjMapTitle}"></p>
+                                    <p th:text="${board.mjMapTitle}" style="font-size: 14px; color: gray;"></p>
                                     <p th:text="'조회수: ' + ${board.mjCnt}" style="font-size: 12px; color: gray;"></p>
                                 </a>
                             </div>
@@ -133,10 +162,49 @@
         </section>
 
         <!--기타-->
-        <section id="section4" class="container py-5">
-            <div class="row border" style="height: 500px">
-                기타
+        <section id="section4" class="container py-5 mt-5">
+            <div class="row d-flex justify-content-between" style="height: 100%">
+                <!-- 게시판 -->
+                <div style="width: 35%">
+                    <div class="d-flex justify-content-between" style="border-bottom: 2px solid black" >
+                        <h4 class="mb-0">자유 게시판</h4>
+                        <a th:href="@{/freequestion/}" style="text-decoration: none; color: #c8aa95"><i class="bi bi-plus fs-3"></i></a>
+                    </div>
+                    <ul class="ps-0">
+                        <li th:each="freeboard : ${freeQuestionBoard}" class="py-2" style="border-bottom: 1px solid #e1e1e1">
+                            <a th:href="@{|/freequestion/detail/${freeboard.frboSeq}|}" class="d-flex justify-content-between" style="text-decoration: none; color: #333; font-size: 15px">
+                                <span th:text="${freeboard.frboSeq}" style="width: 10%;" class="ps-2"></span>
+                                <span th:text="${freeboard.frboTitle}" class="line-text" style="width: 55%;"></span>
+                                <span th:text="${#temporals.format(freeboard.frboRegDate, 'yyyy-MM-dd')}" class="text-end pe-2" style="width: 35%;"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- 게시판 -->
+                <div style="width: 35%">
+                    <div class="d-flex justify-content-between" style="border-bottom: 2px solid black" >
+                        <h4 class="mb-0">진행중인 루트 이벤트</h4>
+                        <a th:href="@{/root/list}" style="text-decoration: none; color: #c8aa95"><i class="bi bi-plus fs-3"></i></a>
+                    </div>
+                    <ul class="ps-0">
+                        <li th:each="rootList : ${rootList}" class="py-2" style="border-bottom: 1px solid #e1e1e1">
+                            <a th:href="@{|/root/register/detail/${rootList.rootSeq}|}" class="d-flex justify-content-between" style="text-decoration: none; color: #333; font-size: 15px">
+                                <span th:text="${rootList.rootSeq}" style="width: 10%;" class="ps-2"></span>
+                                <span th:text="${rootList.rootTitle}" class="line-text" style="width: 55%;"></span>
+<!--                                <span th:text="${#temporals.format(rootList.frboRegDate, 'yyyy-MM-dd')}" class="text-end pe-2" style="width: 35%;"></span>-->
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div style="width: 30%; border: 1px solid #eee; border-radius: 10px; background-color: #baa491;">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <span style="font-weight: 500; font-size: 36px;">
+                            Q&A
+                        </span>
+                    </div>
+                </div>
             </div>
+
         </section>
 
         <div class="btn-group" role="group" aria-label="Location buttons">
@@ -189,7 +257,7 @@
     console.log("있니?" + mjboard);
 
     let swiper = new Swiper('.swiper', {
-        slidesPerView: 3,
+        slidesPerView: 4,
         direction: getDirection(),
         spaceBetween: 20,
         navigation: {

@@ -1,12 +1,10 @@
 package com.springboot.biz.root.rootUser;
 
-import com.springboot.biz.user.HUser;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 
 @Getter
 @Setter

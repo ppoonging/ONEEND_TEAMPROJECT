@@ -1,6 +1,5 @@
 package com.springboot.biz.root.rootUser;
 
-import com.springboot.biz.root.rootAdmin.RootList;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
