@@ -22,7 +22,7 @@ public class UserController {
 
 
    //유저 레시피 리스트 페이지
-
+    //수정을 위함
     @GetMapping("/list")
     public String list(Model model,
                        @RequestParam(value = "kw", defaultValue = "") String kw,
