@@ -56,6 +56,10 @@ dependencies {
     //오아스2
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
+    //웹 소캣 적용
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.webjars:sockjs-client:1.5.1'
+    implementation 'org.webjars:stomp-websocket:2.3.3'
 
 }
 
