@@ -24,8 +24,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "mkdir -p /home/ubuntu/app"
 
       - name: Build Spring Boot App
-        run: |
-          ./gradlew build
+        run: ./gradlew build  # 또는 ./gradlew build -x test (테스트 제외시)
 
       - name: Copy JAR to EC2
         run: |
@@ -37,3 +36,4 @@ jobs:
             pkill -f 'java -jar' || true
             nohup java -jar /home/ubuntu/app/*.jar --server.port=8080 > /home/ubuntu/app/app.log 2>&1 &
           EOF
+
