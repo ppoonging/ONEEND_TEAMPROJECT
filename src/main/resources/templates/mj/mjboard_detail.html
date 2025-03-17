@@ -25,8 +25,8 @@
 
             <!-- 추천 버튼 (로그인 사용자만 Form 방식으로 보여짐) -->
             <div class="mt-3">
-                <div th:if="${#authentication.authenticated}">
-                    <form th:action="@{/mjboard/mjRecommend/{mjSeq}(mjSeq=${mjboard.mjSeq})}" method="post" style="display: inline;">
+                <div>
+                    <form sec:authorize="isAuthenticated()" th:action="@{|/mjboard/mjRecommend/${mjboard.mjSeq}|}" method="post" style="display: inline;">
                         <button type="submit" class="btn btn-outline-danger btn-sm mt-3">
                             ❤️ 추천 <span class="badge bg-secondary ms-1" th:text="${#lists.size(mjboard.recommendUsers)}"></span>
                         </button>
@@ -68,7 +68,7 @@
                 </form>
             </div>
 
-            <!-- 댓글 작성 -->
+<!--             댓글 작성 -->
             <form th:action="@{|/mjanswer/create/${mjboard.mjSeq}|}" method="post" th:object="${mjanswerForm}" class="mt-4">
                 <textarea class="form-control" th:field="*{mjAnsContent}" rows="2" placeholder="댓글을 작성해주세요" style="font-size: 14px;"></textarea>
                 <button type="submit" class="btn btn-outline-primary mt-2">댓글 등록</button>

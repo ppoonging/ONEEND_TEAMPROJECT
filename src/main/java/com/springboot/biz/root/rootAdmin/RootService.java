@@ -1,24 +1,11 @@
 package com.springboot.biz.root.rootAdmin;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.biz.DataNotFoundException;
-import com.springboot.biz.root.rootUser.RootAuth;
-import com.springboot.biz.root.rootUser.RootAuthList;
 import com.springboot.biz.user.HUser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -127,6 +114,9 @@ public class RootService {
        throw new DataNotFoundException("루트 데이터가 없습니다.");
     }
 
-
+    // 최신 5개의 게시글 가져오기
+    public List<Root> getFiveRoot() {
+        return rootRepository.findByRootStateTrueOrderByRootDateAsc();
+    }
 
 }

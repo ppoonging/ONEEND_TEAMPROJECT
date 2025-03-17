@@ -9,6 +9,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+
+            registry.addResourceHandler("/**")
+                    .addResourceLocations("classpath:/static/");
+
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("file:///home/ubuntu/deploy/files/"); // uploads로 바꿀 수도
 

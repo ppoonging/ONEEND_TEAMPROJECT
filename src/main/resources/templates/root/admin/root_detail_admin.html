@@ -49,11 +49,8 @@
             </div>
             <div class="d-flex justify-content-end mt-3">
                 <input type="button" id="map-button" class="btn btn-outline-secondary me-2" value="루트 확인">
-
-
-                <button sec:authorize="hasRole('ADMIN')" type="button" class="btn btn-outline-secondary">
-                    <a th:href="@{/root/register/list}"  class="root-a-outline-se">목록</a>
-                </button>
+                <a sec:authorize="isAuthenticated()" th:href="@{/root/form}"  class="btn btn-outline-secondary root-a-outline-se me-2">인증하기</a>
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{/root/register/list}"  class="btn btn-outline-secondary root-a-outline-se">목록</a>
             </div>
         </section>
     </div>
