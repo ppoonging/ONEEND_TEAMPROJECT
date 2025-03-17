@@ -10,26 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
+      - name: Create app folder on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "mkdir -p /home/ubuntu/app"
 
-   - name: Deploy JAR to EC2
-  run: |
-    ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "mkdir -p /home/ubuntu/app"
-    ./gradlew build
-    scp -o StrictHostKeyChecking=no build/libs/*.jar ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/app/
+      - name: Build Spring Boot App
+        run: |
+          ./gradlew build
 
- - name: Run JAR on EC2
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-          pkill -f 'java -jar' || true  # 기존 실행 중인 거 종료 (에러 무시)
-          nohup java -jar ~/app/*.jar --server.port=8080 > ~/app/app.log 2>&1 &
-        EOF
+      - name: Copy JAR to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no build/libs/*.jar ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/app/
 
+      - name: Run JAR on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            pkill -f 'java -jar' || true
+            nohup java -jar /home/ubuntu/app/*.jar --server.port=8080 > /home/ubuntu/app/app.log 2>&1 &
+          EOF
