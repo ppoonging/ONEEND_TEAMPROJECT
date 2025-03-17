@@ -11,80 +11,80 @@
             <div class="shadow-sm p-4" style="border-radius: 16px; background-color: #FFFFFF;">
                 <h3 th:text="${mjboard.mjTitle}" style="font-weight: bold; font-size: 24px;"></h3>
                 <div class="mt-3" style="white-space: pre-line;" th:utext="${mjboard.mjContent}"></div>
-                <div class="d-flex justify-content-center" style="margin-top: 60px; padding: 60px 0px; border-top: 1px solid #eee;">
-                    <!--map-->
-                    <div class="w-50" th:if="${mjboard.mjMapLatitude != null}">
+
+                <!-- 지도 -->
+                <div class="d-flex justify-content-center" style="margin-top: 60px; padding: 60px 0px; border-top: 1px solid #eee;" th:if="${mjboard.mjMapLatitude != null}">
+                    <div class="w-50">
                         <div id="map" style="width: 100%; min-height: 350px;"></div>
                     </div>
                 </div>
+
+                <!-- 등록일, 조회수 -->
                 <div class="d-flex justify-content-between mt-3 text-muted" style="font-size: 13px;">
                     <span th:text="${#temporals.format(mjboard.mjRegDate, 'yyyy-MM-dd HH:mm')}"></span>
                     <span>조회수 : <span th:text="${mjboard.mjCnt}"></span></span>
                 </div>
             </div>
 
-            <!-- 추천 버튼 (로그인 사용자만 Form 방식으로 보여짐) -->
-            <div class="mt-3">
-                <div th:if="${#authentication.authenticated}">
-                    <form th:action="@{/mjboard/mjRecommend/{mjSeq}(mjSeq=${mjboard.mjSeq})}" method="post" style="display: inline;">
-                        <button type="submit" class="btn btn-outline-danger btn-sm mt-3">
-                            ❤️ 추천 <span class="badge bg-secondary ms-1" th:text="${#lists.size(mjboard.recommendUsers)}"></span>
-                        </button>
-                    </form>
-                </div>
+            <!-- 추천 (주석처리) -->
+            <div >
+                <form  sec:authorize="isAuthenticated()" th:action="@{|/mjboard/mjRecommend/${mjboard.mjSeq}|}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-outline-danger btn-sm mt-3">
+                        ❤️ 추천 <span class="badge bg-secondary ms-1" th:text="${mjboard.recommendUsers != null ? #lists.size(mjboard.recommendUsers) : 0}"></span>
+                    </button>
+                </form>
             </div>
 
-            <!-- 수정/삭제 버튼 (로그인 + 본인만) -->
+            <!-- 수정/삭제 -->
             <th:block th:if="${#authorization.expression('isAuthenticated()') and #authentication.name == mjboard.userId.username}">
                 <a th:href="@{|/mjboard/modify/${mjboard.mjSeq}|}" class="btn btn-outline-secondary btn-sm rounded-pill">수정</a>
                 <a href="javascript:void(0);" th:data-uri="@{|/mjboard/delete/${mjboard.mjSeq}|}" class="delete btn btn-outline-danger btn-sm rounded-pill">삭제</a>
             </th:block>
 
-
-            <!-- 댓글 수 -->
+            <!-- 댓글 리스트 -->
             <h6 class="mt-4 border-bottom pb-2" th:text="|${#lists.size(mjboard.mjAanswerList)}개의 댓글이 있습니다.|" style="font-weight: bold;"></h6>
 
-            <!-- 댓글 반복 -->
-            <div th:each="mjanswer : ${mjboard.mjAanswerList}" th:if="${mjanswer.mjAnsComment == null}" class="my-2">
-                <div style="font-size: 14px; font-weight: bold;">
-                    <span th:text="${mjanswer.userId != null ? mjanswer.userId.nickname : '알 수 없음'}"></span>:
-                    <span th:text="${mjanswer.mjAnsContent}"></span>
-                </div>
-                <div style="font-size: 12px; color: gray;" th:text="${#temporals.format(mjanswer.mjAnsRegDate, 'yyyy-MM-dd HH:mm')}"></div>
-
-                <!-- 대댓글 반복 -->
-                <div th:each="child : ${mjanswer.childAnswers}" class="ms-4 border-start ps-3 mt-2" style="border-left: 2px solid #ddd;">
-                    <div style="font-size: 13px;">
-                        <b th:text="${child.userId != null ? child.userId.nickname : '알 수 없음'}"></b>
-                        <span th:text="${child.mjAnsContent}"></span>
+            <th:block th:if="${mjboard.mjAanswerList != null}">
+                <div th:each="mjanswer : ${mjboard.mjAanswerList}" th:if="${mjanswer.mjAnsComment == null}" class="my-3">
+                    <div style="font-size: 14px; font-weight: bold;">
+                        <span th:text="${mjanswer.userId != null ? mjanswer.userId.nickname : '알 수 없음'}"></span>:
+                        <span th:text="${mjanswer.mjAnsContent}"></span>
                     </div>
-                    <div style="font-size: 11px; color: gray;" th:text="${#temporals.format(child.mjAnsRegDate, 'yyyy-MM-dd HH:mm')}"></div>
+                    <div style="font-size: 12px; color: gray;" th:text="${#temporals.format(mjanswer.mjAnsRegDate, 'yyyy-MM-dd HH:mm')}"></div>
+
+                    <!-- 대댓글 반복 -->
+                    <div th:each="child : ${mjanswer.childAnswers}" class="ms-4 border-start ps-3 mt-2" style="border-left: 2px solid #ddd;">
+                        <div style="font-size: 13px;">
+                            <b th:text="${child.userId != null ? child.userId.nickname : '알 수 없음'}"></b>
+                            <span th:text="${child.mjAnsContent}"></span>
+                        </div>
+                        <div style="font-size: 11px; color: gray;" th:text="${#temporals.format(child.mjAnsRegDate, 'yyyy-MM-dd HH:mm')}"></div>
+                    </div>
+
+                    <!-- 대댓글 작성-->
+                    <form th:action="@{|/mjanswer/reply/${mjanswer.mjAnsSeq}|}" method="post" th:object="${mjreplyForm}" class="mt-2 ms-4">
+                        <textarea class="form-control form-control-sm" th:field="*{mjAnsContent}" rows="1" placeholder="대댓글 작성..." style="font-size: 13px;"></textarea>
+                        <button type="submit" class="btn btn-sm btn-outline-primary mt-1">등록</button>
+                    </form>
                 </div>
+            </th:block>
 
-                <!-- 대댓글 작성 -->
-                <form th:action="@{|/mjanswer/reply/${mjanswer.mjAnsSeq}|}" method="post" th:object="${mjreplyForm}" class="mt-2 ms-4">
-                    <textarea class="form-control form-control-sm" th:field="*{mjAnsContent}" rows="1" placeholder="대댓글 작성..." style="font-size: 13px;"></textarea>
-                    <button type="submit" class="btn btn-sm btn-outline-primary mt-1">등록</button>
-                </form>
-            </div>
-
-            <!-- 댓글 작성 -->
-            <form th:action="@{|/mjanswer/create/${mjboard.mjSeq}|}" method="post" th:object="${mjanswerForm}" class="mt-4">
+            <!--댓글 작성-->
+            <form sec:authorize="isAuthenticated()" th:action="@{|/mjanswer/create/${mjboard.mjSeq}|}" method="post" th:object="${mjanswerForm}" class="mt-4">
                 <textarea class="form-control" th:field="*{mjAnsContent}" rows="2" placeholder="댓글을 작성해주세요" style="font-size: 14px;"></textarea>
                 <button type="submit" class="btn btn-outline-primary mt-2">댓글 등록</button>
             </form>
 
-            <!-- 맛집 목록 이동 버튼 -->
+            <!-- 목록 이동 -->
             <div class="text-center mt-4">
                 <a th:href="@{/mjboard/list}" class="btn btn-outline-dark btn-sm">맛집 목록으로 이동</a>
             </div>
 
             <hr style="margin-top: 50px">
-
-
-
         </section>
     </div>
+
+    <!-- 지도 스크립트 -->
     <script th:inline="javascript" layout:fragment="script">
         let lat = [[${mjboard.mjMapLatitude}]];
         let lng = [[${mjboard.mjMapLongitude}]];
@@ -94,12 +94,6 @@
         let link = '[[${mjboard.mjMapLink}]]';
         let title = '[[${mjboard.mjMapTitle}]]';
 
-        let map;
-        let marker;
-
-        console.log(lat, lng)
-
-        // <!-- ✅ 삭제 스크립트 -->
         document.querySelectorAll(".delete").forEach(function (element) {
             element.addEventListener('click', function () {
                 if (confirm("정말로 삭제하시겠습니까?")) {
@@ -109,25 +103,18 @@
         });
 
         document.addEventListener("DOMContentLoaded", () => {
-            if(lat){
-                setMap(new naver.maps.LatLng(lat, lng));
-            }
-
+            if (lat) setMap(new naver.maps.LatLng(lat, lng));
         });
 
         function setMap(center) {
-
-            console.log("동작")
-
-            map = new naver.maps.Map("map", {
+            let map = new naver.maps.Map("map", {
                 center: center,
                 zoom: 18,
                 zoomControl: true,
                 mapTypeControl: true
-
             });
 
-            marker = new naver.maps.Marker({
+            let marker = new naver.maps.Marker({
                 position: center,
                 map: map,
                 icon: {
@@ -137,43 +124,14 @@
             });
 
             let contentString = `
-                        <div class="iw_inner" style="
-                            border-radius: 10px;
-                            border: 1px solid #ccc;
-                            background: white;
-                            max-width: 550px;
-                            padding: 15px;
-                            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-
-                        ">
-                        <h5 style="font-size: 13px;" class="font-bold-style">${title.replaceAll('"','')}</h5>
-                        <h6 style="font-size: 9px; color: #555">${category.replaceAll('"','')}</h6>
-                        <p class="mb-1" style="font-size: 11px;">${roadAddress.replaceAll('"','')}</p>
-                        <p class="mb-1" style="font-size: 10px; color: #555;">${address.replaceAll('"','')}</p>
-                        <a href="http://www.seoul.go.kr" target="_blank" style="font-size: 10px;">${link.replaceAll('"','')}</a>
-
-                    </div>`;
-
-
-            let infowindow = new naver.maps.InfoWindow({
-                content: contentString,
-                maxWidth: 550,
-                backgroundColor: "none",
-                borderColor: "none",
-            });
-
-            naver.maps.Event.addListener(marker, "click", function(e) {
-                if (infowindow.getMap()) {
-                    infowindow.close();
-                } else {
-                    infowindow.open(map, marker);
-                }
-            });
-
+                <div class="iw_inner" style="padding:15px;">
+                    <h5>${title}</h5>
+                    <p>${roadAddress}</p>
+                    <a href="${link}" target="_blank">자세히 보기</a>
+                </div>`;
+            let infowindow = new naver.maps.InfoWindow({ content: contentString });
             infowindow.open(map, marker);
-
         }
-
     </script>
 </main>
 </html>

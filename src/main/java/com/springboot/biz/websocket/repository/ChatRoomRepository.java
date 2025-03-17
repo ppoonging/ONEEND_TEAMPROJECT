@@ -10,4 +10,5 @@ import java.util.List;
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, String> {
     // 방 번호로 찾기
     ChatRoom findByRoomId(String roomId);
+    void deleteByRoomId(String roomId);
 }

@@ -106,6 +106,8 @@ public class MjboardController {
     public String detail(Model model, @PathVariable("mjSeq") Integer mjSeq) {
         Mjboard mjboard = mjboardService.getMjboard(mjSeq);
         String imageUrl = null;
+
+        // 이미지 URL 파싱 및 유효성 체크
         if (mjboard.getMjContent() != null && mjboard.getMjContent().contains("<img")) {
             int srcIndex = mjboard.getMjContent().indexOf("src=");
             if (srcIndex != -1) {
@@ -113,6 +115,10 @@ public class MjboardController {
                 int endIndex = mjboard.getMjContent().indexOf("\"", srcIndex);
                 if (endIndex != -1) {
                     imageUrl = mjboard.getMjContent().substring(srcIndex, endIndex);
+                    File imageFile = new File("파일이_저장되는_경로" + imageUrl); // 실제 경로로 교체 필요
+                    if (!imageFile.exists()) {
+                        imageUrl = "/default-image.jpg"; // 대체 이미지
+                    }
                 }
             }
         }
@@ -122,6 +128,7 @@ public class MjboardController {
         model.addAttribute("mjboard", mjboard);
         return "mj/mjboard_detail";
     }
+
 
 
     // 썸머노트 이미지 업로드

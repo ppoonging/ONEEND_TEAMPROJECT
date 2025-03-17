@@ -99,7 +99,7 @@
     let stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function () {
-        console.log('✅ 웹소켓 연결 성공');
+        console.log('웹소켓 연결 성공');
 
         //구독
         stompClient.subscribe('/topic/chat/room/' + roomId, function (message) {
@@ -108,7 +108,7 @@
 
             let chatBox = document.getElementById('chat');
             if (!chatBox) {
-                console.error("❌ chatBox 요소를 찾을 수 없음");
+                console.error("chatBox 요소를 찾을 수 없음");
                 return;
             }
 
@@ -153,7 +153,7 @@
             roomId: roomId,
             type: 'LEAVE'
         }));
-        window.location.href = '/chatroom/rooms';
+        window.location.href = '/chat/rooms';
     });
 
     //메시지 전송
