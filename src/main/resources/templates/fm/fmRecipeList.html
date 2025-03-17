@@ -50,35 +50,29 @@
                                 <div class="modal-body">
                                     <img th:if="${fm.fmrecipeFilePath != null}"
                                          th:src="@{${fm.fmrecipeFilePath}}"
-                                         class="card-img-top" alt="레시피 이미지" width="200">
+                                         class="card-img-top modal-img" alt="레시피 이미지">
                                     <img th:if="${fm.fmrecipeFilePath == null and fm.fmrecipeFileName != null}"
                                          th:src="@{'/files/fmrecipe/' + ${fm.fmrecipeFileName}}"
-                                         class="card-img-top" alt="레시피 이미지" width="200">
+                                         class="card-img-top modal-img" alt="레시피 이미지">
                                     <p><strong>설명:</strong> <span th:text="${fm.fmrecipeContent}"></span></p>
                                     <p><strong>준비 과정:</strong> <span th:text="${fm.fmrecipeReady}"></span></p>
                                     <p><strong>재료:</strong> <span th:text="${fm.fmrecipeIngre}"></span></p>
                                     <p><strong>등록일:</strong> <span th:text="${#temporals.format(fm.fmrecipeRegDate,'yyyy-MM-dd HH:mm')}"></span></p>
                                 </div>
                                 <div class="modal-footer d-flex justify-content-between">
-                                    <!-- 로그인 사용자 찜 버튼 -->
                                     <button type="button" class="btn favorite-btn"
                                             sec:authorize="isAuthenticated()"
                                             th:if="${favoriteMap != null and favoriteMap[fm.fmrecipeSeq]}"
                                             th:text="'★ 찜 해제'"
                                             th:attr="data-recipe-id=${fm.fmrecipeSeq}"></button>
-
                                     <button type="button" class="btn favorite-btn"
                                             sec:authorize="isAuthenticated()"
                                             th:if="${favoriteMap != null and !favoriteMap[fm.fmrecipeSeq]}"
                                             th:text="'☆ 찜하기'"
                                             th:attr="data-recipe-id=${fm.fmrecipeSeq}"></button>
-
-                                    <!-- 비로그인 찜 링크 -->
                                     <a class="btn" sec:authorize="isAnonymous()" th:href="@{/users/login}">
                                         ☆ 찜하기 (로그인 필요)
                                     </a>
-
-                                    <!-- 닫기 버튼 -->
                                     <button type="button" class="btn btn-secondary custom-close-btn" data-modal-close>닫기</button>
                                 </div>
                             </div>
@@ -87,42 +81,38 @@
                 </div>
             </div>
 
-            <!-- 데이터 없을 때 메시지 -->
-            <div th:if="${paging == null or paging.content.size() == 0}" class="text-center mt-4">
-                <p>등록된 레시피가 없습니다.</p>
-            </div>
-
-            <!-- 관리자만 등록 버튼 -->
-            <div class="d-flex justify-content-end mt-3">
-                <a class="btn btn-primary btn-lg ml-auto" sec:authorize="hasRole('ADMIN')" th:href="@{/fm/create}">등록</a>
-            </div>
-
-            <!-- 페이징 -->
-            <hr style="margin-top: 50px">
-            <nav aria-label="Page navigation">
-                <ul class="pagination d-flex justify-content-center">
-                    <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
-                        <a class="page-link" th:href="@{|?page=${paging.number-1}|}">〈</a>
-                    </li>
-                    <li th:each="i : ${#numbers.sequence(0, paging.totalPages - 1)}" class="page-item" th:classappend="${paging.number == i} ? 'active'">
-                        <a class="page-link" th:href="@{|?page=${i}|}" th:text="${i + 1}"></a>
-                    </li>
-                    <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
-                        <a class="page-link" th:href="@{|?page=${paging.number+1}|}">〉</a>
-                    </li>
-                </ul>
-            </nav>
-
         </section>
     </div>
+    <div class="d-flex justify-content-end mt-3">
+        <a class="btn btn-primary btn-lg ml-auto" sec:authorize="hasRole('ADMIN')" th:href="@{/fm/create}">등록</a>
+    </div>
+    <!-- 인라인 CSS -->
+    <style>
 
-    <!-- CSRF -->
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+        .hidden { display: none; }
+        .custom-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); z-index: 1050; border-radius: 8px; max-width: 600px; width: 90%; }
+        .custom-modal .modal-header { display: flex; justify-content: space-between; align-items: center; }
+        .custom-close-btn { cursor: pointer; font-size: 24px; color: #ffffff; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); z-index: 1040; display: none; }
+        .modal-open .modal-overlay { display: block; }
+        .custom-btn123 { font-size: 15px; background-color: #b5a89e; border: 2px solid #b5a89e; color: white; transition: background-color 0.3s; }
+        .custom-btn123:hover { background-color: #865136; border-color: #865136; }
+        .modal-img { width: 100%; height: 400px; }
+        .custom-modal .modal-body { max-height: 80vh; overflow-y: auto; padding: 20px; }
+        .modal-body { overflow-y: auto; max-height: 70vh; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
+    </style>
 
-    <!-- JS -->
-    <script th:src="@{/fmRecipeModal.js}"></script>
-    <link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
+    <!-- 인라인 JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('[data-modal-id]').forEach(card => {
+                card.addEventListener('click', () => document.getElementById(card.dataset.modalId).classList.remove('hidden'));
+            });
+            document.querySelectorAll('[data-modal-close]').forEach(closeBtn => {
+                closeBtn.addEventListener('click', () => closeBtn.closest('.custom-modal').classList.add('hidden'));
+            });
+        });
+    </script>
 
 </main>
 </html>
