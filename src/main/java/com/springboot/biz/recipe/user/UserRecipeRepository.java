@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface UserRecipeRepository extends JpaRepository<UserRecipe, Integer> {
-
+//수정을
     // 검색 (제목 + 내용)
     @Query("SELECT u FROM UserRecipe u " +
             "WHERE u.userRecipeTitle LIKE %:kw% OR u.userRecipeContent LIKE %:kw%")
