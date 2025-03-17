@@ -1,6 +1,7 @@
 package com.springboot.biz.recipe.user.answer;
 
 
+import com.springboot.biz.recipe.user.UserRecipe;
 import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;

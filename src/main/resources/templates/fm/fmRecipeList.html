@@ -1,4 +1,4 @@
-<html layout:decorate="~{layout}">
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <main layout:fragment="content">
 
     <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
@@ -8,7 +8,7 @@
     <div class="container">
         <section class="py-2">
 
-            <!-- 카테고리 필터 버튼 -->
+            <!-- 카테고리 필터 -->
             <div class="category5-menu">
                 <a th:href="@{/fm/recipe(category='')}" class="category5-btn">전체</a>
                 <a th:href="@{/fm/recipe(category='구이')}" class="category5-btn">구이</a>
@@ -16,70 +16,85 @@
                 <a th:href="@{/fm/recipe(category='국')}" class="category5-btn">국</a>
                 <a th:href="@{/fm/recipe(category='면')}" class="category5-btn">면</a>
                 <a th:href="@{/fm/recipe(category='비빔밥')}" class="category5-btn">비빔밥</a>
-                <a th:href="@{/fm/recipe(category='전골')}" class="category5-btn">전굴</a>
+                <a th:href="@{/fm/recipe(category='전골')}" class="category5-btn">전골</a>
                 <a th:href="@{/fm/recipe(category='무침')}" class="category5-btn">무침</a>
                 <a th:href="@{/fm/recipe(category='나물')}" class="category5-btn">나물</a>
                 <a th:href="@{/fm/recipe(category='존맛탱 볶음')}" class="category5-btn">존맛탱 볶음</a>
-
             </div>
 
-            <!-- 카드 리스트 -->
-            <div id="recipe-list" class="d-flex flex-wrap gap-3 justify-content-center mt-4">
-                <div th:each="fm: ${paging}" class="card custom-card" style="cursor: pointer; width: 18rem;"
-                     th:attr="data-modal-id='modal' + ${fm.fmrecipeSeq}">
-                    <img th:if="${fm.fmrecipeFilePath != null}"
-                         th:src="@{${fm.fmrecipeFilePath}}"
-                         class="card-img-top"
-                         alt="레시피 이미지" width="200">
+            <!-- 레시피 리스트 + 모달 동시 반복 -->
+            <div th:if="${paging != null and paging.content.size() > 0}" class="d-flex flex-wrap gap-3 justify-content-center mt-4">
+                <div th:each="fm: ${paging}">
+                    <!-- 카드 -->
+                    <div class="card custom-card" style="cursor: pointer; width: 18rem;"
+                         th:attr="data-modal-id='modal' + ${fm.fmrecipeSeq}">
+                        <img th:if="${fm.fmrecipeFilePath != null}"
+                             th:src="@{${fm.fmrecipeFilePath}}"
+                             class="card-img-top" alt="레시피 이미지" width="200">
+                        <img th:if="${fm.fmrecipeFilePath == null and fm.fmrecipeFileName != null}"
+                             th:src="@{'/files/fmrecipe/' + ${fm.fmrecipeFileName}}"
+                             class="card-img-top" alt="레시피 이미지" width="200">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${fm.fmrecipeTitle}"></h5>
+                        </div>
+                    </div>
 
-                    <!-- 2. 파일 이름(name)만 있을 때 -->
-                    <img th:if="${fm.fmrecipeFilePath == null and fm.fmrecipeFileName != null}"
-                         th:src="@{'/files/fmrecipe/' + ${fm.fmrecipeFileName}}"
-                         class="card-img-top"
-                         alt="레시피 이미지" width="200">
+                    <!-- 모달 -->
+                    <div th:id="'modal' + ${fm.fmrecipeSeq}" class="custom-modal hidden">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" th:text="${fm.fmrecipeTitle}"></h5>
+                                    <span class="custom-close-btn" data-modal-close>&times;</span>
+                                </div>
+                                <div class="modal-body">
+                                    <img th:if="${fm.fmrecipeFilePath != null}"
+                                         th:src="@{${fm.fmrecipeFilePath}}"
+                                         class="card-img-top" alt="레시피 이미지" width="200">
+                                    <img th:if="${fm.fmrecipeFilePath == null and fm.fmrecipeFileName != null}"
+                                         th:src="@{'/files/fmrecipe/' + ${fm.fmrecipeFileName}}"
+                                         class="card-img-top" alt="레시피 이미지" width="200">
+                                    <p><strong>설명:</strong> <span th:text="${fm.fmrecipeContent}"></span></p>
+                                    <p><strong>준비 과정:</strong> <span th:text="${fm.fmrecipeReady}"></span></p>
+                                    <p><strong>재료:</strong> <span th:text="${fm.fmrecipeIngre}"></span></p>
+                                    <p><strong>등록일:</strong> <span th:text="${#temporals.format(fm.fmrecipeRegDate,'yyyy-MM-dd HH:mm')}"></span></p>
+                                </div>
+                                <div class="modal-footer d-flex justify-content-between">
+                                    <!-- 로그인 사용자 찜 버튼 -->
+                                    <button type="button" class="btn favorite-btn"
+                                            sec:authorize="isAuthenticated()"
+                                            th:if="${favoriteMap != null and favoriteMap[fm.fmrecipeSeq]}"
+                                            th:text="'★ 찜 해제'"
+                                            th:attr="data-recipe-id=${fm.fmrecipeSeq}"></button>
 
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${fm.fmrecipeTitle}"></h5>
+                                    <button type="button" class="btn favorite-btn"
+                                            sec:authorize="isAuthenticated()"
+                                            th:if="${favoriteMap != null and !favoriteMap[fm.fmrecipeSeq]}"
+                                            th:text="'☆ 찜하기'"
+                                            th:attr="data-recipe-id=${fm.fmrecipeSeq}"></button>
+
+                                    <!-- 비로그인 찜 링크 -->
+                                    <a class="btn" sec:authorize="isAnonymous()" th:href="@{/users/login}">
+                                        ☆ 찜하기 (로그인 필요)
+                                    </a>
+
+                                    <!-- 닫기 버튼 -->
+                                    <button type="button" class="btn btn-secondary custom-close-btn" data-modal-close>닫기</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- 데이터 없을 때 메시지 -->
+            <div th:if="${paging == null or paging.content.size() == 0}" class="text-center mt-4">
+                <p>등록된 레시피가 없습니다.</p>
             </div>
 
             <!-- 관리자만 등록 버튼 -->
             <div class="d-flex justify-content-end mt-3">
                 <a class="btn btn-primary btn-lg ml-auto" sec:authorize="hasRole('ADMIN')" th:href="@{/fm/create}">등록</a>
-            </div>
-
-            <!-- 모달 창 -->
-            <div th:each="fm: ${paging}" th:id="'modal' + ${fm.fmrecipeSeq}" class="custom-modal hidden">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" th:text="${fm.fmrecipeTitle}"></h5>
-                            <span class="custom-close-btn" data-modal-close>&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            <img th:if="${fm.fmrecipeFilePath != null}"
-                                 th:src="@{${fm.fmrecipeFilePath}}"
-                                 class="card-img-top"
-                                 alt="레시피 이미지" width="200">
-
-                            <!-- 2. 파일 이름(name)만 있을 때 -->
-                            <img th:if="${fm.fmrecipeFilePath == null and fm.fmrecipeFileName != null}"
-                                 th:src="@{'/files/fmrecipe/' + ${fm.fmrecipeFileName}}"
-                                 class="card-img-top"
-                                 alt="레시피 이미지" width="200">
-                            <p><strong>설명:</strong> <span th:text="${fm.fmrecipeContent}"></span></p>
-                            <p><strong>준비 과정:</strong> <span th:text="${fm.fmrecipeReady}"></span></p>
-                            <p><strong>재료:</strong> <span th:text="${fm.fmrecipeIngre}"></span></p>
-                            <p><strong>등록일:</strong> <span th:text="${#temporals.format(fm.fmrecipeRegDate,'yyyy-MM-dd HH:mm')}"></span></p>
-                        </div>
-                        <div class="modal-footer d-flex justify-content-between">
-                            <button type="button" class="btn btn-outline-warning favorite-btn"
-                                    th:attr="data-recipe-id=${fm.fmrecipeSeq}">찜하기/해제</button>
-                            <button type="button" class="btn custom-btn123 custom-close-btn" data-modal-close>닫기</button>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- 페이징 -->
@@ -101,66 +116,13 @@
         </section>
     </div>
 
-    <!-- CSRF 토큰 메타 -->
+    <!-- CSRF -->
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
-    <!-- 스타일과 스크립트 -->
-    <link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
+    <!-- JS -->
     <script th:src="@{/fmRecipeModal.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
 
-    <!-- 즐겨찾기 JS -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-            const favoriteButtons = document.querySelectorAll(".favorite-btn");
-            favoriteButtons.forEach(button => {
-                button.addEventListener("click", function () {
-                    const recipeId = this.dataset.recipeId;
-                    fetch("/api/favorite/toggle", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded",
-                            [csrfHeader]: csrfToken
-                        },
-                        body: "recipeId=" + recipeId
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            this.textContent = data.isFavorite ? "★ 찜 해제" : "☆ 찜하기";
-                        })
-                        .catch(error => console.error("찜하기 실패:", error));
-                });
-            });
-        });
-    </script>
-
-
-            <!--하단 줄 (필요에 따라 사용)-->
-            <hr style="margin-top: 50px">
-            <!--pagination-->
-            <nav aria-label="Page navigation">
-                <ul class="pagination d-flex justify-content-center align-items-center flex-grow-1 me-auto ">
-                    <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
-                        <a class="page-link" th:href="@{|?page=${paging.number-1}|}" aria-label="Previous">〈</a>
-                    </li>
-                    <li th:each="i : ${#numbers.sequence(0, paging.totalPages - 1)}"
-                        class="page-item"
-                        th:classappend="${paging.number == i} ? 'active'">
-                        <a class="page-link" th:href="@{|?page=${i}|}" th:text="${i + 1}"></a>
-                    </li>
-                    <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
-                        <a class="page-link" th:href="@{|?page=${paging.number+1}|}" aria-label="Next">〉</a>
-                    </li>
-                </ul>
-            </nav>
-
-    </div>
 </main>
-
-
 </html>
-
-
