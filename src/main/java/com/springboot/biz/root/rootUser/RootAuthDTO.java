@@ -1,9 +1,5 @@
 package com.springboot.biz.root.rootUser;
 
-import com.springboot.biz.root.rootAdmin.Root;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;

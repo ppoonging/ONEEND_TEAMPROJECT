@@ -86,4 +86,5 @@ public class UserService {
         recipe.setRecipeRecommend(recipe.getRecipeRecommend() + 1);
         userRecipeRepository.save(recipe);
     }
+
 }

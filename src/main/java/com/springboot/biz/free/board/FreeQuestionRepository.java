@@ -38,4 +38,8 @@ public interface FreeQuestionRepository extends JpaRepository<FreeQuestion, Inte
     Page<FreeQuestion> findAllByRecommend(@Param("kw") String kw,
                                           @Param("searchType") String searchType,
                                           Pageable pageable);
+
+//    @Query("SELECT q FROM FreeQuestion q ORDER BY q.frboRegDate DESC")
+    List<FreeQuestion> findTop5ByOrderByFrboRegDateDesc();
+
 }

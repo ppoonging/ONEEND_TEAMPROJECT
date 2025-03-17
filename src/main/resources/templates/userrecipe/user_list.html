@@ -1,25 +1,9 @@
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
-
-    <!-- 상단 -->
-    <div style="background-color: #F4E9E3">
-        <div class="container py-2">
-            <span style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">
-                한끝 커뮤니티 > 유저 레시피
-            </span>
-        </div>
+    <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
+        <h2 class="text-center text-white py-2 font-bold-style">유저 레시피</h2>
     </div>
-
-    <div class="container mt-5">
-
-        <!-- 상단 이미지 -->
-        <div class="text-center">
-            <img th:src="@{/images/total/bab.png}" width="5%">
-        </div>
-
-        <!-- 타이틀 -->
-        <h2 class="text-center py-4">유저 레시피</h2>
-
+    <div class="container">
         <!--카테고리 경로-->
         <div class="category5-menu my-4 text-center">
             <a th:href="@{/userrecipe/list(category='')}" class="category5-btn">전체</a>
@@ -28,9 +12,6 @@
             <a th:href="@{/userrecipe/list(category='국')}" class="category5-btn">국</a>
             <a th:href="@{/userrecipe/list(category='김치')}" class="category5-btn">김치</a>
         </div>
-
-
-
 
         <!-- 카드 리스트 -->
         <div id="recipe-list" class="d-flex flex-wrap gap-3 justify-content-center mt-4">

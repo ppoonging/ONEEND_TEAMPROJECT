@@ -51,7 +51,7 @@
 }
 
 .root-btn-style {
-    border: 1px solid black !important; /* 기본 상태에서는 테두리 투명 */
+    border: 1px solid black !important;
     transition: border 0.3s ease-in-out;
 }
 
@@ -73,11 +73,11 @@
 
 
 #select-root {
-    width: 300px; /* 원하는 고정 크기 */
+    width: 300px;
 }
 
 #select-root option {
-    max-width: 100%; /* option 크기에 맞춤 */
+    max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -105,8 +105,8 @@
 }
 
 #root-modal-image {
-    max-width: 30%; /* 최대 너비 */
-    max-height: 50vh; /* 최대 높이 */
+    max-width: 30%;
+    max-height: 50vh;
     border-radius: 10px;
     display: block;
 }
@@ -241,8 +241,6 @@
 
 }
 
-/**/
-
 
 .root-list-card-container {
     width: calc(30% + 33px); /* 한 줄에 3개 */
@@ -260,7 +258,7 @@
     cursor: pointer;
     width: 100%; /* 더 넓게 */
     max-width: 100%;
-    padding: 2em 0;
+    padding: 2em 2em;
     background: #FFF;
     box-shadow: 0 0 6px 0 rgba(32, 32, 36, 0.15);
     transition: all 0.35s ease;

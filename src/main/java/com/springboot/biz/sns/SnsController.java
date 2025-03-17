@@ -1,6 +1,5 @@
 package com.springboot.biz.sns;
 
-import com.springboot.biz.root.rootUser.RootAuth;
 import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import lombok.RequiredArgsConstructor;
