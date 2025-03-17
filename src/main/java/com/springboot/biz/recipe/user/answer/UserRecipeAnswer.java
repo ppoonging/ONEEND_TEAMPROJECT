@@ -33,8 +33,6 @@ public class UserRecipeAnswer {
 
     private String uRecipeAnsComment; //레시피 답변에 답변
 
-    @ManyToOne
-    private UserRecipe userRecipe;  //유저레시피 질문 관계맺기
 
 
 }

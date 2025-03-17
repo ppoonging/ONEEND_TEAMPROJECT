@@ -9,12 +9,28 @@
 
         <!--지도/랭킹/날씨-->
         <section id="section2" class="container pt-5">
+
+            <ul class="nav nav-tabs" id="regionTab">
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link active" aria-current="page" href="#">Active</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="#">Link</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="#">Link</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>-->
+<!--                </li>-->
+            </ul>
+
             <div class="d-flex justify-content-between">
                 <!--지도-->
-                <div class="border" style="width: 65%; height: 600px;">
+                <div style="width: 65%; height: 600px;">
                     <div id="map" style="width: 100%; min-height: 600px;"></div>
                 </div>
-                <div class="border" style="width: 30%; height: 600px;">
+                <div style="width: 30%; height: 600px;">
                         <aside class="h-100">
 
 
@@ -47,12 +63,42 @@
                                             <p style="font-size: 1rem; margin: 5px 0;">날씨 : <span th:text="${weatherData.weather[0].description}"></span></p>
                                         </div>
 -->
-                            <div class="calign-middle border" style="height: 33.3%">
-
-
+                            <div class="calign-middle p-4" style="height: 45%; border: 1px solid #eee; border-radius: 15%; background-color: #f5f5f5">
+                                <h6 class="border-bottom mb-4 pb-2 text">소요시간 확인하기</h6>
+                                <form id="directionsForm">
+                                    <div class="mb-1">
+                                        <div class="row mb-2 d-flex justify-content-center">
+                                            <label class="col-sm-2 text-center me-1" style="font-size: 14px; padding: 0.3em 0.5em; border: 1px solid #fff; background-color: #C8AB8F; border-radius: 20px; color: #fff;">출발</label>
+                                            <input type="hidden" id="start">
+                                            <input class="col-sm-8 border-0" type="text" id="startValue" PLACEHOLDER="지도에서 출발지 선택" readonly>
+                                        </div>
+                                        <div class="row d-flex justify-content-center">
+                                            <label class="col-sm-2 text-center me-1" style="font-size: 14px; padding: 0.3em 0.5em; border: 1px solid #fff; background-color: #C8AB8F; border-radius: 20px; color: #fff;">도착 </label>
+                                            <input type="hidden" id="goal">
+                                            <input class="col-sm-8 border-0" id="goalValue" PLACEHOLDER="지도에서 도착지 선택" readonly>
+                                        </div>
+                                    </div>
+                                    <p class="text-end" style="font-size: 11px; color: #555">(자동차 기준)</p>
+                                    <div class="d-flex justify-content-end">
+                                        <button type="submit" id="search-submit" class="cssbuttons-io-button">
+                                            최적 거리 보기
+                                            <div class="icon">
+                                                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path>
+                                                </svg>
+                                            </div>
+                                        </button>
+<!--                                        <button type="submit" id="search-submit" class="btn btn-sm">길찾기</button>-->
+                                    </div>
+                                </form>
+                                <div id="info" class="mb-1 mt-2 fs-6 text-center text-danger"></div> <!-- 거리, 소요시간 표시 -->
                             </div>
+
                             <div class="align-bottom" style="height: 33.3%">
-                                기타 콘텐츠
+                                <div>
+                                    <h6>맛집 인기순</h6>
+                                </div>
                             </div>
                         </aside>
 
@@ -61,9 +107,28 @@
         </section>
 
         <!--게시판-->
-        <section id="section3" class="container pt-5">
-            <div class="row border" style="height: 500px">
-                게시판
+        <section id="section3" class="container pt-5 mt-5">
+            <h3>#인기 맛집</h3>
+            <div class="row" style="height: 500px">
+                <!-- Swiper -->
+                <div class="swiper mySwiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide" th:each="board : ${top9MjBoard}" style="text-align: center;">
+                            <div class="card-mj">
+                                <a th:href="@{'/mjboard/detail/' + ${board.mjSeq}}" style="text-decoration: none;">
+                                    <img th:src="${imageUrlMap[board.mjSeq]} ? ${imageUrlMap[board.mjSeq]} : '/images/total/default.png'"
+                                         alt="썸네일"
+                                         style="width: 300px; height: 300px; object-fit: cover; border-radius: 10px;">
+                                    <h5 th:text="${board.mjTitle}" style="margin-top: 10px; color: black;"></h5>
+                                    <p th:text="${board.mjMapTitle}"></p>
+                                    <p th:text="'조회수: ' + ${board.mjCnt}" style="font-size: 12px; color: gray;"></p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
             </div>
         </section>
 
@@ -74,7 +139,6 @@
             </div>
         </section>
 
-        <body>
         <div class="btn-group" role="group" aria-label="Location buttons">
             <a href="/weather?location=Seoul" class="btn btn-primary btn-sm">서울</a>
             <a href="/weather?location=Incheon" class="btn btn-primary btn-sm">인천</a>
@@ -110,11 +174,42 @@
 </html>
 
 <link rel="stylesheet" type="text/css" th:href="@{/weather.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/main.css}">
 
 
 <script th:inline="javascript">
     let map;
+    let mjboard = /*[[${mjboard}]]*/ [];
     let markerList = [];
+
+    let imageUrlMap = /*[[${imageUrlMap}]]*/ {};
+
+    let routeLine = null;
+
+    console.log("있니?" + mjboard);
+
+    let swiper = new Swiper('.swiper', {
+        slidesPerView: 3,
+        direction: getDirection(),
+        spaceBetween: 20,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        on: {
+            resize: function () {
+                swiper.changeDirection(getDirection());
+            },
+        },
+    });
+
+    function getDirection() {
+        let windowWidth = window.innerWidth;
+        let direction = window.innerWidth <= 760 ? 'vertical' : 'horizontal';
+
+        return direction;
+    }
+
 
     document.addEventListener('DOMContentLoaded', function() {
         const weatherCard = document.getElementById('weatherCard');
@@ -134,48 +229,258 @@
             lastScrollY = currentScrollY;
         });
 
-        setMap(new naver.maps.LatLng(37.5665, 126.9780)); // 기본 지도 위치
+        setMap(new naver.maps.LatLng(36.751351, 128.0316113)); // 기본 지도 위치
+
+
+        // 지도 Tab 관리
+        let addrList = mjboard.map(data => data.mjMapAddress);
+        let Regions = regionAddress(addrList);
+        console.log("추출된 지역 리스트: ", Regions);
+
+        const regionTab = document.getElementById('regionTab');
+        regionTab.innerHTML = `
+            <li class="nav-item">
+                <span class="nav-link active" style="color: #1a1d20" onclick="onClickRegionTab(event, 'all')">전체</span>
+            </li>
+        `;
+
+        Regions.forEach(region => {
+            regionTab.innerHTML += `
+                <li class="nav-item">
+                    <span class="nav-link" style="color: #1a1d20" onclick="onClickRegionTab(event, '${region}')">${region}</span>
+                </li>
+            `;
+        });
+
+        // 최초 전체 마커 표시
+        // updateMarkers('all');
+
 
     });
 
+    // map
     function setMap(center) {
         map = new naver.maps.Map("map", {
             center: center,
-            zoom: 13,
+            zoom: 7,
             zoomControl: true,
             mapTypeControl: true
         });
 
-        // 지도에 마커 여러개 찍기
-        /* [[${mjboard}]] JSON 변환 방식 */
-        let mjboard = /*[[${mjboard}]]*/ [];
+        let markersLoaded = false;
+        naver.maps.Event.addListener(map, 'tilesloaded', function() {
+            if (!markersLoaded) {
+                updateMarkers('all');
+                markersLoaded = true;
+            }
+        });
 
-        mjboard.forEach(board => {
-            let markerPosition = new naver.maps.LatLng(board.mjMapLatitude, board.mjMapLongitude);
+    }
 
-            let marker = new naver.maps.Marker({
-                position: markerPosition,
-                map: map
+    // 마커 설정
+    function updateMarkers(value) {
+        // 기존 마커 지도에서 제거
+        markerList.forEach(marker => marker.setMap(null));
+        markerList = [];
+
+        // 지역 필터링 (all 이면 전체, 아니면 해당하는 value 값 필터링)
+        let filter = value === 'all' ? mjboard : mjboard.filter(data => data.mjMapAddress.includes(value));
+
+        console.log(`선택된 지역: ${value}, 마커 수: ${filter.length}`);
+
+        const bounds = new naver.maps.LatLngBounds();
+
+        // 필터링한 값으로 마커 재생성
+        filter.forEach(data => {
+            let location = new naver.maps.LatLng(data.mjMapLatitude, data.mjMapLongitude);
+            let imgSrc = imageUrlMap[data.mjSeq] ? imageUrlMap[data.mjSeq] : '/images/total/default.png';
+
+            const marker = new naver.maps.Marker({
+                position: location,
+                map: map,
+                icon: {
+                    content: `<img width="30" height="30" src="https://img.icons8.com/stickers/100/marker.png" alt="marker"/>`,
+                    anchor: new naver.maps.Point(15, 30)
+                }
             });
 
-            let contentString = `
-                <div style="border:1px solid #ccc; padding:10px; border-radius:10px;">
-                    <h5>${board.mjMapTitle || '제목 없음'}</h5>
-                    <p>${board.mjMapAddress || '주소 없음'}</p>
-                    <a href="${board.mjMapLink || '#'}" target="_blank">자세히 보기</a>
+            const contentString = `
+                <div class="iw_inner" style="
+                    border-radius: 10px;
+                    border: 1px solid #ccc;
+                    background: white;
+                    max-width: 900px;
+                    padding: 15px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                <div class="d-flex">
+                    <img src="${imgSrc}" class="card-img-top me-3" style="width: 80px; height: 80px; object-fit:cover;" alt="썸네일">
+                    <div>
+                        <h5 style="font-size: 13px;" class="font-bold-style">${data.mjMapTitle}</h5>
+                        <h6 style="font-size: 11px; color: #555">${data.mjMapAddress}</h6>
+                        <p class="mb-1" style="font-size: 11px;">${data.mjMapRodeAddress}</p>
+                    </div>
                 </div>
-            `;
+                <div>
+                    <div class="text-center">
+                        <a href="/mjboard/detail/${data.mjSeq}" style="font-size: 13px; padding: 5px 8px; border: 1px solid #fff; background-color: #ec8d53; border-radius: 20px; color: #fff;">자세히 보기</a>
+                    </div>
+                    <div class="text-end">
+                        <button class="directionStart btn btn-sm btn-outline-secondary"
+                            data-latitude="${data.mjMapLatitude}"
+                            data-longitude="${data.mjMapLongitude}"
+                            data-title="${data.mjMapTitle}">
+                                출발</button>
+                        <button class="directionGoal btn btn-sm btn-outline-secondary"
+                                data-latitude="${data.mjMapLatitude}"
+                                data-longitude="${data.mjMapLongitude}"
+                                data-title="${data.mjMapTitle}">
+                                도착</button>
+                    </div>
+                </div>
 
-            let infowindow = new naver.maps.InfoWindow({
-                content: contentString
+            </div>`;
+
+            const infowindow = new naver.maps.InfoWindow({
+                content: contentString,
+                maxWidth: 550,
+                backgroundColor: "none",
+                borderColor: "none",
+            });
+
+            naver.maps.Event.addListener(map, "click", function () {
+                infowindow.close();
             });
 
             naver.maps.Event.addListener(marker, "click", function () {
+                map.setCenter(location);
+                // map.setZoom(11);
                 infowindow.open(map, marker);
+
+                setTimeout(() => {
+                    const startBtn = document.querySelector('.directionStart');
+                    const goalBtn = document.querySelector('.directionGoal');
+
+                    if (startBtn) {
+                        startBtn.addEventListener('click', function () {
+                            const latitude = this.dataset.latitude;
+                            const longitude = this.dataset.longitude;
+                            const title = this.dataset.title;
+                            console.log('출발 ', latitude, longitude);
+                            document.getElementById('start').value = `${longitude},${latitude}`;
+                            document.getElementById('startValue').value = title;
+                        });
+                    }
+
+                    if (goalBtn) {
+                        goalBtn.addEventListener('click', function () {
+                            const latitude = this.dataset.latitude;
+                            const longitude = this.dataset.longitude;
+                            const title = this.dataset.title;
+                            console.log('도착 ', latitude, longitude);
+                            document.getElementById('goal').value = `${longitude},${latitude}`;
+                            document.getElementById('goalValue').value = title;
+                        });
+                    }
+                }, 300);
             });
 
-            markerList.push(marker); // 필요 시 마커 리스트 저장
+            markerList.push(marker);
+            bounds.extend(location);
         });
+
+        // 지도 중심 자동 이동
+        if (markerList.length > 0) {
+            map.fitBounds(bounds);
+        } else {
+
+            map.setCenter(new naver.maps.LatLng(36.751351, 128.0316113));
+            map.setZoom(6);
+        }
     }
+
+
+    // 지도 주소 글자 추출
+    function regionAddress(value) {
+        const regionSet = new Set();
+        value.forEach(address => {
+
+            let region = address.substring(0, 2);
+            if(region !== ''){
+                regionSet.add(region);
+            }
+        });
+        return Array.from(regionSet);
+    }
+
+    // 지도 Tab 이벤트
+    function onClickRegionTab(e, value) {
+        e.preventDefault();
+
+        document.querySelectorAll('#regionTab .nav-link').forEach(data => {
+            data.classList.remove('active');
+        });
+
+        e.target.classList.add('active');
+
+        updateMarkers(value);
+    }
+
+    // 길찾기 버튼
+    document.getElementById("directionsForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const startInput = document.getElementById('start').value.trim();
+        const goalInput = document.getElementById('goal').value.trim();
+
+        if (!startInput || !goalInput) {
+            alert("출발지와 도착지를 정확히 선택해주세요.");
+            return;
+        } else if(startInput === goalInput) {
+            alert("출발지와 도착지를 다르게 선택하주세요");
+            return;
+        }
+
+        // 기존 경로 초기화 (선 중복 방지)
+        if (window.routeLine) window.routeLine.setMap(null);
+
+        fetch(`/direction?start=${startInput}&goal=${goalInput}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+
+                // 지도 그리기 함수 호출
+                drawRoute(data.path);
+
+                // 거리/시간 표시
+                const distanceKm = (data.summary.distance / 1000).toFixed(2);
+                const durationMin = Math.ceil(data.summary.duration / 60000);
+                document.getElementById('info').innerText = `총 거리: ${distanceKm}km, 자동차 소요 시간: ${durationMin}분`;
+            })
+            .catch(error => console.error("길찾기 오류:", error));
+    });
+
+
+    // 출발/도착 라인 생성
+    function drawRoute(pathList) {
+
+        // Polyline (경로)
+        const routePath = pathList.map(coord => new naver.maps.LatLng(coord[0], coord[1]));
+
+        // 기존 라인 제거 (중복 방지)
+        if (routeLine) routeLine.setMap(null);
+
+        // 새 라인 생성
+        routeLine = new naver.maps.Polyline({
+            map: map,
+            path: routePath,
+            strokeColor: '#FF0000',
+            strokeWeight: 5,
+            strokeOpacity: 0.8
+        });
+
+        // 지도 중심을 출발지로 이동
+        map.setCenter(routePath[0]);
+    }
+
 
 </script>

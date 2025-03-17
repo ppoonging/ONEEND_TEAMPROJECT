@@ -20,7 +20,6 @@ public class SnsService {
 
     public void save (MultipartFile multipartFile, String link, String title, String content, String tag, HUser user) throws IOException {
 
-        String os = System.getProperty("os.name").toLowerCase();
         String originalImgName = multipartFile.getOriginalFilename();
         String imgName = "";
 

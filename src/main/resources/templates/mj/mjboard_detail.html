@@ -13,7 +13,7 @@
                 <div class="mt-3" style="white-space: pre-line;" th:utext="${mjboard.mjContent}"></div>
                 <div class="d-flex justify-content-center" style="margin-top: 60px; padding: 60px 0px; border-top: 1px solid #eee;">
                     <!--map-->
-                    <div class="w-50" th:if="${mjboard.getMjMapAddress()}">
+                    <div class="w-50" th:if="${mjboard.mjMapLatitude != null}">
                         <div id="map" style="width: 100%; min-height: 350px;"></div>
                     </div>
                 </div>
@@ -81,55 +81,62 @@
 
             <hr style="margin-top: 50px">
 
-            <script th:inline="javascript" layout:fragment="script">
-                let lat = [[${mjboard.mjMapLatitude}]];
-                let lng = [[${mjboard.mjMapLongitude}]];
-                let address = '[[${mjboard.mjMapAddress}]]';
-                let roadAddress = '[[${mjboard.mjMapRodeAddress}]]';
-                let category = '[[${mjboard.mjMapCategory}]]';
-                let link = '[[${mjboard.mjMapLink}]]';
-                let title = '[[${mjboard.mjMapTitle}]]';
 
-                let map;
-                let marker;
 
-                console.log(lat, lng)
+        </section>
+    </div>
+    <script th:inline="javascript" layout:fragment="script">
+        let lat = [[${mjboard.mjMapLatitude}]];
+        let lng = [[${mjboard.mjMapLongitude}]];
+        let address = '[[${mjboard.mjMapAddress}]]';
+        let roadAddress = '[[${mjboard.mjMapRodeAddress}]]';
+        let category = '[[${mjboard.mjMapCategory}]]';
+        let link = '[[${mjboard.mjMapLink}]]';
+        let title = '[[${mjboard.mjMapTitle}]]';
 
-                // <!-- ✅ 삭제 스크립트 -->
-                document.querySelectorAll(".delete").forEach(function (element) {
-                    element.addEventListener('click', function () {
-                        if (confirm("정말로 삭제하시겠습니까?")) {
-                            location.href = this.dataset.uri;
-                        }
-                    });
-                });
+        let map;
+        let marker;
 
-                document.addEventListener("DOMContentLoaded", () => {
-                    setMap(new naver.maps.LatLng(lat, lng));
-                });
+        console.log(lat, lng)
 
-                function setMap(center) {
+        // <!-- ✅ 삭제 스크립트 -->
+        document.querySelectorAll(".delete").forEach(function (element) {
+            element.addEventListener('click', function () {
+                if (confirm("정말로 삭제하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                }
+            });
+        });
 
-                    console.log("동작")
+        document.addEventListener("DOMContentLoaded", () => {
+            if(lat){
+                setMap(new naver.maps.LatLng(lat, lng));
+            }
 
-                    map = new naver.maps.Map("map", {
-                        center: center,
-                        zoom: 18,
-                        zoomControl: true,
-                        mapTypeControl: true
+        });
 
-                    });
+        function setMap(center) {
 
-                    marker = new naver.maps.Marker({
-                        position: center,
-                        map: map,
-                        icon: {
-                            content: ` <img width="40" height="40" src="https://img.icons8.com/stickers/100/marker.png" alt="marker"/>`,
-                            anchor: new naver.maps.Point(20, 20)
-                        }
-                    });
+            console.log("동작")
 
-                    let contentString = `
+            map = new naver.maps.Map("map", {
+                center: center,
+                zoom: 18,
+                zoomControl: true,
+                mapTypeControl: true
+
+            });
+
+            marker = new naver.maps.Marker({
+                position: center,
+                map: map,
+                icon: {
+                    content: `<img width="40" height="40" src="https://img.icons8.com/stickers/100/marker.png" alt="marker"/>`,
+                    anchor: new naver.maps.Point(20, 20)
+                }
+            });
+
+            let contentString = `
                         <div class="iw_inner" style="
                             border-radius: 10px;
                             border: 1px solid #ccc;
@@ -148,31 +155,25 @@
                     </div>`;
 
 
-                    let infowindow = new naver.maps.InfoWindow({
-                        content: contentString,
-                        maxWidth: 550,
-                        backgroundColor: "none",
-                        borderColor: "none",
-                    });
+            let infowindow = new naver.maps.InfoWindow({
+                content: contentString,
+                maxWidth: 550,
+                backgroundColor: "none",
+                borderColor: "none",
+            });
 
-                    naver.maps.Event.addListener(marker, "click", function(e) {
-                        if (infowindow.getMap()) {
-                            infowindow.close();
-                        } else {
-                            infowindow.open(map, marker);
-                        }
-                    });
-
+            naver.maps.Event.addListener(marker, "click", function(e) {
+                if (infowindow.getMap()) {
+                    infowindow.close();
+                } else {
                     infowindow.open(map, marker);
-
-
                 }
+            });
 
+            infowindow.open(map, marker);
 
-            </script>
+        }
 
-        </section>
-    </div>
-
+    </script>
 </main>
 </html>
