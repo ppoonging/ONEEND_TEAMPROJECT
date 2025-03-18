@@ -27,7 +27,8 @@ public class FreeQuestion {
     @Column(length = 200)
     private String frboTitle; //제목
 
-    @Column(columnDefinition = "TEXT")
+    @Lob // Large Object로 설정
+    @Column(columnDefinition = "LONGTEXT")
     private String frboContent; //내용
 
     private LocalDateTime frboRegDate; //작성일
