@@ -5,7 +5,8 @@
         <div class="container py-2">
 
             <!--수정해야할 부분-->
-            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">소근소근 > 한식루트 인증</span>
+            <span class=""
+                  style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">소근소근 > 한식루트 인증</span>
 
         </div>
     </div>
@@ -22,17 +23,18 @@
 
             <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
             <div th:object="${rootAuthDTO}">
-<!--                <div th:replace="~{form_errors :: formErrorsFragment}"></div>-->
-                <form id="select-form" th:action="@{/root/form}" method="get" class="row mb-3 needs-validation" novalidate>
+                <!--                <div th:replace="~{form_errors :: formErrorsFragment}"></div>-->
+                <form id="select-form" th:action="@{/root/form}" method="get" class="row mb-3 needs-validation"
+                      novalidate>
                     <span class="blockquote-footer mb-1">루트 선택을 먼저해주세요, 루트 선택 시 입력한 내용이 초기화됩니다.</span>
                     <label for="select-root" class="col-sm-1 col-form-label">루트 선택</label>
                     <div class="col-sm-11">
                         <select id="select-root" th:field="*{rootSeq}" class="form-select" required>
                             <option value="">선택</option>
-                            <option th:each="root : ${root}"
+                            <option th:each="root : ${root}" th:if="${root.rootState}"
                                     th:value="${root.rootSeq}"
                                     th:text="${root.rootTitle}"
-                                    >
+                            >
                             </option>
                         </select>
                         <div class="invalid-feedback">
@@ -42,15 +44,17 @@
 
                 </form>
 
-                <form th:action="@{/root/form/save}" id="register-form"  enctype="multipart/form-data" method="post" class="needs-validation" novalidate>
+                <form th:action="@{/root/form/save}" id="register-form" enctype="multipart/form-data" method="post"
+                      class="needs-validation" novalidate>
 
-<!--                    <input type="hidden" th:name="${_csrf.parameterName}" th:vale="${_csrf.token}">-->
-<!--                    <input type="hidden" id="rootAuthSeq" name="rootAuthSeq" th:value="${rootAuthDTO.rootAuthSeq}">-->
+                    <!--                    <input type="hidden" th:name="${_csrf.parameterName}" th:vale="${_csrf.token}">-->
+                    <!--                    <input type="hidden" id="rootAuthSeq" name="rootAuthSeq" th:value="${rootAuthDTO.rootAuthSeq}">-->
 
                     <div class="mb-2 row">
                         <label for="title" class="col-sm-1 col-form-label">제목</label>
                         <div class="col-sm-11">
-                            <input type="text" id="title" name="title" th:field="*{title}" class="form-control" required>
+                            <input type="text" id="title" name="title" th:field="*{title}" class="form-control"
+                                   required>
                             <div class="invalid-feedback">
                                 제목을 입력해주세요.
                             </div>
@@ -78,21 +82,29 @@
                         <!--right-->
                         <div class="h-100 overflow-y-auto" style="width: 35%;">
                             <ul th:if="${selRootList}" class="p-3 mb-0">
-                                <li id="search-data-list" th:each="selRootList : ${selRootList}" class="root-li" >
+                                <li id="search-data-list" th:each="selRootList : ${selRootList}" class="root-li">
                                     <div class="d-flex flex-row p-2 ">
                                         <div class="my-2" style="width: 90%;">
                                             <h6 th:utext="${selRootList.rootListIndex} + '. ' + ${selRootList.rootListTitle}"
                                                 style="font-weight: bold; cursor: pointer;" name="click-address"
-                                                th:data-lat="${selRootList.rootListLatitude}" th:data-lng="${selRootList.rootListLongitude}"></h6>
-                                            <p th:text="'카테고리: ' + ${selRootList.rootListCategory}" class="mb-2" style="font-size: 14px; color: #777"></p>
-                                            <p th:text="'지번: ' + ${selRootList.rootListAddress}" class="mb-2" style="font-size: 14px; color: #444"></p>
-                                            <p th:text="'도로명: ' + ${selRootList.rootListRodeAddress}" class="mb-0" style="font-size: 14px; color: #444"></p>
-                                            <input type="hidden" id="latitude" th:value = "${selRootList.rootListLatitude}" />
-                                            <input type="hidden"  id="longitude" th:value = "${selRootList.rootListLongitude}"/>
+                                                th:data-lat="${selRootList.rootListLatitude}"
+                                                th:data-lng="${selRootList.rootListLongitude}"></h6>
+                                            <p th:text="'카테고리: ' + ${selRootList.rootListCategory}" class="mb-2"
+                                               style="font-size: 14px; color: #777"></p>
+                                            <p th:text="'지번: ' + ${selRootList.rootListAddress}" class="mb-2"
+                                               style="font-size: 14px; color: #444"></p>
+                                            <p th:text="'도로명: ' + ${selRootList.rootListRodeAddress}" class="mb-0"
+                                               style="font-size: 14px; color: #444"></p>
+                                            <input type="hidden" id="latitude"
+                                                   th:value="${selRootList.rootListLatitude}"/>
+                                            <input type="hidden" id="longitude"
+                                                   th:value="${selRootList.rootListLongitude}"/>
                                         </div>
-                                        <div class="d-flex justify-content-center align-items-center" style="width: 10%">
+                                        <div class="d-flex justify-content-center align-items-center"
+                                             style="width: 10%">
                                             <div class="checkbox-form">
-                                                <input type="checkbox" id="checkbox" name="checkbox" class="root-checkbox-input"
+                                                <input type="checkbox" id="checkbox" name="checkbox"
+                                                       class="root-checkbox-input"
                                                        th:data-title="${selRootList.rootListTitle}"
                                                        th:data-address="${selRootList.rootListAddress}"
                                                        th:data-roadaddress="${selRootList.rootListRodeAddress}"
@@ -100,7 +112,7 @@
                                                        th:data-longitude="${selRootList.rootListLongitude}"
                                                        th:data-link="${selRootList.rootListLink}"
                                                        th:data-category="${selRootList.rootListCategory}"
-                                                 />
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -113,31 +125,34 @@
                         </div>
                     </div>
                     <div class="d-flex flex-column align-items-end">
-                        <p id="checkVaild" class="text-danger mb-1" style="font-size: .875em; margin-top: .25rem; display: none;">리스트를 하나 이상 선택해주세요.</p>
+                        <p id="checkVaild" class="text-danger mb-1"
+                           style="font-size: .875em; margin-top: .25rem; display: none;">리스트를 하나 이상 선택해주세요.</p>
                     </div>
                     <div class="mt-3">
                         <input type="button" id="map-button" class="btn btn-sm btn-outline-secondary" value="루트 확인">
-                        <input type="button" id="map-root-remove-button" class="btn btn-sm btn-outline-secondary" value="루트 지우기">
-                        <input type="button" id="map-marker-remove-button" class="btn btn-sm btn-outline-secondary" value="마커 지우기">
+                        <input type="button" id="map-root-remove-button" class="btn btn-sm btn-outline-secondary"
+                               value="루트 지우기">
+                        <input type="button" id="map-marker-remove-button" class="btn btn-sm btn-outline-secondary"
+                               value="마커 지우기">
                     </div>
                     <div class="mt-3">
                         <div>
                             <label for="content" class="form-label">후기</label>
-                            <textarea class="form-control" id="content" name="content" th:field="*{content}" required rows="5"></textarea>
+                            <textarea class="form-control" id="content" name="content" th:field="*{content}" required
+                                      rows="5"></textarea>
                             <div class="invalid-feedback">
                                 내용을 입력해주세요.
                             </div>
                         </div>
                         <input type="hidden" id="rootListData" name="rootList" th:field="*{rootAuthList}">
                         <input type="hidden" id="rootSeq" name="rootSeq">
-                        <input type="hidden" id="form-mod" name="formMod" th:value="${rootAuthSeq != null ? 'modify' : 'save'}">
+                        <input type="hidden" id="form-mod" name="formMod"
+                               th:value="${rootAuthSeq != null ? 'modify' : 'save'}">
                         <input type="hidden" id="rootAuthSeq" name="rootAuthSeq" th:value="${rootAuthSeq}">
                     </div>
                     <div class="d-flex justify-content-end mt-3">
-                        <button type="button" class="btn btn-outline-secondary mb-3 me-2">
-                            <a th:href="@{/root/list}" class="root-a-outline-se">목록으로</a>
-                        </button>
-                        <button type="button" id="form-submit" name="form-submit" class="root-a-outline-se">저장</button>
+                        <a th:href="@{/root/list}" class="btn btn-outline-secondary root-a-outline-se me-2 root-cursor">목록으로</a>
+                        <button type="button" id="form-submit" name="form-submit" class="btn btn-outline-secondary root-a-outline-se">저장</button>
                     </div>
 
                 </form>
@@ -159,7 +174,7 @@
         let selMaker = [];
 
         // 페이지 로드 시 동작
-        document.addEventListener("DOMContentLoaded", ()=>{
+        document.addEventListener("DOMContentLoaded", () => {
             setMap();
             drawPolyline(rootList);
             updateSelectList();
@@ -168,7 +183,7 @@
 
             console.log("확인 " + rootAuthList)
 
-            if(isModify){
+            if (isModify) {
                 drawAuthPolyline(rootAuthList);
                 sessionStorage.setItem("checkRootUser", JSON.stringify(rootAuthList));
             }
@@ -196,7 +211,7 @@
                 mapTypeControl: true
             });
 
-            if(rootList.length > 0){
+            if (rootList.length > 0) {
                 const bounds = new naver.maps.LatLngBounds();
                 rootList.forEach(data => bounds.extend(new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)));
                 map.fitBounds(bounds);
@@ -351,16 +366,15 @@
             const savedList = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
 
             document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
-                const dataTitle = checkbox.dataset.title; // 체크박스의 data-title
-                const matched = savedList.find(item => item.rootAuthListTitle === dataTitle); // 일치하는 데이터 가져오기
+                const dataTitle = checkbox.dataset.title;
+                const matched = savedList.find(item => item.rootAuthListTitle === dataTitle);
 
                 if (matched) {
-                    checkbox.checked = true; // 일치하면 체크
+                    checkbox.checked = true;
+                    const checkLi = checkbox.closest('li');
+                    const fileContainer = checkLi.querySelector('.file-container');
 
-                    const checkLi = checkbox.closest('li'); // li 찾기
-                    const fileContainer = checkLi.querySelector('.file-container'); // 해당 li 안의 파일 영역
-
-                    if(fileContainer) {
+                    if (fileContainer) {
                         fileContainer.style.display = 'block';
                     }
 
@@ -390,8 +404,8 @@
                 const checkVaild = document.getElementById("checkVaild");
                 checkVaild.style.display = 'none';
 
-                const checkLi = checkbox.closest('li'); // li 찾기
-                const fileContainer = checkLi.querySelector('.file-container'); // 해당 li 안의 파일 영역
+                const checkLi = checkbox.closest('li');
+                const fileContainer = checkLi.querySelector('.file-container');
 
                 const obj = {
                     rootAuthListTitle: checkbox.dataset.title,
@@ -550,13 +564,13 @@
 
         // 파일 미리보기
         document.querySelectorAll('.file-input').forEach(input => {
-            input.addEventListener('change', function(event) {
+            input.addEventListener('change', function (event) {
                 const file = event.target.files[0];
 
                 if (file && file.type.startsWith('image/')) {
                     const reader = new FileReader();
 
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         const existingPreview = input.parentElement.querySelector('.image-preview');
                         if (existingPreview) {
                             existingPreview.src = e.target.result;
@@ -584,7 +598,7 @@
             sessionStorage.setItem("checkRootUser", JSON.stringify(sessionChkData));
 
             document.querySelectorAll('input[name="checkbox"]').forEach((chk) => {
-                if(chk.dataset.rootAuthListTitle === value.rootAuthListTitle) {
+                if (chk.dataset.rootAuthListTitle === value.rootAuthListTitle) {
                     chk.checked = false;
                     const parentLi = chk.closest('li');
                     const fileInputDiv = parentLi.querySelector('.mb-3');
@@ -607,10 +621,10 @@
         }
 
         // 루트 중앙 이동
-        document.getElementById("map-button").addEventListener("click", function (){
+        document.getElementById("map-button").addEventListener("click", function () {
             // console.log("click")
 
-            const path = rootList.map((data)=>{
+            const path = rootList.map((data) => {
                 // console.log(data);
                 return new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude)
             })
@@ -628,7 +642,7 @@
         })
 
         // 루트 폴리라인 지우기
-        document.getElementById("map-root-remove-button").addEventListener("click", function (){
+        document.getElementById("map-root-remove-button").addEventListener("click", function () {
             console.log("click");
 
             // 기존 폴리라인 제거
@@ -650,7 +664,7 @@
         })
 
         // 위치 마커 지우기
-        document.getElementById("map-marker-remove-button").addEventListener("click", function (){
+        document.getElementById("map-marker-remove-button").addEventListener("click", function () {
             console.log("click");
 
             if (marker) marker.setMap(null);
@@ -683,11 +697,11 @@
 
             }
 
-            if(hasError || !saveForm.checkValidity() || !selForm.checkValidity() || !checkSel) {
+            if (hasError || !saveForm.checkValidity() || !selForm.checkValidity() || !checkSel) {
                 event.preventDefault();
                 event.stopPropagation();
 
-            }else {
+            } else {
 
                 let rootseq = document.getElementById("select-root").value;
                 document.getElementById("rootSeq").value = rootseq;
@@ -709,3 +723,4 @@
 </main>
 
 </html>
+<link rel="stylesheet" type="text/css" th:href="@{/mj-design-css.css}">

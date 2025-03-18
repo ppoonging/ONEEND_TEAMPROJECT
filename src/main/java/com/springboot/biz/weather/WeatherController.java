@@ -1,6 +1,5 @@
 package com.springboot.biz.weather;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,13 +35,21 @@ public class WeatherController {
         // 지역 이름을 한글로 변환
         String koreanLocation = changeKor(location);
 
+        // 날씨 아이콘 처리 (이미지 URL 동적 처리)
+        // 날씨 아이콘 처리 (아이콘 URL 동적 처리)
+        String iconUrl = null;
+        if (weatherResponse != null && weatherResponse.getWeather() != null && weatherResponse.getWeather().length > 0) {
+            String iconCode = weatherResponse.getWeather()[0].getIcon();  // ex) 01d, 09d
+            iconUrl = "http://openweathermap.org/img/wn/" + iconCode + "@2x.png";  // OpenWeather 기본 아이콘 URL
+        }
 
-
-        // 모델에 날씨 정보 추가
+// 모델에 날씨 정보 및 아이콘 URL 추가
         model.addAttribute("weatherData", weatherResponse);
         model.addAttribute("today", today); // 오늘 날짜 추가
         model.addAttribute("location", koreanLocation); // 한글 지역 이름 추가
-        return "fragments/main";  // weather.html을 반환
+        model.addAttribute("weatherIcon", iconUrl); // 아이콘 URL 추가
+
+        return "fragments/main"; // weatherPage는 타임리프에서 날씨 정보를 표시할 HTML 파일
     }
 
     private String changeKor(String location) {
@@ -55,7 +62,7 @@ public class WeatherController {
             case "jeolla": return "전라도";
             case "busan": return "부산";
             case "daegu": return "대구";
-            default:return location;//나머지는 영어로
+            default:return location; // 나머지는 영어로
         }
     }
 }

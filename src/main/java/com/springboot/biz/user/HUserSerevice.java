@@ -67,11 +67,12 @@ public class HUserSerevice {
 
 
 
-    public void modify(HUser hUser, String nickname, String email, String phoneNumber, String address) {
+    public void modify(HUser hUser, String nickname, String email, String phoneNumber, String address, String addressDetail) {
         hUser.setNickname(nickname);
         hUser.setEmail(email);
         hUser.setPhoneNumber(phoneNumber);
         hUser.setAddress(address);
+        hUser.setAddressDetail(addressDetail);
         this.userRepository.save(hUser);
     }
 

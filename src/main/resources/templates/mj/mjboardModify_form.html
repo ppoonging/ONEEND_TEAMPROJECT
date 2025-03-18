@@ -1,18 +1,10 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
-
-    <!-- 상단 바 디자인 -->
-    <div style="background-color: #F4E9E3; border-bottom: 3px solid #D87C61;">
-        <div class="container py-2">
-            <span style="color: #777; font-family: 'MapoGoldenPier', sans-serif; font-size: 18px; padding-left: 10px;">
-                한끝 > 맛집소개 수정하기
-            </span>
-        </div>
+    <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
+        <h2 class="text-center text-white py-2 font-bold-style">맛집 소개</h2>
     </div>
-
-    <!-- 본문 내용 -->
-    <div class="container my-5">
+    <div class="container">
         <h2 class="mb-4">맛집소개 수정하기</h2>
 
         <form th:action="@{|/mjboard/modify/${mjboard.mjSeq}|}" method="post" enctype="multipart/form-data" th:object="${mjboardForm}">

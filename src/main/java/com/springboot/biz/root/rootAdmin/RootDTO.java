@@ -16,4 +16,6 @@ public class RootDTO {
 
     private List<RootList> rootLists; // 실제
 
+    private boolean rootState;
+
 }

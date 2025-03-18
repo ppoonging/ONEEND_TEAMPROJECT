@@ -39,7 +39,7 @@ public class RootAuthService {
 
     // rootAuth list 가져오기
     public Page<RootAuth> getAll(int page) {
-        Pageable pageable = PageRequest.of(page, 2, Sort.by(Sort.Order.desc("rootAuthDate")));
+        Pageable pageable = PageRequest.of(page, 9, Sort.by(Sort.Order.desc("rootAuthDate")));
 
         return this.rootAuthRepository.findAll(pageable);
     }
@@ -56,7 +56,7 @@ public class RootAuthService {
 
     // list + category
     public Page<RootAuth> getAllCategory(int page, String category) {
-        Pageable pageable = PageRequest.of(page, 2, Sort.by(Sort.Order.desc("rootAuthDate")));
+        Pageable pageable = PageRequest.of(page, 9, Sort.by(Sort.Order.desc("rootAuthDate")));
         return rootAuthRepository.findByRoot_RootTitle(category, pageable);
     }
 

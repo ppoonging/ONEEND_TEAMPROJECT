@@ -23,7 +23,13 @@ public class WeatherResponse {
         @Setter
         public static class Weather {
                 private String description; // 날씨 설명
+
+                private String icon;  // 아이콘 코드
         }
+
+
+
+
 }
 
 
