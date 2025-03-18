@@ -22,20 +22,7 @@
             <button type="submit" style="padding: 8px 16px; border: none; background: #D5C9C1; color: white; border-radius: 5px;">검색</button>
         </form>
 
-        <!-- 정렬 버튼 추가 -->
-        <div class="d-flex justify-content-start mb-3">
-            <a th:href="@{/mjboard/list(sort='recent', kw=${kw}, searchType=${searchType})}"
-               class="btn btn-sm"
-               th:classappend="${sort == 'recent'} ? 'btn-dark' : 'btn-outline-dark'">최신순</a>
 
-            <a th:href="@{/mjboard/list(sort='popular', kw=${kw}, searchType=${searchType})}"
-               class="btn btn-sm"
-               th:classappend="${sort == 'popular'} ? 'btn-danger' : 'btn-outline-danger'">추천순</a>
-
-            <a th:href="@{/mjboard/list(sort='view', kw=${kw}, searchType=${searchType})}"
-               class="btn btn-sm"
-               th:classappend="${sort == 'view'} ? 'btn-primary' : 'btn-outline-primary'">조회순</a>
-        </div>
 
 
         <!-- 게시글 카드 리스트 -->

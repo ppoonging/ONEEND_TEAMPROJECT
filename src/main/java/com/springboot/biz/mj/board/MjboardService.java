@@ -1,9 +1,6 @@
 package com.springboot.biz.mj.board;
 
 import com.springboot.biz.DataNotFoundException;
-import com.springboot.biz.mj.board.Mjboard;
-import com.springboot.biz.mj.board.MjboardRepository;
-import com.springboot.biz.mj.board.MjthumbnailService;
 import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import jakarta.transaction.Transactional;
@@ -24,29 +21,24 @@ public class MjboardService {
     private final MjthumbnailService mjthumbnailService;
     private final HUserSerevice hUserSerevice;
 
-    // 검색 + 정렬 기능 포함된 리스트 조회 (중복 제거 및 구조 정리)
-    public Map<String, Object> getList(Pageable pageable, String kw, String searchType, String sort) {
+    //상후 수정
+    // 게시판 리스트 (추천수, 별점 계산 포함)
+    public Map<String, Object> getList(Pageable pageable, String kw, String searchType) {
         Page<Mjboard> paging;
 
-        // 검색 처리
-        if (!kw.isEmpty()) {
-            paging = mjboardRepository.findAllByKeyword(kw, pageable);
+        // 검색 타입에 따라 다르게 처리 (상후수정)
+        if ("title".equals(searchType)) {
+            // 제목에서만 검색
+            paging = mjboardRepository.findAllByTitle(kw, pageable);
+        } else if ("content".equals(searchType)) {
+            // 내용에서만 검색
+            paging = mjboardRepository.findAllByContent(kw, pageable);
         } else {
-            // 정렬 처리
-            switch (sort) {
-                case "popular":
-                    paging = mjboardRepository.findAllByOrderByRecommendDesc(pageable);
-                    break;
-                case "view":
-                    paging = mjboardRepository.findAllByOrderByViewDesc(pageable);
-                    break;
-                default:
-                    paging = mjboardRepository.findAllByOrderByMjRegDateDesc(pageable);
-                    break;
-            }
+            // 제목과 내용 모두 검색
+            paging = mjboardRepository.findAllByKeyword(kw, pageable);
         }
 
-        // 별점 계산
+
         Map<Integer, Integer> starCountMap = new HashMap<>();
         for (Mjboard board : paging) {
             int recommendCount = board.getRecommendUsers().size();
@@ -54,12 +46,13 @@ public class MjboardService {
             starCountMap.put(board.getMjSeq(), starCount);
         }
 
-        // 결과 반환
         Map<String, Object> result = new HashMap<>();
-        result.put("paging", paging);
-        result.put("starCountMap", starCountMap);
+        result.put("paging", paging); // 페이징된 결과를 저장
+        result.put("starCountMap", starCountMap); // 별점 맵을 저장
+
         return result;
     }
+
 
     // 게시글 작성
     public void create(String mjTitle, String mjContent, MultipartFile file, HUser hUser, Integer mjCnt,
@@ -71,6 +64,10 @@ public class MjboardService {
         File saveFile = new File(projectPath, mjFileName);
         file.transferTo(saveFile);
 
+        /*String thumbnailFileName = "thumb_" + mjFileName;
+        File thumbnailFile = new File(projectPath, thumbnailFileName);
+        mjthumbnailService.createThumbnail(saveFile, thumbnailFile);*/
+
         Mjboard mj = new Mjboard();
         mj.setMjFilePath("/files/mj/" + mjFileName);
         mj.setMjFileName(mjFileName);
@@ -80,7 +77,7 @@ public class MjboardService {
         mj.setUserId(hUser);
         mj.setMjCnt(0);
 
-        // 지도 정보 저장
+        // map
         mj.setMjMapTitle(mjMapTitle);
         mj.setMjMapAddress(mjMapAddress);
         mj.setMjMapRodeAddress(mjMapRodeAddress);
@@ -88,7 +85,6 @@ public class MjboardService {
         mj.setMjMapLongitude(mjMapLongitude);
         mj.setMjMapLink(mjMapLink);
         mj.setMjMapCategory(mjMapCategory);
-
         mjboardRepository.save(mj);
     }
 
@@ -111,14 +107,14 @@ public class MjboardService {
         return mjboard;
     }
 
-    // 게시글 수정
+    // 수정
     public void modify(Mjboard mjboard, String mjTitle, String mjContent, String mjMapTitle, String mjMapAddress, String mjMapRodeAddress, Double mjMapLatitude,
                        Double mjMapLongitude, String mjMapLink, String mjMapCategory) {
 
         mjboard.setMjTitle(mjTitle);
         mjboard.setMjContent(mjContent);
 
-        //지도 정보 수정
+        //map
         mjboard.setMjMapTitle(mjMapTitle);
         mjboard.setMjMapAddress(mjMapAddress);
         mjboard.setMjMapRodeAddress(mjMapRodeAddress);
@@ -126,16 +122,15 @@ public class MjboardService {
         mjboard.setMjMapLongitude(mjMapLongitude);
         mjboard.setMjMapLink(mjMapLink);
         mjboard.setMjMapCategory(mjMapCategory);
-
         mjboardRepository.save(mjboard);
     }
 
-    //게시글 삭제
+    // 삭제
     public void delete(Mjboard mjboard) {
         mjboardRepository.delete(mjboard);
     }
 
-    // 추천 기능 (토글 방식)
+    // 추천
     @Transactional
     public void mjRecommend(Mjboard mjboard, HUser user) {
         Set<HUser> recommendUsers = mjboard.getRecommendUsers();
@@ -147,12 +142,13 @@ public class MjboardService {
         mjboardRepository.save(mjboard);
     }
 
-    // 모든 게시글 리스트 가져오기
+    // 데이터만 가져오기
+
     public List<Mjboard> getList() {
         return this.mjboardRepository.findAll();
     }
 
-    // 조회수 기준 Top 9 게시글 가져오기
+    // top 9 가져오기
     public List<Mjboard> getTop9ByView() {
         return mjboardRepository.findTop9ByOrderByMjCntDesc();
     }

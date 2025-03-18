@@ -26,15 +26,6 @@ public interface MjboardRepository extends JpaRepository<Mjboard, Integer> {
     @Query("SELECT m FROM Mjboard m WHERE m.mjContent LIKE %:kw%")
     Page<Mjboard> findAllByContent(@Param("kw") String kw, Pageable pageable);
 
-    //최신순 정렬 (기본값)
-    Page<Mjboard> findAllByOrderByMjRegDateDesc(Pageable pageable);
 
-    //추천순 정렬
-    @Query("SELECT m FROM Mjboard m ORDER BY size(m.recommendUsers) DESC, m.mjRegDate DESC")
-    Page<Mjboard> findAllByOrderByRecommendDesc(Pageable pageable);
-
-    //조회수순 정렬
-    @Query("SELECT m FROM Mjboard m ORDER BY m.mjCnt DESC, m.mjRegDate DESC")
-    Page<Mjboard> findAllByOrderByViewDesc(Pageable pageable);
 }
 

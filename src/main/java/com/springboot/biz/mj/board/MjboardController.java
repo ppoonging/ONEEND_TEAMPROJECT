@@ -41,22 +41,23 @@ public class MjboardController {
     public String list(Model model,
                        @PageableDefault(size = 6, sort = "mjRegDate", direction = Sort.Direction.DESC) Pageable pageable,
                        @RequestParam(value = "kw", defaultValue = "") String kw,
-                       @RequestParam(value = "searchType", defaultValue = "both") String searchType,
-                       @RequestParam(value = "sort", defaultValue = "mjRegDate") String sort) {
+                       @RequestParam(value = "searchType", defaultValue = "both") String searchType) {
 
-        Map<String, Object> result = mjboardService.getList(pageable, kw, searchType, sort);
+        // 검색 타입에 맞게 서비스에서 검색 결과 가져오기
+        Map<String, Object> result = mjboardService.getList(pageable, kw, searchType);
         Page<Mjboard> paging = (Page<Mjboard>) result.get("paging");
 
-        // 이미지 URL 매핑
-        Map<Integer, String> imageUrlMap = new HashMap<>();
         String defaultImageUrl = "/images/total/default.png";
+
+        // 각 게시글에서 이미지 URL 추출 후, mjSeq를 키로 하는 Map에 저장
+        Map<Integer, String> imageUrlMap = new HashMap<>();
         for (Mjboard board : paging) {
             String content = board.getMjContent();
             String imageUrl = null;
             if (content != null && content.contains("<img")) {
                 int srcIndex = content.indexOf("src=\"");
                 if (srcIndex != -1) {
-                    int start = srcIndex + 5;
+                    int start = srcIndex + 5; // "src=\""의 길이
                     int end = content.indexOf("\"", start);
                     if (end != -1) {
                         imageUrl = content.substring(start, end);
@@ -66,16 +67,18 @@ public class MjboardController {
             if (imageUrl == null || imageUrl.trim().isEmpty()) {
                 imageUrl = defaultImageUrl;
             }
+
             imageUrlMap.put(board.getMjSeq(), imageUrl);
         }
 
+        // 모델에 필요한 데이터 추가
         model.addAttribute("paging", paging);
         model.addAttribute("starCountMap", result.get("starCountMap"));
         model.addAttribute("kw", kw);
-        model.addAttribute("searchType", searchType);
-        model.addAttribute("sort", sort);
+        model.addAttribute("searchType", searchType); // 검색 타입 추가
         model.addAttribute("imageUrlMap", imageUrlMap);
-        return "mj/mjboard_list";
+
+        return "mj/mjboard_list"; // 해당 뷰로 이동
     }
 
     //게시글 작성 폼
