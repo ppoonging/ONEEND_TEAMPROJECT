@@ -90,8 +90,9 @@
                             </div>
 
                             <div class="h6" th:text="${rootAuth.rootAuthTitle}"></div>
-                            <div class="hover_content">
+                            <div class="hover_content d-flex justify-content-between">
                                 <p th:utext="${rootAuth.rootAuthContent}"></p>
+                                <p th:text="${#temporals.format(rootAuth.rootAuthDate, 'yyyy-MM-dd HH:mm')}"></p>
                             </div>
                         </div>
                     </a>
