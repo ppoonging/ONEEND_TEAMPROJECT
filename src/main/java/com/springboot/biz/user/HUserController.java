@@ -1,8 +1,6 @@
 package com.springboot.biz.user;
 
 
-import com.springboot.biz.notion.MgNotion;
-import com.springboot.biz.notion.MgNotionForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -57,7 +55,7 @@ public class HUserController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(HUserForm hUserForm) {
         return "users/login_form";
     }
 
@@ -82,11 +80,12 @@ public class HUserController {
 
 
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/myPage")
     public String infor(Model model, Principal principal) {
         HUser hUser = this.hUserSerevice.getUser(principal.getName());
         model.addAttribute("hUser", hUser);
-        return "myPage";
+        return "mypage/myPage";
     }
 
 
@@ -110,7 +109,7 @@ public class HUserController {
 
         model.addAttribute("hUserForm", hUserForm); //폼에 데이터를 넘겨야 수정 페이지에서 value로 불러올수 있음
 
-        return "myPageForm";
+        return "mypage/myPageForm";
     }
 
 
@@ -121,7 +120,7 @@ public class HUserController {
                          Principal principal, @PathVariable("username") String username) {
 
         if (bindingResult.hasErrors()) {
-            return "myPageForm";
+            return "mypage/myPageForm";
         }
 
         model.addAttribute("hUserForm", hUserForm); // 필수

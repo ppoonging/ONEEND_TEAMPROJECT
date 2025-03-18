@@ -4,7 +4,6 @@
         <a th:href="@{/users/signup}" sec:authorize="isAnonymous()" style="text-decoration: none">
             <span style="border-right: 1px solid #ccc; font-size: 14px; color: #777;" class="px-2">회원가입 </span>
         </a>
-
         <a th:href="@{/users/login}" sec:authorize="isAnonymous()"  style="text-decoration: none">
             <span class="px-2" style="font-size: 14px; color: #777;">로그인</span>
         </a>
@@ -86,7 +85,7 @@
                                 <div type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
                                     <i class="bi bi-person-fill" style="color: #555" th:attr="data-bs-title=${#authentication.name}"
                                        data-bs-toggle="tooltip"
-                                       data-bs-placement="top" sec:authorize="isAuthenticated()"></i>
+                                       data-bs-placement="top" ></i>
                                 </div>
                                 <div class="collapse bg-white" id="collapseExample2" style="position: absolute; border: 1px solid #eee; border-radius: 10%; transform: translateX(-35%)" >
                                     <div class="py-2" style="font-size: 13px; display: flex; flex-flow: column; text-wrap: nowrap">

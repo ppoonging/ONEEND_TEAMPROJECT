@@ -71,7 +71,7 @@
                     </div>
                     <div class="modal-footer d-flex justify-content-between">
                         <!-- ❤️ 추천 버튼 -->
-                        <form th:action="@{/userrecipe/recommend/{id}(id=${user.userRecipeSeq})}" method="post">
+                        <form sec:authorize="isAuthenticated()" th:action="@{/userrecipe/recommend/{id}(id=${user.userRecipeSeq})}" method="post">
                             <button type="submit" class="btn btn-outline-danger">
                                 ❤️ 추천 (<span th:text="${user.recipeRecommend}">0</span>)
                             </button>
@@ -82,8 +82,8 @@
             </div>
         </div>
         <!-- 스타일 + 모달 JS -->
-        <link rel="stylesheet" type="text/css" th:href="@{/stylesmodal.css}">
-        <script th:src="@{/fmrecipemodal.js}"></script>
+        <script th:src="@{/fmRecipeModal.js}"></script>
+        <link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
     </div>
 </main>
 </html>

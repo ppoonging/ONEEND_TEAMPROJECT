@@ -88,24 +88,18 @@
     </div>
     <!-- 인라인 CSS -->
 <!--     <style>
-
-
-    <!-- CSRF -->
-<!--     <meta sec:authorize="isAuthenticated()" name="_csrf" th:content="${_csrf.token}"/>
-    <meta sec:authorize="isAuthenticated()" name="_csrf_header" th:content="${_csrf.headerName}"/>
-
-        .hidden { display: none; }
-        .custom-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); z-index: 1050; border-radius: 8px; max-width: 600px; width: 90%; }
-        .custom-modal .modal-header { display: flex; justify-content: space-between; align-items: center; }
-        .custom-close-btn { cursor: pointer; font-size: 24px; color: #ffffff; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); z-index: 1040; display: none; }
-        .modal-open .modal-overlay { display: block; }
-        .custom-btn123 { font-size: 15px; background-color: #b5a89e; border: 2px solid #b5a89e; color: white; transition: background-color 0.3s; }
-        .custom-btn123:hover { background-color: #865136; border-color: #865136; }
-        .modal-img { width: 100%; height: 400px; }
-        .custom-modal .modal-body { max-height: 80vh; overflow-y: auto; padding: 20px; }
-        .modal-body { overflow-y: auto; max-height: 70vh; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
-    </style> --> -->
+            .hidden { display: none; }
+            .custom-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); z-index: 1050; border-radius: 8px; max-width: 600px; width: 90%; }
+            .custom-modal .modal-header { display: flex; justify-content: space-between; align-items: center; }
+            .custom-close-btn { cursor: pointer; font-size: 24px; color: #ffffff; }
+            .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); z-index: 1040; display: none; }
+            .modal-open .modal-overlay { display: block; }
+            .custom-btn123 { font-size: 15px; background-color: #b5a89e; border: 2px solid #b5a89e; color: white; transition: background-color 0.3s; }
+            .custom-btn123:hover { background-color: #865136; border-color: #865136; }
+            .modal-img { width: 100%; height: 400px; }
+            .custom-modal .modal-body { max-height: 80vh; overflow-y: auto; padding: 20px; }
+            .modal-body { overflow-y: auto; max-height: 70vh; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
+        </style> -->
 
 
     <!-- 인라인 JS -->
@@ -124,5 +118,10 @@
     <script th:src="@{/fmRecipeModal.js}"></script>
     <link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
 
+    <!-- CSRF -->
+    <meta sec:authorize="isAuthenticated()" name="_csrf" th:content="${_csrf.token}"/>
+    <meta sec:authorize="isAuthenticated()" name="_csrf_header" th:content="${_csrf.headerName}"/>
+
 </main>
+
 </html>

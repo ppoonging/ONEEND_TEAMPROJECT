@@ -5,16 +5,11 @@ import com.springboot.biz.user.HUserSerevice;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.security.Principal;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,14 +23,14 @@ public class MgController {
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
         Page<MgNotion> paging = this.mgService.getList(page);
         model.addAttribute("paging", paging);
-        return "notionList";
+        return "notion/notionList";
     }
 
     @GetMapping("/detail/{notionSeq}")
     public String detail(Model model, @PathVariable("notionSeq") Integer notionSeq) {
         MgNotion mgNotion = this.mgService.getMgNotion(notionSeq);
         model.addAttribute("mgNotion", mgNotion);
-        return "notionDetail";
+        return "notion/notionDetail";
     }
 
 
@@ -50,7 +45,7 @@ public class MgController {
     public String Create(@Valid MgNotionForm mgNotionForm, BindingResult bindingResult, @RequestParam("file") MultipartFile file) throws Exception {
         // Check for validation errors
         if(bindingResult.hasErrors()) {
-            return "notionForm";  // Return back to the form page
+            return "notion/notionForm";  // Return back to the form page
         }
 
         // Call service to handle creating the notion and save the file41616156
@@ -66,13 +61,13 @@ public class MgController {
 
         mgNotionForm.setNotionTitle(mgNotion.getNotionTitle());
         mgNotionForm.setNotionContent(mgNotion.getNotionContent());
-        return "notionForm";
+        return "notion/notionForm";
     }
 
     @PostMapping("/modify/{notionSeq}")
     public String Modify(@Valid MgNotionForm mgNotionForm, BindingResult bindingResult, @PathVariable("notionSeq") Integer notionSeq, @RequestParam("file") MultipartFile file)throws Exception {
         if(bindingResult.hasErrors()) {
-            return "notionForm";
+            return "notion/notionForm";
         }
         MgNotion mgNotion = this.mgService.getMgNotion(notionSeq);
 

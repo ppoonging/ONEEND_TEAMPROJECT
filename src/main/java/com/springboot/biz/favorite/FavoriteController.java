@@ -2,6 +2,7 @@ package com.springboot.biz.favorite;
 
 import com.springboot.biz.recipe.fm.FmRecipe;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,8 @@ public class FavoriteController {
         return "redirect:/fm/recipe"; // 찜 추가/삭제 후 리스트로 리다이렉트
     }
 
-/*마이페이지 즐겨찾기 */
+        /*마이페이지 즐겨찾기 */
+        @PreAuthorize("isAuthenticated()")
         @GetMapping("/my")
         public String myFavorites(Model model, Principal principal) {
             List<FmRecipe> favoriteRecipes = favoriteService.getUserFavorites(principal.getName());
