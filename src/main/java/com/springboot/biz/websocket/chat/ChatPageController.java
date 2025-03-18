@@ -30,7 +30,7 @@ public class ChatPageController {
     }
 
     // 채팅방 상세 페이지
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")//수정
     @GetMapping("/room/{roomId}")
     public String room(@PathVariable String roomId, Model model, Principal principal) {
         model.addAttribute("room", chatRoomRepository.findByRoomId(roomId));//roomid 로 찾기

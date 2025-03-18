@@ -33,7 +33,7 @@ public class ChatMessage {
 
     private String image; // base64로 저장 (선택)
 
-
+//ㅇㅇ
 
     private LocalDateTime sendDate = LocalDateTime.now(); // 보낸 시간
 

@@ -83,7 +83,7 @@ public class ChatRoomController {
                 .orElseThrow(() -> new RuntimeException("유저 정보 없음"));
         model.addAttribute("user", user);
 
-        return "websocket/chat_detailroom"; // 채팅방 상세 페이지로 이동
+        return "websocket/chat_detailroom"; // 채팅방 상세 페이지로 이동 //수정
     }
 
 

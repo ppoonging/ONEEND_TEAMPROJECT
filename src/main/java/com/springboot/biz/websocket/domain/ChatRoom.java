@@ -29,5 +29,5 @@ public class ChatRoom {
         room.name = name;
         room.owner = owner;
         return room;
-    }
+    }//ㅇㅇ
 }

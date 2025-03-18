@@ -42,7 +42,7 @@ public class ChatController {
     }
 
     // 채팅방 메세지 전송
-    @MessageMapping("/chat/message/{roomId}")
+    @MessageMapping("/chat/message/{roomId}") //수정
     public void message(@DestinationVariable String roomId, @Payload ChatMessage message, Principal principal) {
         String username = principal.getName();
         HUser sender = hUserRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("유저 정보 없음"));

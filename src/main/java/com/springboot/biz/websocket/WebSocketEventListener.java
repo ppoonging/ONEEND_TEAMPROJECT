@@ -71,7 +71,7 @@ public class WebSocketEventListener {
     public void removeUserFromRoom(String roomId) {
         roomUserCount.put(roomId, Math.max(0, roomUserCount.getOrDefault(roomId, 1) - 1));
         sendUserCount(roomId);
-    }
+    }//ㅇㅇ
 
     public int getUserCount(String roomId) {
         return roomUserCount.getOrDefault(roomId, 0);
