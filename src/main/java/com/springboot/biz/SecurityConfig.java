@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,11 +50,13 @@ public class SecurityConfig {
                         .requestMatchers("/users/mypage").authenticated()  // 마이페이지 로그인 필요
                         .requestMatchers("/admin/**").hasRole("ADMIN")  // 관리자만 접근 가능
                         .requestMatchers("/user/**").hasRole("USER")  // 일반 사용자만 접근 가능
+                        .requestMatchers("users/login").permitAll()
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
                         .loginPage("/users/login")
-                        .defaultSuccessUrl("/")  // 로그인 후 기본 페이지
+                        .loginProcessingUrl("/users/login")  // 로그인 폼의 action과 동일하게 설정
+                        .defaultSuccessUrl("/", true)  // 로그인 성공 시 이동할 페이지
                         .permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
@@ -67,6 +70,9 @@ public class SecurityConfig {
                         .logoutRequestMatcher(new AntPathRequestMatcher("/users/logout"))
                         .logoutSuccessUrl("/")  // 로그아웃 후 기본 페이지
                         .invalidateHttpSession(true)  // 세션 무효화
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // 필요할 때만 세션 생성
                 );
 
         return http.build();

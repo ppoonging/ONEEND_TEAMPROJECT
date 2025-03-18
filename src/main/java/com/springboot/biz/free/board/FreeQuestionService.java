@@ -79,23 +79,11 @@ public class FreeQuestionService {
         File saveFile = new File(projectPath,frboFileName);
         file.transferTo(saveFile);
 
-        //썸네일
-        String thumbnailFileName = "thumb_" + frboFileName;
-        File thumbnailFile = new File(projectPath,thumbnailFileName);
-
-        try{
-            freeThumbnailService.createThumbnail(saveFile,thumbnailFile);
-        }catch (IOException e){
-            throw new Exception("썸네일 생성에 실패했습니다",e);
-        }
-
-        String frbothumbnailUrl = "/files/" + thumbnailFileName;
 
 
         //데이터 저장
         FreeQuestion f = new FreeQuestion();
         f.setFrboFilePath("/files/" + frboFileName);
-        f.setFrbothumbnailUrl(frbothumbnailUrl);
         f.setFrboFileName(frboFileName);
         f.setFrboTitle(frboTitle);
         f.setFrboContent(frboContent);

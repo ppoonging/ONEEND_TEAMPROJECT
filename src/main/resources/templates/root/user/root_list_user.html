@@ -3,7 +3,7 @@
     <!--content-->
     <section class="">
         <div style="background-color: #333;">
-            <div class="container">
+            <div class="container py-5">
 
                 <div class="row py-2">
                     <h3 class="text-center text-white py-3 brutal-subscribe__title">ROOT EVENT</h3>
@@ -59,7 +59,7 @@
                 </div>
             </div>
         </div>
-        <div class="container pt-5">
+        <div class="container py-5">
             <h2 class="text-start py-3 mb-5 root-border-bottom">루트 인증 현황</h2>
 
             <div class="col mb-3 ms-2 d-flex justify-content-start">
@@ -90,8 +90,9 @@
                             </div>
 
                             <div class="h6" th:text="${rootAuth.rootAuthTitle}"></div>
-                            <div class="hover_content">
+                            <div class="hover_content d-flex justify-content-between">
                                 <p th:utext="${rootAuth.rootAuthContent}"></p>
+                                <p th:text="${#temporals.format(rootAuth.rootAuthDate, 'yyyy-MM-dd HH:mm')}"></p>
                             </div>
                         </div>
                     </a>

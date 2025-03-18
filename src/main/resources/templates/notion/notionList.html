@@ -5,40 +5,9 @@
     <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
         <h2 class="text-center text-white py-2 font-bold-style">공지사항</h2>
     </div>
-    <div class="container">
-        <!--수정해야할 부분-->
-        <!--content-->
-        <section class="py-3">
+    <div class="container py-5">
+        <section class="py-2">
 
-            <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
-
-                <!-- **내용** -->
-
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>공지사항</title>
-
-                <style>
-                    .table thead {
-                        background-color: #f4e9;
-                    }
-                    .table th, .table td {
-                        text-align: center;
-                        vertical-align: middle;
-                    }
-                    .table a {
-                        text-decoration: none;
-                        color: #c6acae;
-                    }
-                    .table a:hover {
-                        color: #c6acae;
-                    }
-                </style>
-            </head>
-            <body>
             <div class="container mt-5">
 
                 <table class="table table-bordered table-hover">
@@ -74,18 +43,6 @@
                 </table>
             </div>
 
-
-            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-            </body>
-            </html>
-
-
-
-
-
-
             <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
                 <!-- 로그인 사용자만 -->
                 <a th:href="@{/notion/create}" sec:authorize="isAuthenticated()"
@@ -102,22 +59,6 @@
                 </a>
             </div>
 
-
-            <style>
-
-                .fixed-btn {
-                    position: fixed; /* ⭐ 무조건 필요 */
-                    bottom: 30px;
-                    right: 30px;
-                    z-index: 1000;
-                    transition: background-color 0.3s ease;
-                }
-
-                .fixed-btn:hover {
-                    background-color: #b8946b;
-                }
-
-            </style>
         </section>
     </div>
 
@@ -139,7 +80,36 @@
     </nav>
 
 
-
 </main>
-</html>
+<style>
+
+    .fixed-btn {
+        position: fixed; /* ⭐ 무조건 필요 */
+        bottom: 30px;
+        right: 30px;
+        z-index: 1000;
+        transition: background-color 0.3s ease;
+    }
+
+    .fixed-btn:hover {
+        background-color: #b8946b;
+    }
+
+     .table thead {
+         background-color: #f4e9;
+     }
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+    .table a {
+        text-decoration: none;
+        color: #c6acae;
+    }
+    .table a:hover {
+        color: #c6acae;
+    }
+
+
+</style>
 </html>

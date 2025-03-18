@@ -1,4 +1,4 @@
-package com.springboot.biz.customer;
+package com.springboot.biz.customer.replay;
 
 import com.springboot.biz.customer.question.Customer;
 import com.springboot.biz.user.HUser;
