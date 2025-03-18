@@ -32,17 +32,10 @@ public class FreeQuestion {
 
     private LocalDateTime frboRegDate; //작성일
 
-    @Column(columnDefinition = "Integer default 0")
-    @NonNull
-    private Integer frboCnt;  //  자유게시판 조회수
-
-    private Integer frboRecommend;  //자유게시판 답변 추천
-
     private String frboFilePath; //파일경로
 
     private String frboFileName; //파일이름
 
-    private String frbothumbnailUrl; //썸네일
 
     private LocalDateTime frboModifyDate; //수정시간
 

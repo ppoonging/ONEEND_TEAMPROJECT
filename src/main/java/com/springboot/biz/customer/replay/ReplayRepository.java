@@ -1,6 +1,5 @@
 package com.springboot.biz.customer.replay;
 
-import com.springboot.biz.customer.Replay;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

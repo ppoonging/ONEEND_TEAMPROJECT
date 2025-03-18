@@ -5,10 +5,13 @@ import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -30,14 +33,17 @@ public class CustomerService {
     }
 
     // 고객 문의 등록
-    public void createCustomer(String custTitle, String custContent, Integer userSeq) {
+    public void createCustomer(String custTitle, String custContent, Integer userSeq){
+
+
+        // 고객 정보 저장
         HUser user = hUserSerevice.getUserById(userSeq);
         Customer customer = new Customer();
         customer.setCustTitle(custTitle);
         customer.setCustContent(custContent);
         customer.setUser(user);
         customer.setCustRegTime(LocalDateTime.now());
-        customer.setCustState(CustState.PENDING); // 기본값: 대기중
+        customer.setCustState(CustState.PENDING);  // 기본값: 대기중
         customerRepository.save(customer);
     }
 
