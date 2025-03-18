@@ -12,170 +12,213 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
     <style>
+        body {
+            background-color: #F5E1C8; /* 베이지 배경 */
+            font-family: 'Arial', sans-serif;
+        }
+
+        .chat-container {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #FAF3E0; /* 베이지 계열 */
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-header {
+            background-color: #D2B48C; /* 베이지 */
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .user-count {
+            font-size: 14px;
+            color: white;
+            text-align: center;
+            margin-top: 5px;
+        }
+
         .chat-box {
             height: 500px;
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
             padding: 15px;
             overflow-y: auto;
-            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            background-color: #F4EDE4; /* 연한 베이지 */
+        }
+
+        .message {
+            max-width: 75%;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
         }
 
         .my-message {
-            text-align: right;
+            align-self: flex-end;
+            flex-direction: row-reverse;
         }
 
         .other-message {
-            text-align: left;
+            align-self: flex-start;
         }
 
         .message-box {
-            display: inline-block;
             padding: 10px;
-            border-radius: 10px;
-            margin: 5px 0;
-            max-width: 70%;
+            border-radius: 12px;
+            font-size: 14px;
             word-wrap: break-word;
         }
 
         .my-message .message-box {
-            background-color: #d1e7dd;
+            background-color: #D2B48C; /* 베이지 */
+            color: black;
+            border-radius: 12px 12px 0px 12px;
         }
 
         .other-message .message-box {
-            background-color: #fff;
-            border: 1px solid #dee2e6;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px 12px 12px 0px;
         }
 
         .system-message {
             text-align: center;
-            font-size: 0.9rem;
             color: #6c757d;
-            margin: 10px 0;
+            font-size: 12px;
+            margin: 5px 0;
         }
 
-        .time {
-            display: block;
-            font-size: 0.75rem;
-            color: gray;
+        .input-group {
+            padding: 10px;
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .input-group input {
+            border-radius: 20px;
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .send-btn {
+            background-color: #D2B48C; /* 베이지 */
+            border-radius: 20px;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-left: 5px;
+        }
+
+        .exit-btn {
+            background-color: #8B4513; /* 어두운 브라운 */
+            color: white;
+            border-radius: 20px;
+            border: none;
+            padding: 8px 12px;
+            font-size: 14px;
             margin-top: 5px;
-        }
-
-        .image-message {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 5px;
-            border-radius: 8px;
+            display: block;
+            width: 100%;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 th:text="${room.name}">채팅방 이름</h3>
-        <div>
-            <span id="userCount" class="badge bg-secondary me-2">접속자: 1명</span>
-            <button id="leaveButton" class="btn btn-outline-danger btn-sm">나가기</button>
-        </div>
+<div class="chat-container">
+    <div class="chat-header">
+        <span th:text="${room.name}">채팅방 이름</span>
+        <div class="user-count" id="userCount">접속자: 0명</div>
     </div>
 
     <!-- 채팅 박스 -->
-    <div id="chat" class="chat-box mb-3"></div>
+    <div id="chat" class="chat-box"></div>
 
     <!-- 메시지 입력창 -->
     <div class="input-group">
         <input type="text" id="messageInput" class="form-control" placeholder="메시지를 입력하세요">
-        <input type="file" id="imageInput" accept="image/*" class="form-control" style="max-width: 200px;">
-        <button id="sendButton" class="btn btn-primary">보내기</button>
+        <button id="sendButton" class="send-btn">보내기</button>
     </div>
+
+    <!-- 나가기 버튼 -->
+    <button id="exitButton" class="exit-btn">나가기</button>
 </div>
 
-<!-- 자바스크립트 -->
 <script th:inline="javascript">
-    let roomId = [[${room.roomId}]];
-    let user = [[${user.nickname}]];
-    let socket = new SockJS('/ws-chat');
-    let stompClient = Stomp.over(socket);
+    document.addEventListener("DOMContentLoaded", function () {
+        let roomId = [[${room.roomId}]];
+        let user = [[${user.nickname}]];
+        let socket = new SockJS('/ws-chat');
+        let stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, function () {
-        console.log('✅ 웹소켓 연결 성공');
+        // 웹소켓 연결 및 구독
+        stompClient.connect({}, function () {
+            console.log('✅ 웹소켓 연결 성공');
 
-        //구독
-        stompClient.subscribe('/topic/chat/room/' + roomId, function (message) {
-            let msgData = JSON.parse(message.body);
-            console.log("💬 받은 메시지: ", msgData);
+            // 채팅방 메시지 수신
+            stompClient.subscribe('/topic/chat/room/' + roomId, function (message) {
+                let msgData = JSON.parse(message.body);
+                let chatBox = document.getElementById('chat');
+                let msgElement = document.createElement('div');
 
-            let chatBox = document.getElementById('chat');
-            if (!chatBox) {
-                console.error("❌ chatBox 요소를 찾을 수 없음");
-                return;
-            }
+                console.log("💬 받은 메시지: ", msgData);
 
-            let msgElement = document.createElement('div');
+                if (msgData.type === 'CHAT') {
+                    msgElement.className = msgData.sender === user ? 'my-message' : 'other-message';
+                    msgElement.innerHTML = `<div class="message-box"><b>${msgData.sender}</b><br>${msgData.message}</div>`;
+                } else if (msgData.type === 'ENTER') {  // JOIN → ENTER 변경
+                    msgElement.className = "system-message";
+                    msgElement.innerHTML = `🚀 ${msgData.sender}님이 입장하셨습니다.`;
+                } else if (msgData.type === 'LEAVE') {
+                    msgElement.className = "system-message";
+                    msgElement.innerHTML = `👋 ${msgData.sender}님이 퇴장하셨습니다.`;
+                } else if (msgData.type === 'USER_COUNT') {
+                    document.getElementById('userCount').innerText = `접속자: ${msgData.count}명`;
+                    return;
+                }
+                chatBox.appendChild(msgElement);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
 
-            if (msgData.type === 'USER_COUNT') {
-                document.getElementById('userCount').innerText = '접속자: ' + msgData.count + '명';
-                return;
-            }
-
-            if (msgData.type === 'ENTER' || msgData.type === 'LEAVE') {
-                msgElement.innerHTML = `<div class="system-message">${msgData.sender}님이 ${msgData.type === 'ENTER' ? '입장' : '퇴장'}하였습니다.</div>`;
-            } else if (msgData.type === 'CHAT') {
-                let isMine = msgData.sender === user;
-                msgElement.className = isMine ? 'my-message' : 'other-message';
-
-                let messageContent = msgData.image ? `<img src="${msgData.image}" class="image-message"><br>` : '';
-                messageContent += msgData.message;
-
-                msgElement.innerHTML = `
-                <div class="message-box">
-                    <b>${msgData.sender}</b><br>
-                    ${messageContent}
-                    <span class="time">${new Date(msgData.sendDate).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</span>
-                </div>`;
-            }
-
-            chatBox.appendChild(msgElement);
-            chatBox.scrollTop = chatBox.scrollHeight;
+            // 서버에 입장 메시지 전송
+            stompClient.send("/app/chat/enter", {}, JSON.stringify({
+                roomId: roomId,
+                sender: user
+            }));
         });
 
-        //입장
-        stompClient.send("/app/chat/enter", {}, JSON.stringify({
-            roomId: roomId,
-            type: 'ENTER'
-        }));
-    });
+        // 메시지 전송 기능
+        document.getElementById('sendButton').addEventListener('click', function () {
+            let msg = document.getElementById('messageInput').value.trim();
+            if (msg !== '') {
+                stompClient.send("/app/chat/message/" + roomId, {}, JSON.stringify({
+                    roomId: roomId,
+                    sender: user,
+                    message: msg,
+                    type: 'CHAT'
+                }));
+                document.getElementById('messageInput').value = '';
+            }
+        });
 
-    //나가기
-    document.getElementById('leaveButton').addEventListener('click', function () {
-        stompClient.send("/app/chat/leave", {}, JSON.stringify({
-            roomId: roomId,
-            type: 'LEAVE'
-        }));
-        window.location.href = '/chatroom/rooms';
-    });
-
-    //메시지 전송
-    document.getElementById('sendButton').addEventListener('click', function () {
-        let msg = document.getElementById('messageInput').value.trim();
-        if (msg !== '') {
+        // 나가기 버튼
+        document.getElementById('exitButton').addEventListener('click', function () {
             stompClient.send("/app/chat/message/" + roomId, {}, JSON.stringify({
                 roomId: roomId,
-                message: msg,
-                type: 'CHAT'
+                sender: user,
+                type: 'LEAVE'
             }));
-            document.getElementById('messageInput').value = '';
-        }
+            stompClient.disconnect();
+            window.location.href = "/chat/rooms";  // 올바른 URL로 이동
+        });
     });
-
-    // 엔터로 전송
-    document.getElementById('messageInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') document.getElementById('sendButton').click();
-    });
-
 </script>
-
 
 </body>
 </html>

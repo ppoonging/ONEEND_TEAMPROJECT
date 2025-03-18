@@ -32,7 +32,7 @@ public class ChatController {
         HUser sender = hUserRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("유저 정보 없음"));
 
         headerAccessor.getSessionAttributes().put("roomId", message.getRoomId());
-        eventListener.addUserToRoom(headerAccessor.getSessionId(), message.getRoomId());
+        eventListener.addUserToRoom(headerAccessor.getSessionId(), message.getRoomId(), sender.getNickname());
 
         message.setSender(sender.getNickname());
         message.setType(ChatMessage.MessageType.ENTER);

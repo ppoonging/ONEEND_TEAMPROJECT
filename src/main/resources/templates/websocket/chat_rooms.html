@@ -4,75 +4,247 @@
     <title>채팅방 리스트</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #FFFFFF; /* 배경 흰색 고정 */
+            font-family: 'Arial', sans-serif;
         }
         .chat-container {
-            max-width: 700px;
-            margin: 0 auto;
+            max-width: 500px;
+            margin: 30px auto;
+            background-color: #FFF;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
         .chat-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            padding: 15px 0;
+            border-bottom: 2px solid #f0f0f0;
         }
         .chat-card {
-            transition: all 0.3s ease;
+            background-color: #F9F9F9;
+            transition: all 0.3s ease-in-out;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
         .chat-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background-color: #F4F4F4;
+        }
+        .chat-info {
+            font-size: 14px;
+            color: gray;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        .enter-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .enter-btn:hover {
+            background-color: #45A049;
+        }
+        .delete-btn {
+            background-color: #FF6B6B;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .delete-btn:hover {
+            background-color: #FF4F4F;
         }
     </style>
 </head>
-<body class="container py-5">
+<body>
+<header th:fragment="header" id="header" class="bg-white pt-3 border-bottom sticky-top shadow-sm">
+    <div class="container d-flex justify-content-end">
+        <span th:text="${#authentication.name} + ' 님'" sec:authorize="isAuthenticated()" style=" font-size: 14px; color: #777; transform: translateY(1.8px)" class="px-2"></span>
+        <a th:href="@{/users/signup}" sec:authorize="isAnonymous()" style="text-decoration: none">
+            <span style="border-right: 1px solid #ccc; font-size: 14px; color: #777;" class="px-2">회원가입 </span>
+        </a>
+
+        <a th:href="@{/users/login}" sec:authorize="isAnonymous()"  style="text-decoration: none">
+            <span class="px-2" style="font-size: 14px; color: #777;">로그인</span>
+        </a>
+        <a th:href="@{/users/logout}" sec:authorize="isAuthenticated()"  style="text-decoration: none">
+            <span class="px-2" style="font-size: 14px; color: #777;">로그아웃</span>
+        </a>
+    </div>
+
+    <!--네비바-->
+    <div id="navbar" class="container-fluid" style="background-color: white;">
+        <nav class="navbar navbar-expand-lg w-100">
+            <div class="container">
+                <a class="me-3" th:href="@{/}">
+                    <img th:src="@{/images/total/logo.png}" width="90%">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto my-2 my-lg-0" style="--bs-scroll-height: 169px;">
+                        <li class="nav-item dropdown">
+                            <!--맛광커뮤니티-->
+                            <a class="nav-link me-5 fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                레시피
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" th:href="@{/fm/recipe}">정석 레시피</a></li>
+                                <li><a class="dropdown-item" th:href="@{/userrecipe/list}">우리들의 레시피</a></li>
+                            </ul>
+                        </li>
+                        <!--맛광레시피-->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link me-5 fs-5" th:href="@{/mjboard/list}">맛집</a> <!-- 이렇게 수정 -->
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link me-5 fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                소근소근
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" th:href="@{/freequestion/}">자유게시판</a></li>
+                                <li><a class="dropdown-item" th:href="@{/root/list}">한식루트 인증</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link me-5 fs-5" th:href="@{/sns}">SNS</a>
+                        </li>
+                        <!--고객센터-->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link me-5 fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                고객센터
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" th:href="@{/notion/}">공지사항</a></li>
+                                <li><a class="dropdown-item" th:href="@{/customer/}">Q&A</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div>
+
+                    </div>
+                    <!--네비바 아이콘-->
+                    <div class="navbar-nav">
+                        <ul class="row my-2 my-lg-0 media-sub-nav" style="transform: translateY(5px);  list-style: none;">
+                            <!--팀 소개-->
+                            <li class="col fs-4 pt-1" >
+                                <a href="#" style="color: #333">
+                                    <i class="bi bi-hand-index-thumb-fill" style="color: #ecd0c4"></i>
+                                </a>
+                            </li>
+                            <!--채팅-->
+                            <li class="col fs-4 pt-1" style="transform: translateX(3px)">
+                                <a th:href="@{/chat/rooms}" style="color: #333">
+                                    <i class="bi bi-chat-dots-fill" style="color: #4c80e4"></i>
+                                </a>
+                            </li>
+                            <!--회원-->
+                            <li class="col fs-3 pt-1">
+                                <div type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
+                                    <i class="bi bi-person-fill" style="color: #555" th:attr="data-bs-title=${#authentication.name}"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-placement="top" sec:authorize="isAuthenticated()"></i>
+                                </div>
+                                <div class="collapse bg-white" id="collapseExample2" style="position: absolute; border: 1px solid #eee; border-radius: 10%; transform: translateX(-35%)" >
+                                    <div class="py-2" style="font-size: 13px; display: flex; flex-flow: column; text-wrap: nowrap">
+                                        <a th:href="@{/users/myPage}" class="coll py-1 px-3" style="color: #333; text-decoration: none">마이페이지</a>
+                                        <a th:href="@{/favorite/my}" class="coll py-1 px-3" style="color: #333; text-decoration: none;">내 글 목록</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+    </div>
+    <script th:inline="javascript" layout:fragment="script">
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+        });
+    </script>
+</header>
+
+
+
 
 <div class="chat-container">
 
-    <!-- 헤더 및 로그인 버튼 -->
+    <!-- 헤더 -->
     <div class="chat-header">
-        <h2 class="fw-bold">💬 한끝 소통</h2>
-        <a th:href="@{/users/login}" sec:authorize="isAnonymous()" class="btn btn-outline-primary btn-sm">
+        <h3 class="fw-bold">💬 채팅방 리스트</h3>
+        <a th:href="@{/users/login}" sec:authorize="isAnonymous()" class="btn btn-outline-dark btn-sm">
             로그인
         </a>
     </div>
 
     <!-- 방 생성 폼 (로그인 한 사용자만) -->
-    <div th:if="${#authorization.expression('isAuthenticated()')}" class="mb-4">
+    <div th:if="${#authorization.expression('isAuthenticated()')}" class="mb-3">
         <form th:action="@{/chatroom/rooms}" method="post" class="input-group shadow-sm">
-            <input type="text" name="name" class="form-control" placeholder="채팅방 이름을 입력하세요" required>
-            <button type="submit" class="btn btn-primary">방 만들기</button>
+            <input type="text" name="name" class="form-control" placeholder="새로운 채팅방 이름" required>
+            <button type="submit" class="btn btn-dark">생성</button>
         </form>
     </div>
 
     <!-- 로그인 안한 사용자 안내 -->
-    <div th:if="${#authorization.expression('!isAuthenticated()')}" class="alert alert-warning shadow-sm">
+    <div th:if="${#authorization.expression('!isAuthenticated()')}" class="alert alert-warning text-center">
         <strong>채팅방 생성 및 입장은 로그인 후 이용 가능합니다.</strong>
     </div>
 
     <!-- 방 리스트 -->
     <div th:if="${rooms != null and #lists.size(rooms) > 0}">
-        <div th:each="room : ${rooms}" class="card chat-card mb-3">
-            <div class="card-body d-flex justify-content-between align-items-center">
+        <div th:each="room : ${rooms}" class="chat-card">
+            <div>
                 <div class="fw-semibold" th:text="${room.name}">방 이름</div>
-                <div>
-                    <a th:if="${#authorization.expression('isAuthenticated()')}"
-                       th:href="@{|/chat/room/${room.roomId}|}"
-                       class="btn btn-success btn-sm">입장</a>
-                    <span th:if="${#authorization.expression('!isAuthenticated()')}" class="text-muted">로그인 필요</span>
+                <div class="chat-info">
+                    🟢 <span th:text="${room.userCount}">0</span> 명 참여 중 |
+                    방장: <span th:text="${room.owner}">방장</span>
                 </div>
+            </div>
+            <div class="action-buttons">
+                <a th:href="@{|/chat/room/${room.roomId}|}" class="enter-btn">입장</a>
+
+                <!-- 방장만 삭제 버튼 보이도록 설정 -->
+                <form th:if="${room.owner == #authentication.principal.username}"
+                      th:action="@{|/chatroom/delete/${room.roomId}|}"
+                      method="post" class="d-inline">
+                    <button type="submit" class="delete-btn">삭제</button>
+                </form>
             </div>
         </div>
     </div>
 
     <!-- 방이 없을 때 안내 -->
-    <div th:if="${rooms == null or #lists.size(rooms) == 0}" class="alert alert-info text-center shadow-sm">
-        현재 생성된 채팅방이 없습니다. 새로운 방을 만들어보세요!
+    <div th:if="${rooms == null or #lists.size(rooms) == 0}" class="alert alert-secondary text-center">
+        생성된 채팅방이 없습니다. 새로운 방을 만들어보세요!
     </div>
 
 </div>
 
 </body>
 </html>
+<!-- Bootstrap Icon CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">

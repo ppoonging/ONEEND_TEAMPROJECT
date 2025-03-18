@@ -40,4 +40,15 @@ public class ChatMessage {
     /*@ManyToOne(fetch = FetchType.LAZY) // 유저 연결 (다대일 관계)
     @JoinColumn(name = "user_seq") // FK 이름 (HUser의 PK)*/
 
+    // 추가: 필요한 생성자 정의
+    public ChatMessage(MessageType type, String roomId, String message, String sender) {
+        this.type = type;
+        this.roomId = roomId;
+        this.message = message;
+        this.sender = sender;
+        this.image = null;
+        this.sendDate = LocalDateTime.now();
+    }
+
+
 }
