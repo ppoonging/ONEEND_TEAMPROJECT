@@ -37,7 +37,9 @@ public class MjboardService {
     }
 
     // 게시글 작성
-    public void create(String mjTitle, String mjContent, MultipartFile file, HUser hUser, Integer mjCnt) throws Exception {
+    public void create(String mjTitle, String mjContent, MultipartFile file, HUser hUser, Integer mjCnt,
+                       String mjMapTitle, String mjMapAddress, String mjMapRodeAddress, Double mjMapLatitude,
+                       Double mjMapLongitude, String mjMapLink, String mjMapCategory) throws Exception {
         String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/mj";
         UUID uuid = UUID.randomUUID();
         String mjFileName = uuid + "_" + file.getOriginalFilename();
@@ -56,6 +58,15 @@ public class MjboardService {
         mj.setMjRegDate(LocalDateTime.now());
         mj.setUserId(hUser);
         mj.setMjCnt(0);
+
+        // map
+        mj.setMjMapTitle(mjMapTitle);
+        mj.setMjMapAddress(mjMapAddress);
+        mj.setMjMapRodeAddress(mjMapRodeAddress);
+        mj.setMjMapLatitude(mjMapLatitude);
+        mj.setMjMapLongitude(mjMapLongitude);
+        mj.setMjMapLink(mjMapLink);
+        mj.setMjMapCategory(mjMapCategory);
         mjboardRepository.save(mj);
     }
 
@@ -79,9 +90,20 @@ public class MjboardService {
     }
 
     // 수정
-    public void modify(Mjboard mjboard, String mjTitle, String mjContent) {
+    public void modify(Mjboard mjboard, String mjTitle, String mjContent, String mjMapTitle, String mjMapAddress, String mjMapRodeAddress, Double mjMapLatitude,
+                       Double mjMapLongitude, String mjMapLink, String mjMapCategory) {
+
         mjboard.setMjTitle(mjTitle);
         mjboard.setMjContent(mjContent);
+
+        //map
+        mjboard.setMjMapTitle(mjMapTitle);
+        mjboard.setMjMapAddress(mjMapAddress);
+        mjboard.setMjMapRodeAddress(mjMapRodeAddress);
+        mjboard.setMjMapLatitude(mjMapLatitude);
+        mjboard.setMjMapLongitude(mjMapLongitude);
+        mjboard.setMjMapLink(mjMapLink);
+        mjboard.setMjMapCategory(mjMapCategory);
         mjboardRepository.save(mjboard);
     }
 
@@ -100,5 +122,16 @@ public class MjboardService {
             recommendUsers.add(user);
         }
         mjboardRepository.save(mjboard);
+    }
+
+    // 데이터만 가져오기
+
+    public List<Mjboard> getList() {
+        return this.mjboardRepository.findAll();
+    }
+
+    // top 9 가져오기
+    public List<Mjboard> getTop9ByView() {
+        return mjboardRepository.findTop9ByOrderByMjCntDesc();
     }
 }

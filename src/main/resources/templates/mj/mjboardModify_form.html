@@ -4,31 +4,108 @@
     <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
         <h2 class="text-center text-white py-2 font-bold-style">맛집 소개</h2>
     </div>
-    <div class="container">
-        <h2 class="mb-4">맛집소개 수정하기</h2>
+    <div class="container py-5">
+        <section>
+            <div class="card shadow-sm p-4" style="border-radius: 16px; background-color: #fff;">
 
-        <form th:action="@{|/mjboard/modify/${mjboard.mjSeq}|}" method="post" enctype="multipart/form-data" th:object="${mjboardForm}">
-            <!-- CSRF 토큰 (필요시 주석 해제) -->
-            <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"> -->
+                <h2 class="mb-4" style="font-weight: bold; font-size: 28px; text-align: center;">맛집 소개 수정</h2>
 
-            <!-- 제목 입력 -->
-            <div class="form-group">
-                <label for="mjTitle">제목</label>
-                <input type="text" th:field="*{mjTitle}" id="mjTitle" class="form-control" placeholder="제목을 입력하세요">
-                <small class="text-danger" th:if="${#fields.hasErrors('mjTitle')}" th:errors="*{mjTitle}"></small>
+                <!-- Map 위치 등록 버튼 -->
+                <div class="d-flex justify-content-end align-items-center mb-2">
+                    <div id="locationSelect" class="d-none d-flex align-items-center">
+                        <img width="24" height="24" src="https://img.icons8.com/skeuomorphism/32/map-marker.png"
+                             alt="map-marker" class="me-1"/>
+                        <span class="me-3"
+                              style="color: #ec8d53; font-size: 13px; transform: translateY(4px)">위치 선택 완료!</span>
+                        <span class="me-3" id="locationSelectText"></span>
+                    </div>
+                    <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">위치
+                        등록
+                    </button>
+                </div>
+
+                <form th:action="@{|/mjboard/modify/${mjboard.mjSeq}|}" method="post" enctype="multipart/form-data"
+                      th:object="${mjboardForm}">
+                    <!-- CSRF 토큰 (필요시 주석 해제) -->
+                    <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"> -->
+
+                    <!-- 제목 입력 -->
+                    <div class="form-group">
+                        <label for="mjTitle">제목</label>
+                        <input type="text" th:field="*{mjTitle}" id="mjTitle" class="form-control"
+                               placeholder="제목을 입력하세요">
+                        <small class="text-danger" th:if="${#fields.hasErrors('mjTitle')}"
+                               th:errors="*{mjTitle}"></small>
+                    </div>
+
+                    <!-- 내용 (썸머노트 에디터) -->
+                    <div class="form-group">
+                        <label for="mjContent">내용</label>
+                        <textarea th:field="*{mjContent}" id="summernote" class="form-control" rows="10"></textarea>
+                        <small class="text-danger" th:if="${#fields.hasErrors('mjContent')}"
+                               th:errors="*{mjContent}"></small>
+                    </div>
+
+                    <!-- 지도 -->
+                    <div class="modal modal-xl fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">위치 등록</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3 row">
+                                        <label for="query" class="col-sm-1 col-form-label">검색</label>
+                                        <div class="col-sm-5">
+                                            <input type="text" id="query" name="query" th:value="${query}" class="form-control" placeholder="키워드를 정확히 입력해주세요.">
+                                        </div>
+                                        <div class="col-1 d-grid">
+                                            <button type="button" id="search-submit" class="btn btn-outline-primary">검색</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between h-100">
+                                        <!--left-->
+                                        <div class="d-flex flex-column justify-content-between" style="width: 58%;">
+                                            <div id="map" style="width: 100%; min-height: 500px;"></div>
+                                        </div>
+
+                                        <!--right-->
+                                        <div class="h-100" style="width: 40%;">
+                                            <ul id="searchResultList" class="h-100 p-0 mb-0">
+                                                <li id="search-data-list">
+                                                    <!--검색 리스트 공간-->
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 저장 버튼 -->
+                    <button type="submit" class="btn btn-primary">수정하기</button>
+
+                    <input type="hidden" name="mjMapTitle" id="mjMapTitle" th:field="*{mjMapTitle}">
+                    <input type="hidden" name="mjMapAddress" id="mjMapAddress" th:field="*{mjMapAddress}">
+                    <input type="hidden" name="mjMapRodeAddress" id="mjMapRodeAddress" th:field="*{mjMapRodeAddress}">
+                    <input type="hidden" name="mjMapLatitude" id="mjMapLatitude" th:field="*{mjMapLatitude}">
+                    <input type="hidden" name="mjMapLongitude" id="mjMapLongitude" th:field="*{mjMapLongitude}">
+                    <input type="hidden" name="mjMapLink" id="mjMapLink" th:field="*{mjMapLink}">
+                    <input type="hidden" name="mjMapCategory" id="mjMapCategory" th:field="*{mjMapCategory}">
+
+                </form>
             </div>
-
-            <!-- 내용 (썸머노트 에디터) -->
-            <div class="form-group">
-                <label for="mjContent">내용</label>
-                <textarea th:field="*{mjContent}" id="summernote" class="form-control" rows="10"></textarea>
-                <small class="text-danger" th:if="${#fields.hasErrors('mjContent')}" th:errors="*{mjContent}"></small>
-            </div>
-
-            <!-- 저장 버튼 -->
-            <button type="submit" class="btn btn-primary">수정하기</button>
-        </form>
+        </section>
     </div>
+
+    <!--CSS 파일 연결 -->
+    <link rel="stylesheet" type="text/css" th:href="@{/mj.css}">
 
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
@@ -77,6 +154,185 @@
             });
         });
     </script>
+
+    <script th:inline="javascript" layout:fragment="script">
+
+        let map;
+        let marker;
+        let mjboard = '[[${mjboard}]]';
+        let title = document.getElementById("mjMapTitle").value;
+
+        // 모달
+        document.addEventListener("DOMContentLoaded", () => {
+            const myModal = document.getElementById('exampleModal')
+
+            myModal.addEventListener('shown.bs.modal', () => {
+                if (!map) {
+                    console.log("확인")
+                    setMap(new naver.maps.LatLng(37.5666805, 126.9784147)); // 처음이면 세팅
+                } else {
+                    console.log("확2")
+                    map.refresh(); // 있으면 리프레시
+                }
+            })
+
+            const check = document.getElementById("locationSelect");
+            if(mjboard){
+                check.classList.remove('d-none');
+                check.classList.add('d-flex');
+                const checkText = document.getElementById("locationSelectText");
+                checkText.textContent = title;
+            }
+
+
+        });
+
+        // 맵 세팅
+        function setMap(center) {
+
+            console.log("동작")
+
+            map = new naver.maps.Map("map", {
+                center: center,
+                zoom: 16,
+                zoomControl: true,
+                mapTypeControl: true
+            });
+
+            // if (rootList && rootList.length > 0) {
+            //     const bounds = new naver.maps.LatLngBounds();
+            //     rootList.forEach(data => bounds.extend(new naver.maps.LatLng(data.latitude, data.longitude)));
+            //     map.fitBounds(bounds);
+            // }
+        }
+
+
+        // 주소 검색 동작
+        document.getElementById("search-submit").addEventListener("click", function () {
+            console.log("주소 검색 동작")
+
+            const query = document.getElementById("query").value;
+
+            if (query.trim().length === 0) {
+                alert("검색어를 입력하세요.");
+                return;
+            }
+
+            // fetch 로 받아서 새로고침 안되게 -> 그전에 Param으로 받아서 새로고침되는 문제 해결
+            fetch(`/mjboard/form/search?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("검색결과", data);
+                    searchResult(data);
+                })
+                .catch(error => {
+                    console.error("검색 실패:", error);
+                    alert("검색 중 오류가 발생했습니다.");
+                });
+        });
+
+        function searchResult(value) {
+            const listContainer = document.getElementById("searchResultList");
+            listContainer.innerHTML = ""; // 초기화
+
+            if (value.length === 0) {
+                listContainer.innerHTML = "<li>검색 결과가 없습니다.</li>";
+                return;
+            }
+
+            value.forEach(data => {
+                const li = document.createElement('li');
+                li.classList.add('d-flex', 'flex-row', 'p-1', 'h-100', 'root-li');
+
+                li.innerHTML = `
+                            <div class="p-2" style="width: 90%;">
+                                <h6 style="font-weight: bold; cursor: pointer; font-size: 14px" name="click-address"
+                                    data-lat="${data.latitude}" data-lng="${data.longitude}">${data.title}</h6>
+                                <p class="mb-1" style="font-size: 12px; color: #777">카테고리: ${data.category}</p>
+                                <p class="mb-1" style="font-size: 12px; color: #444">지번: ${data.address}</p>
+                                <p class="mb-0" style="font-size: 12px; color: #444">도로명: ${data.roadAddress}</p>
+                                <input type="hidden" value="${data.latitude}" />
+                                <input type="hidden" value="${data.longitude}" />
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center" style="width: 10%">
+                                <div class="checkbox-form">
+                                    <input type="radio" name="checkbox" class="root-checkbox-input"
+                                        data-title="${data.title}"
+                                        data-address="${data.address}"
+                                        data-roadaddress="${data.roadAddress}"
+                                        data-latitude="${data.latitude}"
+                                        data-longitude="${data.longitude}"
+                                        data-link="${data.link}"
+                                        data-category="${data.category}"
+                                    />
+                                </div>
+                            </div>
+                    `;
+
+                listContainer.appendChild(li);
+            });
+
+            // // 새로 그린 요소에 다시 이벤트 등록
+            // CheckboxEvents();
+            // clickAddressEvents();
+        }
+
+        document.addEventListener("click", function (e) {
+            if (e.target && e.target.classList.contains('root-checkbox-input')) {
+                const selected = e.target;
+
+                // 데이터 가져오기
+                const title = selected.dataset.title;
+                const address = selected.dataset.address;
+                const roadAddress = selected.dataset.roadaddress;
+                const latitude = selected.dataset.latitude;
+                const longitude = selected.dataset.longitude;
+                const link = selected.dataset.link;
+                const category = selected.dataset.category;
+
+                console.log("장소:", title, address, latitude, longitude);
+
+                // hidden input에 값 저장
+                document.getElementById('mjMapTitle').value = title;
+                document.getElementById('mjMapAddress').value = address;
+                document.getElementById('mjMapRodeAddress').value = roadAddress;
+                document.getElementById('mjMapLatitude').value = latitude;
+                document.getElementById('mjMapLongitude').value = longitude;
+                document.getElementById('mjMapLink').value = link;
+                document.getElementById('mjMapCategory').value = category;
+
+                console.log("선택완료?")
+                const check = document.getElementById("locationSelect");
+                if(mjboard){
+                    check.classList.remove('d-none');
+                    check.classList.add('d-flex');
+                    const checkText = document.getElementById("locationSelectText");
+                    checkText.textContent = title;
+                }
+
+                const position = new naver.maps.LatLng(latitude, longitude);
+                map.setCenter(position);
+                map.setZoom(18);
+
+                if (marker) marker.setMap(null);
+                marker = new naver.maps.Marker({
+                    position: position,
+                    map: map,
+                    icon: {
+                        content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
+                        anchor: new naver.maps.Point(10, 40)
+                    },
+                    animation: naver.maps.Animation.BOUNCE
+                });
+
+            }
+
+        });
+
+
+    </script>
+
+
 
 </main>
 </html>

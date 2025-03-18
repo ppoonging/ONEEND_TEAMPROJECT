@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @Entity
 public class UserRecipe {
-
+//수정을
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userRecipeSeq; //유저레시피 기본키

@@ -21,6 +21,11 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        // 이메일에 따라 권한 설정
+        String email = (String) attributes.get("email");
+        if ("cksgh0726@naver.com".equals(email)) {
+            return Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
@@ -29,7 +34,6 @@ public class CustomOAuth2User implements OAuth2User {
         return (String) attributes.get("name"); // 네이버 사용자 이름
     }
 
-    // 추가적으로 이메일 같은 정보도 꺼낼 수 있음
     public String getEmail() {
         return (String) attributes.get("email");
     }

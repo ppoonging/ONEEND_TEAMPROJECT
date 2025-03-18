@@ -1,5 +1,6 @@
 package com.springboot.biz.mj.board;
 
+import com.springboot.biz.map.MapService;
 import com.springboot.biz.mj.answer.MjAnswerForm;
 import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
@@ -24,10 +25,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.security.Principal;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Controller
@@ -36,6 +34,7 @@ public class MjboardController {
 
     private final HUserSerevice hUserSerevice;
     private final MjboardService mjboardService;
+    private final MapService mapService;
 
     // 목록
     @GetMapping("/list")
@@ -46,6 +45,8 @@ public class MjboardController {
         // 각 게시글의 mjSeq를 키로, 추출한 이미지 URL을 값으로 저장할 Map 생성
         Map<String, Object> result = mjboardService.getList(pageable, kw);
         Page<Mjboard> paging = (Page<Mjboard>) result.get("paging");
+
+        String defaultImageUrl = "/images/total/default.png";
 
         // 각 게시글에서 이미지 URL 추출 후, mjSeq를 키로 하는 Map에 저장
         Map<Integer, String> imageUrlMap = new HashMap<>();
@@ -62,6 +63,10 @@ public class MjboardController {
                     }
                 }
             }
+            if (imageUrl == null || imageUrl.trim().isEmpty()) {
+                imageUrl = defaultImageUrl;
+            }
+
             imageUrlMap.put(board.getMjSeq(), imageUrl);
         }
 
@@ -90,7 +95,9 @@ public class MjboardController {
             return "mj/mjboard_form";
         }
         HUser hUser = hUserSerevice.getUser(principal.getName());
-        mjboardService.create(mjboardForm.getMjTitle(), mjboardForm.getMjContent(), file, hUser, 0);
+        mjboardService.create(mjboardForm.getMjTitle(), mjboardForm.getMjContent(), file, hUser, 0,
+                mjboardForm.getMjMapTitle(), mjboardForm.getMjMapAddress(), mjboardForm.getMjMapRodeAddress(), mjboardForm.getMjMapLatitude(),
+                mjboardForm.getMjMapLongitude(), mjboardForm.getMjMapLink(), mjboardForm.getMjMapCategory());
         return "redirect:/mjboard/list";
     }
 
@@ -165,6 +172,13 @@ public class MjboardController {
         Mjboard board = mjboardService.getMjboard(mjSeq);
         form.setMjTitle(board.getMjTitle());
         form.setMjContent(board.getMjContent());
+        form.setMjMapTitle(board.getMjMapTitle());
+        form.setMjMapAddress(board.getMjMapAddress());
+        form.setMjMapRodeAddress(board.getMjMapRodeAddress());
+        form.setMjMapLatitude(board.getMjMapLatitude());
+        form.setMjMapLongitude(board.getMjMapLongitude());
+        form.setMjMapLink(board.getMjMapLink());
+        form.setMjMapCategory(board.getMjMapCategory());
         model.addAttribute("mjboard", board);
         return "mj/mjboardModify_form";
     }
@@ -175,7 +189,8 @@ public class MjboardController {
     public String modify(@Valid MjboardForm form, BindingResult bindingResult, @PathVariable Integer mjSeq) {
         if (bindingResult.hasErrors()) return "mj/mjboardModify_form";
         Mjboard board = mjboardService.getMjboard(mjSeq);
-        mjboardService.modify(board, form.getMjTitle(), form.getMjContent());
+        mjboardService.modify(board, form.getMjTitle(), form.getMjContent(), form.getMjMapTitle(), form.getMjMapAddress(), form.getMjMapRodeAddress(),
+                form.getMjMapLatitude(), form.getMjMapLongitude(), form.getMjMapLink(), form.getMjMapCategory());
         return "redirect:/mjboard/list";
     }
 
@@ -187,4 +202,13 @@ public class MjboardController {
         mjboardService.delete(board);
         return "redirect:/mjboard/list";
     }
+
+    // 검색
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/form/search")
+    @ResponseBody
+    public List<Map<String, String>> search(@RequestParam String query) {
+        return mapService.search(query); // JSON 형태로 반환
+    }
+
 }

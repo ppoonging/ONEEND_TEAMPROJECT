@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface MjboardRepository extends JpaRepository<Mjboard, Integer> {
     // 제목으로 검색
    /* Page<Mjboard> findByMjTitleContaining(String kw, Pageable pageable);*/
@@ -13,6 +15,7 @@ public interface MjboardRepository extends JpaRepository<Mjboard, Integer> {
     @Query("SELECT m FROM Mjboard m WHERE m.mjTitle LIKE %:kw% OR m.mjContent LIKE %:kw% OR m.userId.nickname LIKE %:kw%")
     Page<Mjboard> findAllByKeyword(@Param("kw") String kw, Pageable pageable);
 
-
+    @Query("SELECT m FROM Mjboard m ORDER BY m.mjCnt DESC LIMIT 9")
+    List<Mjboard> findTop9ByOrderByMjCntDesc();
 
 }

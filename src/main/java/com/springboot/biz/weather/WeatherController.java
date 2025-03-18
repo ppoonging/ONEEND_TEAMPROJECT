@@ -65,4 +65,27 @@ public class WeatherController {
             default:return location; // 나머지는 영어로
         }
     }
+
+    @GetMapping("/weather/location")
+    public String getWeatherByLocation(@RequestParam double lat, @RequestParam double lon, Model model) {
+        String apiKey = "4bb66d8059b9e367d1207764e32daad2"; // 안전하게 관리 필요
+        WeatherResponse weatherResponse = weatherService.getWeatherByCoords(lat, lon, apiKey);
+
+        LocalDate today = LocalDate.now();
+
+        // 날씨 아이콘 URL
+        String iconUrl = null;
+        if (weatherResponse != null && weatherResponse.getWeather() != null && weatherResponse.getWeather().length > 0) {
+            String iconCode = weatherResponse.getWeather()[0].getIcon();
+            iconUrl = "http://openweathermap.org/img/wn/" + iconCode + "@2x.png";
+        }
+
+        model.addAttribute("weatherData", weatherResponse);
+        model.addAttribute("today", today);
+        model.addAttribute("location", weatherResponse.getName()); // 위치명 자동으로
+        model.addAttribute("weatherIcon", iconUrl);
+
+        return "fragments/main"; // Thymeleaf 날씨 템플릿
+    }
+
 }

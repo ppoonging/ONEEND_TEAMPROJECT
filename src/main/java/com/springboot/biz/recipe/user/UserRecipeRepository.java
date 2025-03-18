@@ -1,13 +1,16 @@
 package com.springboot.biz.recipe.user;
 
+import com.springboot.biz.free.board.FreeQuestion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface UserRecipeRepository extends JpaRepository<UserRecipe, Integer> {
+import java.util.List;
 
+public interface UserRecipeRepository extends JpaRepository<UserRecipe, Integer> {
+//수정을
     // 검색 (제목 + 내용)
     @Query("SELECT u FROM UserRecipe u " +
             "WHERE u.userRecipeTitle LIKE %:kw% OR u.userRecipeContent LIKE %:kw%")
@@ -20,4 +23,5 @@ public interface UserRecipeRepository extends JpaRepository<UserRecipe, Integer>
     Page<UserRecipe> findByKeywordAndCategory(@Param("kw") String kw,
                                               @Param("category") String category,
                                               Pageable pageable);
+
 }

@@ -1,7 +1,7 @@
 package com.springboot.biz.recipe.user.answer;
 
 
-import com.springboot.biz.recipe.user.board.UserRecipe;
+import com.springboot.biz.recipe.user.UserRecipe;
 import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -33,8 +33,6 @@ public class UserRecipeAnswer {
 
     private String uRecipeAnsComment; //레시피 답변에 답변
 
-    @ManyToOne
-    private UserRecipe userRecipe;  //유저레시피 질문 관계맺기
 
 
 }

@@ -1,5 +1,6 @@
 package com.springboot.biz.recipe.user;
 
+import com.springboot.biz.free.board.FreeQuestion;
 import com.springboot.biz.user.HUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +21,7 @@ public class UserService {
 
     private final UserRecipeRepository userRecipeRepository;
 
-
+//수정
      //레시피 리스트
 
     public Page<UserRecipe> getList(String kw, String category, int page) {
@@ -86,4 +87,5 @@ public class UserService {
         recipe.setRecipeRecommend(recipe.getRecipeRecommend() + 1);
         userRecipeRepository.save(recipe);
     }
+
 }

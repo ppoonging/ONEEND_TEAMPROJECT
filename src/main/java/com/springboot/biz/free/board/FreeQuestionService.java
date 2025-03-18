@@ -136,6 +136,10 @@ public class FreeQuestionService {
 
 
 
+    // 최신 5개의 게시글 가져오기
+    public List<FreeQuestion> getFiveQuestions() {
+        return freeQuestionRepository.findTop5ByOrderByFrboRegDateDesc();
+    }
 
 
 

@@ -2,7 +2,6 @@ package com.springboot.biz.root.rootUser;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.springboot.biz.root.rootAdmin.Root;
-import com.springboot.biz.root.rootAdmin.RootList;
 import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

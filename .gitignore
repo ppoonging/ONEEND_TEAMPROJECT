@@ -35,3 +35,12 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Ignore Mac system files
+.DS_Store
+
+# Ignore build and deployment files
+BOOT-INF/
+node_modules/
+build/
+*.log

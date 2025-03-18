@@ -1,59 +1,40 @@
 
 <html layout:decorate="~{layout}">
 <main layout:fragment="content">
-    <!--상단-->
-    <div style="background-color: #F4E9E3">
-        <div class="container py-2">
-            <span class="" style="color: #555; font-family: 'HakgyoansimWoojuR'; padding-left: 8px">한끝 > 로그인 페이지</span>
-        </div>
+    <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
+        <h2 class="text-center text-white py-2 font-bold-style">로그인</h2>
     </div>
-    <div class="container mt-5">
-        <div class="text-center">
-            <img th:src="@{/images/total/bab.png}" width="5%">
-        </div>
+    <div class="container py-5">
 
         <!--수정해야할 부분-->
-
-        <h2 class="text-center py-2">로그인 페이지</h2>
         <!--content-->
         <section class="py-5 d-flex justify-content-center">
             <div class="caed p-4 shadow-sm " style="max-width: 400px; width: 100%">
 
-                <!--*** content 넣어야할 부분 (넣고 아래 div height 700px 준거 없애줘야 할거임) ***-->
+    <div class="container mt-5">
+        <div class="text-center">
+            <img th:src="@{/images/total/bab.png}" width="5%">
+        </div>
+    <div class="container">
 
+        <h2 class="text-center py-2">로그인 페이지</h2>
 
-                <!-- 일반 로그인 -->
+        <!-- 로그인 Form -->
+        <section class="py-5 d-flex justify-content-center">
+            <div class="card p-4 shadow-sm" style="max-width: 400px; width: 100%">
                 <form th:action="@{/users/login}" method="post">
-
-                    <!--<div th:if="${param.error}">
-                        <div class="alert alert-danger">
-                            아이디 또는 비밀번호가 틀렸습니다.
-                        </div>
-                    </div>-->
-                    <!DOCTYPE html>
-                    <html lang="ko">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>회원가입</title>
-                    </head>
-                    <body>
-
                     <label for="username" class="form-label">
-                        <input class="input" type="text" name="username" id="username" placeholder="          를 입력하세요"
-                               required>
                         <span>아이디</span>
+                        <input class="form-control" type="text" name="username" id="username" placeholder="아이디를 입력하세요" required>
                     </label>
 
-
-                    <label for="password" class="form-label">
-                        <input class="input" type="password" name="password" id="password" placeholder="             를 입력하세요" required>
+                    <label for="password" class="form-label mt-3">
                         <span>비밀번호</span>
+                        <input class="form-control" type="password" name="password" id="password" placeholder="비밀번호를 입력하세요" required>
                     </label>
 
-
-                    <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn custom-btn123">로그인</button>
+                    <div class="d-flex justify-content-center mt-4">
+                        <button type="submit" class="btn btn-primary w-100">로그인</button>
                     </div>
                 </form>
 
@@ -61,15 +42,7 @@
 
                 <!--open Api 로그인 아이콘으로 변경할 예정?????-->
                 <div class="d-flex justify-content-center gap-2 mt-3">
-                    <a href="/oauth2/authorization/naver" class="btn btn-success" style="font-size: 10px;">
-                        <img src="/images/naver_logo.png" alt="네이버" width="20" class="me-2"> 로그인
-                    </a>
-                    <a href="/oauth2/authorization/google" class="btn btn-light border" style="font-size: 10px;">
-                        <img src="/images/google_logo.png" alt="구글" width="20" class="me-2"> 로그인
-                    </a>
-                    <a href="/oauth2/authorization/apple" class="btn btn-dark" style="font-size: 10px;">
-                        <img src="/images/apple_logo.png" alt="애플" width="20" class="me-2"> 로그인
-                    </a>
+                    <a href="/oauth2/authorization/naver" class="btn btn-success" style="font-size: 12px; width: 100%;">네이버 로그인</a>
                 </div>
                 <!--아이디 칮기 비밀번호 찾기 회원가입하기-->
 
@@ -84,15 +57,11 @@
 
                 <div class="container-1">
 
-                    <div class="link-menu ">
-
-                        <a href="/users/signup">회원가입</a>
-
-                        <span class="divider">|</span>
-
-                        <a href="/users/findLoginId">아이디*비밀번호 찾기</a>
-
-                    </div>
+                <!-- 아이디/비밀번호 찾기 및 회원가입 -->
+                <div class="text-center mt-3">
+                    <a href="/users/signup">회원가입</a>
+                    <span class="mx-2">|</span>
+                    <a href="/users/findLoginId">아이디/비밀번호 찾기</a>
                 </div>
                 </body>
 
@@ -110,8 +79,7 @@
 </main>
 </html>
 
-<link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
-
+<link rel="stylesheet" type="text/css" th:href="@{/stylesmodal.css}">
 <script>
     const emailInput = document.getElementById("username");
 
@@ -120,8 +88,9 @@
     });
 
     emailInput.addEventListener("input", function (event) {
-        event.target.setCustomValidity(''); // 입력하면 다시 초기화
+        event.target.setCustomValidity('');
     });
+
     const passwordInput = document.getElementById("password");
 
     passwordInput.addEventListener("invalid", function (event) {

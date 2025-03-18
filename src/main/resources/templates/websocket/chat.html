@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>채팅방</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body>
+<h2>채팅방</h2>
+<div id="messages"></div>
+<input type="text" id="message" placeholder="메시지 입력" />
+<button onclick="sendMessage()">보내기</button>
+
+<script>
+    const socket = new SockJS('/ws-chat');
+    const stompClient = Stomp.over(socket);
+    const roomId = '테스트방아이디';
+
+    stompClient.connect({}, function () {
+        console.log('Connected');
+
+        // 구독
+        stompClient.subscribe('/topic/chat/room/' + roomId, function (msg) {
+            const message = JSON.parse(msg.body);
+            const msgDiv = document.createElement('div');
+            msgDiv.textContent = message.sender.nickname + ': ' + message.message;
+            document.getElementById('messages').appendChild(msgDiv);
+        });
+    });
+
+    // 메시지 보내기
+    function sendMessage() {
+        const message = document.getElementById('message').value;
+        stompClient.send('/app/chat/message/' + roomId, {}, JSON.stringify({
+            message: message
+        }));
+    }
+</script>
+</body>
+</html>
