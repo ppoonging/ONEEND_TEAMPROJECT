@@ -5,8 +5,8 @@
         <h2 class="text-center text-white py-2 font-bold-style">정석 레시피</h2>
     </div>
 
-    <div class="container">
-        <section class="py-2">
+    <div class="container py-5">
+        <section>
 
             <!-- 카테고리 필터 -->
             <div class="category5-menu">
@@ -87,7 +87,12 @@
         <a class="btn btn-primary btn-lg ml-auto" sec:authorize="hasRole('ADMIN')" th:href="@{/fm/create}">등록</a>
     </div>
     <!-- 인라인 CSS -->
-    <style>
+<!--     <style>
+
+
+    <!-- CSRF -->
+<!--     <meta sec:authorize="isAuthenticated()" name="_csrf" th:content="${_csrf.token}"/>
+    <meta sec:authorize="isAuthenticated()" name="_csrf_header" th:content="${_csrf.headerName}"/>
 
         .hidden { display: none; }
         .custom-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); z-index: 1050; border-radius: 8px; max-width: 600px; width: 90%; }
@@ -100,7 +105,8 @@
         .modal-img { width: 100%; height: 400px; }
         .custom-modal .modal-body { max-height: 80vh; overflow-y: auto; padding: 20px; }
         .modal-body { overflow-y: auto; max-height: 70vh; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
-    </style>
+    </style> --> -->
+
 
     <!-- 인라인 JS -->
     <script>
@@ -113,6 +119,10 @@
             });
         });
     </script>
+
+    <!-- JS -->
+    <script th:src="@{/fmRecipeModal.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
 
 </main>
 </html>
