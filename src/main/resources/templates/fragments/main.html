@@ -79,9 +79,11 @@
                                                 </svg>
                                             </div>
                                         </button>
+<!--                                        <button type="submit" id="search-submit" class="btn btn-sm">길찾기</button>-->
                                     </div>
                                     <div id="info" class="fs-6 text-center text-danger mb-3"></div> <!-- 거리, 소요시간 표시 -->
                                 </form>
+                                <div id="info" class="mb-1 mt-2 fs-6 text-center text-danger"></div> <!-- 거리, 소요시간 표시 -->
                             </div>
 
                             <div class="align-bottom mt-3" style="height: 60%">
@@ -131,6 +133,7 @@
                                 </div>
                             </div>
                         </aside>
+
                 </div>
             </div>
         </section>
@@ -257,7 +260,7 @@
     console.log("있니?" + mjboard);
 
     let swiper = new Swiper('.swiper', {
-        slidesPerView: 4,
+        slidesPerView: 3,
         direction: getDirection(),
         spaceBetween: 20,
         navigation: {

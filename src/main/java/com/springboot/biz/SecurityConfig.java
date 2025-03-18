@@ -9,10 +9,13 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Configuration
 @EnableWebSecurity
@@ -20,47 +23,63 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    // OAuth2 서비스 주입 (생성자 자동 주입)
     private final CustomOAuth2UserService customOAuth2UserService;
 
-    /**
-     * 시큐리티 필터 체인
-     */
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers(
+                        "/css/**",
+                        "/js/**",
+                        "/images/**",
+                        "/static/**",
+                        "/index.css",
+                        "/bootstrap.min.css",
+                        "/bootstrap.bundle.js",
+                        "/delete.js"
+                );
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // CSRF 설정 (API는 제외)
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**")
-                )
-                // 요청 권한 설정
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").authenticated() // API는 로그인 필요
-                        .requestMatchers("/users/mypage").authenticated() // 마이페이지 로그인 필요
-                        .anyRequest().permitAll() // 나머지 경로 모두 허용
+                        .requestMatchers("/api/**").authenticated()  // API는 로그인 필요
+                        .requestMatchers("/users/mypage").authenticated()  // 마이페이지 로그인 필요
+                        .requestMatchers("/admin/**").hasRole("ADMIN")  // 관리자만 접근 가능
+                        .requestMatchers("/user/**").hasRole("USER")  // 일반 사용자만 접근 가능
+                        .anyRequest().permitAll()
                 )
-                // 기본 Form 로그인 설정
                 .formLogin(form -> form
-                        .loginPage("/users/login") // 로그인 페이지
-                        .defaultSuccessUrl("/")    // 성공 시 메인으로
+                        .loginPage("/users/login")
+                        .defaultSuccessUrl("/")  // 로그인 후 기본 페이지
                         .permitAll()
                 )
-                // 로그아웃 설정
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/users/login")
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService)  // 커스텀 서비스 연결
+                        )
+                        .defaultSuccessUrl("/")  // 로그인 후 기본 페이지
+                )
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/users/logout")) // 로그아웃 URL
-                        .logoutSuccessUrl("/") // 로그아웃 후 이동
-                        .invalidateHttpSession(true) // 세션 무효화
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/users/logout"))
+                        .logoutSuccessUrl("/")  // 로그아웃 후 기본 페이지
+                        .invalidateHttpSession(true)  // 세션 무효화
                 );
 
         return http.build();
     }
 
-
-    /**
-     * AuthenticationManager 빈 등록
-     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

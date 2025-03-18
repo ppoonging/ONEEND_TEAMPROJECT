@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>채팅방 리스트</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .chat-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .chat-card {
+            transition: all 0.3s ease;
+        }
+        .chat-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="container py-5">
+
+<div class="chat-container">
+
+    <!-- 헤더 및 로그인 버튼 -->
+    <div class="chat-header">
+        <h2 class="fw-bold">💬 한끝 소통</h2>
+        <a th:href="@{/users/login}" sec:authorize="isAnonymous()" class="btn btn-outline-primary btn-sm">
+            로그인
+        </a>
+    </div>
+
+    <!-- 방 생성 폼 (로그인 한 사용자만) -->
+    <div th:if="${#authorization.expression('isAuthenticated()')}" class="mb-4">
+        <form th:action="@{/chatroom/rooms}" method="post" class="input-group shadow-sm">
+            <input type="text" name="name" class="form-control" placeholder="채팅방 이름을 입력하세요" required>
+            <button type="submit" class="btn btn-primary">방 만들기</button>
+        </form>
+    </div>
+
+    <!-- 로그인 안한 사용자 안내 -->
+    <div th:if="${#authorization.expression('!isAuthenticated()')}" class="alert alert-warning shadow-sm">
+        <strong>채팅방 생성 및 입장은 로그인 후 이용 가능합니다.</strong>
+    </div>
+
+    <!-- 방 리스트 -->
+    <div th:if="${rooms != null and #lists.size(rooms) > 0}">
+        <div th:each="room : ${rooms}" class="card chat-card mb-3">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div class="fw-semibold" th:text="${room.name}">방 이름</div>
+                <div>
+                    <a th:if="${#authorization.expression('isAuthenticated()')}"
+                       th:href="@{|/chat/room/${room.roomId}|}"
+                       class="btn btn-success btn-sm">입장</a>
+                    <span th:if="${#authorization.expression('!isAuthenticated()')}" class="text-muted">로그인 필요</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 방이 없을 때 안내 -->
+    <div th:if="${rooms == null or #lists.size(rooms) == 0}" class="alert alert-info text-center shadow-sm">
+        현재 생성된 채팅방이 없습니다. 새로운 방을 만들어보세요!
+    </div>
+
+</div>
+
+</body>
+</html>

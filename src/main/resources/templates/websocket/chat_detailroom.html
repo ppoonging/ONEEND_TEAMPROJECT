@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>채팅방</title>
+    <meta charset="UTF-8">
+
+    <!-- SockJS / Stomp -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        .chat-box {
+            height: 500px;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+        }
+
+        .my-message {
+            text-align: right;
+        }
+
+        .other-message {
+            text-align: left;
+        }
+
+        .message-box {
+            display: inline-block;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 5px 0;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+
+        .my-message .message-box {
+            background-color: #d1e7dd;
+        }
+
+        .other-message .message-box {
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+        }
+
+        .system-message {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin: 10px 0;
+        }
+
+        .time {
+            display: block;
+            font-size: 0.75rem;
+            color: gray;
+            margin-top: 5px;
+        }
+
+        .image-message {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 5px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 th:text="${room.name}">채팅방 이름</h3>
+        <div>
+            <span id="userCount" class="badge bg-secondary me-2">접속자: 1명</span>
+            <button id="leaveButton" class="btn btn-outline-danger btn-sm">나가기</button>
+        </div>
+    </div>
+
+    <!-- 채팅 박스 -->
+    <div id="chat" class="chat-box mb-3"></div>
+
+    <!-- 메시지 입력창 -->
+    <div class="input-group">
+        <input type="text" id="messageInput" class="form-control" placeholder="메시지를 입력하세요">
+        <input type="file" id="imageInput" accept="image/*" class="form-control" style="max-width: 200px;">
+        <button id="sendButton" class="btn btn-primary">보내기</button>
+    </div>
+</div>
+
+<!-- 자바스크립트 -->
+<script th:inline="javascript">
+    let roomId = [[${room.roomId}]];
+    let user = [[${user.nickname}]];
+    let socket = new SockJS('/ws-chat');
+    let stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function () {
+        console.log('✅ 웹소켓 연결 성공');
+
+        //구독
+        stompClient.subscribe('/topic/chat/room/' + roomId, function (message) {
+            let msgData = JSON.parse(message.body);
+            console.log("💬 받은 메시지: ", msgData);
+
+            let chatBox = document.getElementById('chat');
+            if (!chatBox) {
+                console.error("❌ chatBox 요소를 찾을 수 없음");
+                return;
+            }
+
+            let msgElement = document.createElement('div');
+
+            if (msgData.type === 'USER_COUNT') {
+                document.getElementById('userCount').innerText = '접속자: ' + msgData.count + '명';
+                return;
+            }
+
+            if (msgData.type === 'ENTER' || msgData.type === 'LEAVE') {
+                msgElement.innerHTML = `<div class="system-message">${msgData.sender}님이 ${msgData.type === 'ENTER' ? '입장' : '퇴장'}하였습니다.</div>`;
+            } else if (msgData.type === 'CHAT') {
+                let isMine = msgData.sender === user;
+                msgElement.className = isMine ? 'my-message' : 'other-message';
+
+                let messageContent = msgData.image ? `<img src="${msgData.image}" class="image-message"><br>` : '';
+                messageContent += msgData.message;
+
+                msgElement.innerHTML = `
+                <div class="message-box">
+                    <b>${msgData.sender}</b><br>
+                    ${messageContent}
+                    <span class="time">${new Date(msgData.sendDate).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</span>
+                </div>`;
+            }
+
+            chatBox.appendChild(msgElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        //입장
+        stompClient.send("/app/chat/enter", {}, JSON.stringify({
+            roomId: roomId,
+            type: 'ENTER'
+        }));
+    });
+
+    //나가기
+    document.getElementById('leaveButton').addEventListener('click', function () {
+        stompClient.send("/app/chat/leave", {}, JSON.stringify({
+            roomId: roomId,
+            type: 'LEAVE'
+        }));
+        window.location.href = '/chatroom/rooms';
+    });
+
+    //메시지 전송
+    document.getElementById('sendButton').addEventListener('click', function () {
+        let msg = document.getElementById('messageInput').value.trim();
+        if (msg !== '') {
+            stompClient.send("/app/chat/message/" + roomId, {}, JSON.stringify({
+                roomId: roomId,
+                message: msg,
+                type: 'CHAT'
+            }));
+            document.getElementById('messageInput').value = '';
+        }
+    });
+
+    // 엔터로 전송
+    document.getElementById('messageInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') document.getElementById('sendButton').click();
+    });
+
+</script>
+
+
+</body>
+</html>
