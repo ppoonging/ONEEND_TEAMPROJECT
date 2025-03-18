@@ -1,5 +1,6 @@
 package com.springboot.biz.recipe.user;
 
+import com.springboot.biz.free.board.FreeQuestion;
 import com.springboot.biz.user.HUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

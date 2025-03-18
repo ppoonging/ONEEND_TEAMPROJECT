@@ -3,9 +3,9 @@
     <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
         <h2 class="text-center text-white py-2 font-bold-style">유저 레시피</h2>
     </div>
-    <div class="container">
+    <div class="container py-5">
         <!--카테고리 경로-->
-        <div class="category5-menu my-4 text-center">
+        <div class="category5-menu mb-4 text-center">
             <a th:href="@{/userrecipe/list(category='')}" class="category5-btn">전체</a>
             <a th:href="@{/userrecipe/list(category='구이')}" class="category5-btn">구이</a>
             <a th:href="@{/userrecipe/list(category='밥')}" class="category5-btn">밥</a>
@@ -81,11 +81,9 @@
                 </div>
             </div>
         </div>
-
         <!-- 스타일 + 모달 JS -->
         <link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
         <script th:src="@{/fmRecipeModal.js}"></script>
-
     </div>
 </main>
 </html>

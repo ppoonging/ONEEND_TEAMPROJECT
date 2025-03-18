@@ -5,8 +5,8 @@
         <h2 class="text-center text-white py-2 font-bold-style">정석 레시피</h2>
     </div>
 
-    <div class="container">
-        <section class="py-2">
+    <div class="container py-5">
+        <section>
 
             <!-- 카테고리 필터 -->
             <div class="category5-menu">
@@ -117,8 +117,8 @@
     </div>
 
     <!-- CSRF -->
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta sec:authorize="isAuthenticated()" name="_csrf" th:content="${_csrf.token}"/>
+    <meta sec:authorize="isAuthenticated()" name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <!-- JS -->
     <script th:src="@{/fmRecipeModal.js}"></script>
