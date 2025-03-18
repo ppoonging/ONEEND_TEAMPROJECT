@@ -33,7 +33,6 @@ public class FreeAnswer {
 
     private LocalDateTime frboAnsModify;  //수정시간
 
-    private Integer frboAnsRecommend; //답변 추천
 
     @ManyToOne
     private FreeQuestion freeQuestion; //관계맺기

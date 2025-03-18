@@ -1,6 +1,6 @@
 package com.springboot.biz.customer.question;
 
-import com.springboot.biz.customer.Replay;
+import com.springboot.biz.customer.replay.Replay;
 import com.springboot.biz.user.HUser;
 import jakarta.persistence.*;
 import lombok.Getter;
