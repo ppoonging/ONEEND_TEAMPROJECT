@@ -1,6 +1,9 @@
 package com.springboot.biz.mj.board;
 
 import com.springboot.biz.DataNotFoundException;
+import com.springboot.biz.mj.board.Mjboard;
+import com.springboot.biz.mj.board.MjboardRepository;
+import com.springboot.biz.mj.board.MjthumbnailService;
 import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import jakarta.transaction.Transactional;
@@ -21,15 +24,37 @@ public class MjboardService {
     private final MjthumbnailService mjthumbnailService;
     private final HUserSerevice hUserSerevice;
 
-    // 게시판 리스트 (추천수, 별점 계산 포함)
-    public Map<String, Object> getList(Pageable pageable, String kw) {
-        Page<Mjboard> paging = mjboardRepository.findAllByKeyword(kw, pageable);
+    // 검색 + 정렬 기능 포함된 리스트 조회 (중복 제거 및 구조 정리)
+    public Map<String, Object> getList(Pageable pageable, String kw, String searchType, String sort) {
+        Page<Mjboard> paging;
+
+        // 검색 처리
+        if (!kw.isEmpty()) {
+            paging = mjboardRepository.findAllByKeyword(kw, pageable);
+        } else {
+            // 정렬 처리
+            switch (sort) {
+                case "popular":
+                    paging = mjboardRepository.findAllByOrderByRecommendDesc(pageable);
+                    break;
+                case "view":
+                    paging = mjboardRepository.findAllByOrderByViewDesc(pageable);
+                    break;
+                default:
+                    paging = mjboardRepository.findAllByOrderByMjRegDateDesc(pageable);
+                    break;
+            }
+        }
+
+        // 별점 계산
         Map<Integer, Integer> starCountMap = new HashMap<>();
         for (Mjboard board : paging) {
             int recommendCount = board.getRecommendUsers().size();
             int starCount = (int) Math.min(5, Math.ceil((recommendCount / 50.0) * 5));
             starCountMap.put(board.getMjSeq(), starCount);
         }
+
+        // 결과 반환
         Map<String, Object> result = new HashMap<>();
         result.put("paging", paging);
         result.put("starCountMap", starCountMap);
@@ -46,10 +71,6 @@ public class MjboardService {
         File saveFile = new File(projectPath, mjFileName);
         file.transferTo(saveFile);
 
-        /*String thumbnailFileName = "thumb_" + mjFileName;
-        File thumbnailFile = new File(projectPath, thumbnailFileName);
-        mjthumbnailService.createThumbnail(saveFile, thumbnailFile);*/
-
         Mjboard mj = new Mjboard();
         mj.setMjFilePath("/files/mj/" + mjFileName);
         mj.setMjFileName(mjFileName);
@@ -59,7 +80,7 @@ public class MjboardService {
         mj.setUserId(hUser);
         mj.setMjCnt(0);
 
-        // map
+        // 지도 정보 저장
         mj.setMjMapTitle(mjMapTitle);
         mj.setMjMapAddress(mjMapAddress);
         mj.setMjMapRodeAddress(mjMapRodeAddress);
@@ -67,6 +88,7 @@ public class MjboardService {
         mj.setMjMapLongitude(mjMapLongitude);
         mj.setMjMapLink(mjMapLink);
         mj.setMjMapCategory(mjMapCategory);
+
         mjboardRepository.save(mj);
     }
 
@@ -89,14 +111,14 @@ public class MjboardService {
         return mjboard;
     }
 
-    // 수정
+    // 게시글 수정
     public void modify(Mjboard mjboard, String mjTitle, String mjContent, String mjMapTitle, String mjMapAddress, String mjMapRodeAddress, Double mjMapLatitude,
                        Double mjMapLongitude, String mjMapLink, String mjMapCategory) {
 
         mjboard.setMjTitle(mjTitle);
         mjboard.setMjContent(mjContent);
 
-        //map
+        //지도 정보 수정
         mjboard.setMjMapTitle(mjMapTitle);
         mjboard.setMjMapAddress(mjMapAddress);
         mjboard.setMjMapRodeAddress(mjMapRodeAddress);
@@ -104,15 +126,16 @@ public class MjboardService {
         mjboard.setMjMapLongitude(mjMapLongitude);
         mjboard.setMjMapLink(mjMapLink);
         mjboard.setMjMapCategory(mjMapCategory);
+
         mjboardRepository.save(mjboard);
     }
 
-    // 삭제
+    //게시글 삭제
     public void delete(Mjboard mjboard) {
         mjboardRepository.delete(mjboard);
     }
 
-    // 추천
+    // 추천 기능 (토글 방식)
     @Transactional
     public void mjRecommend(Mjboard mjboard, HUser user) {
         Set<HUser> recommendUsers = mjboard.getRecommendUsers();
@@ -124,13 +147,12 @@ public class MjboardService {
         mjboardRepository.save(mjboard);
     }
 
-    // 데이터만 가져오기
-
+    // 모든 게시글 리스트 가져오기
     public List<Mjboard> getList() {
         return this.mjboardRepository.findAll();
     }
 
-    // top 9 가져오기
+    // 조회수 기준 Top 9 게시글 가져오기
     public List<Mjboard> getTop9ByView() {
         return mjboardRepository.findTop9ByOrderByMjCntDesc();
     }

@@ -74,6 +74,16 @@ public class Mjboard {
 
     private String mjMapCategory; // 장소 분류
 
+    //조회수 기준 정렬
+    public Integer getMjCnt() {
+        return this.mjCnt != null ? this.mjCnt : 0;
+    }
+
+    //추천수 기준 정렬
+    public Integer getRecommendCount() {
+        return this.recommendUsers != null ? this.recommendUsers.size() : 0;
+    }
+
 
 
 

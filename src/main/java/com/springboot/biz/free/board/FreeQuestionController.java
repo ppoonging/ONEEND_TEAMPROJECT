@@ -47,6 +47,7 @@ public class FreeQuestionController {
         return "freequestionList_From";
     }*/
 
+
     @GetMapping("/")
     public String freeQuestionList(Model model,
                                    @RequestParam(value = "page", defaultValue = "0") int page,

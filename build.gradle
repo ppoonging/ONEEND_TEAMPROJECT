@@ -54,12 +54,18 @@ dependencies {
         // JavaMail API (Spring Boot 3.x 이상 사용 시 필요)
         implementation 'jakarta.mail:jakarta.mail-api:2.1.2' // ✅ 유지
     //오아스2
+
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
     //웹 소캣 적용
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.webjars:sockjs-client:1.5.1'
     implementation 'org.webjars:stomp-websocket:2.3.3'
+
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.webjars:sockjs-client:1.5.1'
+    implementation 'org.webjars:stomp-websocket:2.3.3'
+
 
 }
 
