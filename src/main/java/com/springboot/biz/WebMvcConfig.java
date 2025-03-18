@@ -14,18 +14,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
             registry.addResourceHandler("/**")
                     .addResourceLocations("classpath:/static/");
+            registry.addResourceHandler("/**")
+                    .addResourceLocations("classpath:/static/files/mj");
 
-        registry.addResourceHandler("/static/**")
-                .addResourceLocations("file:///home/ubuntu/deploy/files/"); // uploads로 바꿀 수도
-
-
-    registry.addResourceHandler("/files/mj/**")
-                .addResourceLocations("file:///home/ubuntu/deploy/files/mj"); // uploads로 바꿀 수도
-
-
-
-        registry.addResourceHandler("/files/sns/**")
-                .addResourceLocations("file:///home/ubuntu/deploy/files/sns"); // uploads로 바꿀 수도
+//        registry.addResourceHandler("/static/**")
+//                .addResourceLocations("file:///home/ubuntu/deploy/files/"); // uploads로 바꿀 수도
+//
+//
+//    registry.addResourceHandler("/files/mj/**")
+//                .addResourceLocations("file:///home/ubuntu/deploy/files/mj"); // uploads로 바꿀 수도
+//
+//
+//
+//        registry.addResourceHandler("/files/sns/**")
+//                .addResourceLocations("file:///home/ubuntu/deploy/files/sns"); // uploads로 바꿀 수도
 
 
     }

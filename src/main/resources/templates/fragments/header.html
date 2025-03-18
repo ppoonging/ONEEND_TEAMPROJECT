@@ -83,7 +83,7 @@
                             <!--회원-->
                             <li class="col fs-3 pt-1">
                                 <div type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
-                                    <i class="bi bi-person-fill" style="color: #555" th:attr="data-bs-title=${#authentication.name}"
+                                    <i class="bi bi-person-fill" style="color: #555"  th:attr="data-bs-title=${#authentication.name != 'anonymousUser' ? #authentication.name : null}"
                                        data-bs-toggle="tooltip"
                                        data-bs-placement="top" ></i>
                                 </div>
