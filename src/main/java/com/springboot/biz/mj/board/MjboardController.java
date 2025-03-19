@@ -190,7 +190,7 @@ public class MjboardController {
         return "mj/mjboardModify_form";
     }
 
-    // 수정
+    // 수정 ㅇㅇㅇ
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{mjSeq}")
     public String modify(@Valid MjboardForm form, BindingResult bindingResult, @PathVariable Integer mjSeq) {
