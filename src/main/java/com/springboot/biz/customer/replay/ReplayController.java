@@ -23,7 +23,7 @@ public class ReplayController {
     private final HUserSerevice hUserSerevice;
 
 
-    // 댓글 형식으로 답변 등록 (getUserByUsername 적용)
+    //답변등록
     @PostMapping("/create/{custSeq}") // /replay/create/{custSeq} 경로에서 답변 등록
     public String createReplay(@PathVariable("custSeq") Integer custSeq,
                                @RequestParam String replayContent,
@@ -37,11 +37,11 @@ public class ReplayController {
         Customer customer = customerService.getCustomer(custSeq);
         replayService.replayCreate(customer, user, replayContent);
 
-        // 리디렉트 없이 데이터 바인딩
+
         model.addAttribute("customer", customer);
         model.addAttribute("replays", replayService.getReplaysByCustomer(custSeq));
 
-        return "customer/customer_detail"; // 리디렉트 없이 바로 렌더링
+        return "customer/customer_detail";
     }
-    }
+}
 
