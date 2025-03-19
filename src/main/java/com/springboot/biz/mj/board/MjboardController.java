@@ -106,14 +106,16 @@ public class MjboardController {
         return "redirect:/mjboard/list";
     }
 
+
     //게시글 상세 조회
     @GetMapping("/detail/{mjSeq}")
     public String detail(Model model, @PathVariable("mjSeq") Integer mjSeq) {
         Mjboard mjboard = mjboardService.getMjboard(mjSeq);
         model.addAttribute("mjboard", mjboard);
+        model.addAttribute("mjanswerForm", new MjAnswerForm());
+        model.addAttribute("mjreplyForm", new MjAnswerForm());
         return "mj/mjboard_detail";
     }
-
     //썸머노트 이미지 업로드
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/uploadImage")
@@ -149,6 +151,16 @@ public class MjboardController {
         form.setMjMapCategory(board.getMjMapCategory());
         model.addAttribute("mjboard", board);
         return "mj/mjboardModify_form";
+    }
+    // 수정
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify/{mjSeq}")
+    public String modify(@Valid MjboardForm form, BindingResult bindingResult, @PathVariable Integer mjSeq) {
+        if (bindingResult.hasErrors()) return "mj/mjboardModify_form";
+        Mjboard board = mjboardService.getMjboard(mjSeq);
+        mjboardService.modify(board, form.getMjTitle(), form.getMjContent(), form.getMjMapTitle(), form.getMjMapAddress(), form.getMjMapRodeAddress(),
+                form.getMjMapLatitude(), form.getMjMapLongitude(), form.getMjMapLink(), form.getMjMapCategory());
+        return "redirect:/mjboard/list";
     }
 
     //게시글 삭제
