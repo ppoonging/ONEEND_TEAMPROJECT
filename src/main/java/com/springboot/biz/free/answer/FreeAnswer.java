@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 public class FreeAnswer {
 
-    //테스트중
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer frboAnSeq; //글번호

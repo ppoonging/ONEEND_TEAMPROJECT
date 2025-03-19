@@ -25,30 +25,11 @@ import java.util.UUID;
 public class FreeQuestionService {
 
     private final FreeQuestionRepository freeQuestionRepository;
-    private final FreeThumbnailService freeThumbnailService;
 
 
-    /*   //페이지 네이션 적용  차후에 검색까지 적용해야함
-       public Page<FreeQuestion> getFreeQuestionList(int Page) {
-           List<Sort.Order> sorts = new ArrayList<>();
-           sorts.add(Sort.Order.desc("freeQRegDate"));
-           Pageable pageable = PageRequest.of(Page, 10, Sort.by(sorts));
-           return this.freeQuestionRepository.findAll(pageable);
-       }
-       //Id 값 대신 Seq로 찾아갈 예정
-       public FreeQuestion getFreeQuestion(Integer seq) {
-           Optional<FreeQuestion> FQ = this.freeQuestionRepository.findById(seq);
-           if(FQ.isPresent()) {
-               return FQ.get();
-           }else {
-               throw new DataNotFoundException("자유게시판 데이터 없습니다.");
-           }
-
-       }
-   */
-    //리스트
+    //자유게시판 리스트(페이지,검색기늗)
     public Page<FreeQuestion> getFreeQuestionList(int page, String kw, String searchType) {
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("frboRegDate")));  // 내림차순 정렬
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("frboRegDate")));  // 작성일 기준 내림차순 정렬
 
         if ("title".equals(searchType)) {
             return freeQuestionRepository.findAllByTitle(kw, pageable);  // 제목으로만 검색
@@ -67,19 +48,17 @@ public class FreeQuestionService {
 
 
     //글 등록,파일 업로드
-    public void freeForm(String frboTitle, String frboContent, MultipartFile file , HUser hUser) throws Exception{
-        //파일업로드
+    public void freeForm(String frboTitle, String frboContent, MultipartFile file, HUser hUser) throws Exception {
+        //파일업로드 경로 설정
         String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files";
 
-
-
+        //UUID를 사용해서 파일명 중복 방지
         UUID uuid = UUID.randomUUID();
         String frboFileName = uuid + "_" + file.getOriginalFilename();
 
-        File saveFile = new File(projectPath,frboFileName);
+        //파일저장
+        File saveFile = new File(projectPath, frboFileName);
         file.transferTo(saveFile);
-
-
 
         //데이터 저장
         FreeQuestion f = new FreeQuestion();
@@ -90,39 +69,34 @@ public class FreeQuestionService {
         f.setFrboRegDate(LocalDateTime.now());
         f.setFreeAuthor(hUser);
         this.freeQuestionRepository.save(f);
-
-
-
-
     }
-    public FreeQuestion getFreeQuestion(Integer foboSeq){
+
+    //게시글 조회
+    public FreeQuestion getFreeQuestion(Integer foboSeq) {
         Optional<FreeQuestion> freeQuestion = this.freeQuestionRepository.findById(foboSeq);
 
-        if(freeQuestion.isPresent()){
+        if (freeQuestion.isPresent()) {
             return freeQuestion.get();
-        }else {
+        } else {
             throw new DataNotFoundException("검색한 데이타가 없습니다");
         }
-
     }
 
-
-    public void  modify(FreeQuestion question,String frboTitle,String frboContent){
+    //수정
+    public void modify(FreeQuestion question, String frboTitle, String frboContent) {
 
         question.setFrboTitle(frboTitle);
         question.setFrboContent(frboContent);
         question.setFrboModifyDate(LocalDateTime.now());
         this.freeQuestionRepository.save(question);
-
-
     }
 
-    public void delete(FreeQuestion question){
+    //삭제
+    public void delete(FreeQuestion question) {
         this.freeQuestionRepository.delete(question);
     }
 
-
-    @Transactional
+    //추천
     public void toggleRecommend(FreeQuestion question, HUser user) {
         if (question.getFreeCnt().contains(user)) {
             // 이미 추천한 경우 -> 추천 취소
@@ -134,13 +108,8 @@ public class FreeQuestionService {
         freeQuestionRepository.save(question); // 저장
     }
 
-
-
-    // 최신 5개의 게시글 가져오기
+    // 최신 5개의 게시글 가져오기(메인)
     public List<FreeQuestion> getFiveQuestions() {
         return freeQuestionRepository.findTop5ByOrderByFrboRegDateDesc();
     }
-
-
-
 }

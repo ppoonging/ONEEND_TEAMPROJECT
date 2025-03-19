@@ -14,35 +14,38 @@
             <div th:utext="${freeQuestion.frboContent}" style="font-size: 15px; line-height: 1.8;"></div>
         </div>
 
-        <!-- ✅ 추천 버튼 + 추천 수 -->
+
+        <!-- 추천 버튼 + 추천 수 -->
         <div class="my-4 d-flex align-items-center gap-3">
 
             <!-- 로그인 사용자만 추천 가능 -->
             <div sec:authorize="isAuthenticated()">
                 <a th:href="@{|/freequestion/recommend/${freeQuestion.frboSeq}|}"
                    class="btn d-flex align-items-center"
-                   style="padding: 8px 16px; border-radius: 30px;"
-                   th:classappend="${#lists.contains(freeQuestion.freeCnt, #authentication.principal)} ? 'btn-danger' : 'btn-primary'">
-                    <i class="bi" th:classappend="${#lists.contains(freeQuestion.freeCnt, #authentication.principal)} ? 'bi-heart-fill me-2' : 'bi-heart me-2'"></i>
-                    <span th:text="${#lists.contains(freeQuestion.freeCnt, #authentication.principal)} ? '추천 취소' : '추천하기'"></span>
+                   style="padding: 8px 16px; border-radius: 30px; font-size: 14px;"
+                   th:classappend="${#lists.contains(freeQuestion.freeCnt, #authentication.principal)} ? 'btn-danger' : 'btn-outline-danger'">
+                    <i class="bi"
+                       th:classappend="${#lists.contains(freeQuestion.freeCnt, #authentication.principal)} ? 'bi-heart-fill me-2' : 'bi-heart me-2'"></i>
+                    <span th:text="${#lists.contains(freeQuestion.freeCnt, #authentication.principal)} ? '추천' : '추천하기'"></span>
+                    <span class="ms-2 badge bg-light text-dark" th:text="${#lists.size(freeQuestion.freeCnt)}">0</span>
                 </a>
             </div>
 
-            <!-- ✅ 추천 수 항상 표시 -->
-            <span class="badge bg-secondary" style="font-size: 14px;">
-                총 추천 수: <span th:text="${#lists.size(freeQuestion.freeCnt)}">0</span>회
-            </span>
         </div>
+
 
         <!-- 수정/삭제 버튼 -->
         <div class="text-end mb-4" sec:authorize="isAuthenticated()">
-            <a th:href="@{|/freequestion/modify/${freeQuestion.frboSeq}|}" class="btn btn-outline-secondary btn-sm">수정</a>
-            <a href="javascript:void(0);" th:data-uri="@{|/freequestion/delete/${freeQuestion.frboSeq}|}" class="delete btn btn-outline-danger btn-sm">삭제</a>
+            <a th:href="@{|/freequestion/modify/${freeQuestion.frboSeq}|}"
+               class="btn btn-outline-secondary btn-sm">수정</a>
+            <a href="javascript:void(0);" th:data-uri="@{|/freequestion/delete/${freeQuestion.frboSeq}|}"
+               class="delete btn btn-outline-danger btn-sm">삭제</a>
         </div>
 
-        <!-- ✅ 댓글 목록 (수정/삭제/작성) -->
+        <!--댓글 목록 (수정/삭제/작성) -->
         <div class="comment-list">
-            <div th:each="answer : ${freeQuestion.answerList}" th:if="${answer.parentAnswer == null}" class="my-3 p-2 border rounded">
+            <div th:each="answer : ${freeQuestion.answerList}" th:if="${answer.parentAnswer == null}"
+                 class="my-3 p-2 border rounded">
 
                 <!-- 닉네임, 날짜 -->
                 <div style="font-size: 14px; font-weight: bold;">
@@ -52,7 +55,8 @@
 
                 <!-- 댓글 내용 or 수정 폼 -->
                 <div th:if="${#authentication.name == answer.frboAnsAuthor.username}">
-                    <p th:text="${answer.frboAnsContent}" th:id="'content-' + ${answer.frboAnSeq}">댓글 내용</p>
+                    <p th:text="${answer.frboAnsContent}" th:id="'content-' + ${answer.frboAnSeq}"
+                       style="color: black;">댓글 내용</p>
 
                     <!-- 숨겨진 수정 폼 -->
                     <form th:action="@{'/freeanswer/modify/' + ${answer.frboAnSeq}}" method="post"
@@ -61,22 +65,25 @@
                                   th:text="${answer.frboAnsContent}"></textarea>
                         <button type="submit" class="btn btn-primary btn-sm">수정 완료</button>
                         <button type="button" class="btn btn-secondary btn-sm"
-                                th:onclick="'hideEditForm(' + ${answer.frboAnSeq} + ')'">취소</button>
+                                th:onclick="'hideEditForm(' + ${answer.frboAnSeq} + ')'">취소
+                        </button>
                     </form>
 
                     <!-- 수정/삭제 버튼 -->
                     <button type="button" class="btn btn-sm btn-outline-secondary"
-                            th:onclick="'showEditForm(' + ${answer.frboAnSeq} + ')'">수정</button>
-                    <form th:action="@{'/freeanswer/delete/' + ${answer.frboAnSeq}}" method="post" style="display:inline;">
+                            th:onclick="'showEditForm(' + ${answer.frboAnSeq} + ')'">수정
+                    </button>
+                    <form th:action="@{'/freeanswer/delete/' + ${answer.frboAnSeq}}" method="post"
+                          style="display:inline;">
                         <button type="submit" class="btn btn-sm btn-outline-danger">삭제</button>
                     </form>
                 </div>
 
                 <div th:if="${#authentication.name != answer.frboAnsAuthor.username}">
-                    <p th:text="${answer.frboAnsContent}">댓글 내용</p>
+                    <p th:text="${answer.frboAnsContent}" style="color: black;">댓글 내용</p>
                 </div>
 
-                <!-- ✅ 대댓글 반복 -->
+                <!-- 대댓글 반복 -->
                 <div th:each="child : ${answer.childAnswers}" class="ms-4 border-start ps-3 mt-2">
 
                     <div style="font-size: 13px;">
@@ -86,7 +93,8 @@
 
                     <!-- 대댓글 내용 or 수정 폼 -->
                     <div th:if="${#authentication.name == child.frboAnsAuthor.username}">
-                        <p th:text="${child.frboAnsContent}" th:id="'content-' + ${child.frboAnSeq}">대댓글 내용</p>
+                        <p th:text="${child.frboAnsContent}" th:id="'content-' + ${child.frboAnSeq}"
+                           style="color: black;">대댓글 내용</p>
 
                         <form th:action="@{'/freeanswer/modify/' + ${child.frboAnSeq}}" method="post"
                               th:id="'editForm-' + ${child.frboAnSeq}" style="display: none;">
@@ -94,43 +102,52 @@
                                       th:text="${child.frboAnsContent}"></textarea>
                             <button type="submit" class="btn btn-primary btn-sm">수정 완료</button>
                             <button type="button" class="btn btn-secondary btn-sm"
-                                    th:onclick="'hideEditForm(' + ${child.frboAnSeq} + ')'">취소</button>
+                                    th:onclick="'hideEditForm(' + ${child.frboAnSeq} + ')'">취소
+                            </button>
                         </form>
 
                         <button type="button" class="btn btn-sm btn-outline-secondary"
-                                th:onclick="'showEditForm(' + ${child.frboAnSeq} + ')'">수정</button>
-                        <form th:action="@{'/freeanswer/delete/' + ${child.frboAnSeq}}" method="post" style="display:inline;">
+                                th:onclick="'showEditForm(' + ${child.frboAnSeq} + ')'">수정
+                        </button>
+                        <form th:action="@{'/freeanswer/delete/' + ${child.frboAnSeq}}" method="post"
+                              style="display:inline;">
                             <button type="submit" class="btn btn-sm btn-outline-danger">삭제</button>
                         </form>
                     </div>
 
                     <div th:if="${#authentication.name != child.frboAnsAuthor.username}">
-                        <p th:text="${child.frboAnsContent}">대댓글 내용</p>
+                        <p th:text="${child.frboAnsContent}" style="color: black;">대댓글 내용</p>
                     </div>
                 </div>
 
-                <!-- ✅ 대댓글 작성 폼 -->
+                <!-- 대댓글 작성 폼 -->
                 <form th:action="@{|/freeanswer/reply/${answer.frboAnSeq}|}" method="post" class="mt-3 ms-4">
-                    <textarea class="form-control form-control-sm" name="frboAnsContent" rows="1" placeholder="대댓글 작성..." required></textarea>
-                    <button type="submit" class="btn btn-sm btn-outline-primary mt-1">등록</button>
+                    <textarea class="form-control form-control-sm" name="frboAnsContent" rows="1"
+                              placeholder="대댓글 작성..." required></textarea>
+                    <button type="submit" class="btn btn-sm btn-outline-primary mt-1"
+                            style="background-color: #D5C9C1; border-color: #D5C9C1; color: black;">등록
+                    </button>
                 </form>
 
             </div>
         </div>
 
-        <!-- ✅ 댓글 작성 폼 (최상위 댓글) -->
+        <!-- 댓글 작성 폼 (최상위 댓글) -->
         <form th:action="@{|/freeanswer/create/${freeQuestion.frboSeq}|}" method="post" class="mt-4">
             <textarea class="form-control" name="frboAnsContent" rows="2" placeholder="댓글을 작성해주세요" required></textarea>
-            <button type="submit" class="btn btn-outline-primary mt-2">댓글 등록</button>
+            <button type="submit" class="btn btn-outline-primary mt-2"
+                    style="background-color: #D5C9C1; border-color: #D5C9C1; color: black;">댓글 등록
+            </button>
         </form>
     </div>
 
-    <!-- ✅ 댓글/대댓글 수정 토글 스크립트 -->
+    <!-- 댓글/대댓글 수정 토글 스크립트 -->
     <script>
         function showEditForm(id) {
             document.getElementById('content-' + id).style.display = 'none';
             document.getElementById('editForm-' + id).style.display = 'block';
         }
+
         function hideEditForm(id) {
             document.getElementById('content-' + id).style.display = 'block';
             document.getElementById('editForm-' + id).style.display = 'none';
