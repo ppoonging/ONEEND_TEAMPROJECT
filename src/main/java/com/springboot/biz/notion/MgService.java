@@ -96,7 +96,7 @@ public class MgService {
     }
 
     public Page<MgNotion> findAll(Pageable pageable) {
-        return mgRepository.findAll(pageable); // 🔹 JPA 기본 제공 메서드
+        return mgRepository.findAll(pageable);
     }
 
 
