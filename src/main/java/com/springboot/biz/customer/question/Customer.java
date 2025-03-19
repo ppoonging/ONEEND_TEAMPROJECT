@@ -17,7 +17,7 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer custSeq;
+    private Integer custSeq;//고객센터 번호
 
     @ManyToOne
     private HUser user; // 유저 번호 (FK)  userid->user로 수정
@@ -38,5 +38,5 @@ public class Customer {
     private String custFileName;  //파일 이름
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Replay> replay = new ArrayList<>();
+    private List<Replay> replay = new ArrayList<>(); //관계맺기
 }

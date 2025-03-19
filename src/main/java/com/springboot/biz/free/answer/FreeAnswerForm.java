@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class FreeAnswerForm {
 
-    @NotEmpty(message = "내용은 반드시 입력하셔야 합니다")
+    @NotEmpty
     public String frboAnsContent;
 
 

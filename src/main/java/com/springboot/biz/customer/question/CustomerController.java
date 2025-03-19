@@ -20,7 +20,7 @@ public class CustomerController {
     private final CustomerService customerService;
     private final HUserSerevice hUserSerevice;
 
-
+    //고객센터 리스트
     @GetMapping("/")
     public String getAllCustomer(Model model) {
         List<Customer> customers = customerService.getAllCustomers();
@@ -36,7 +36,8 @@ public class CustomerController {
         model.addAttribute("userSeq", user.getUserSeq()); // 사용자 PK 전달
         return "customer/customer_form";
     }
-    //테스트
+
+
     // 문의 등록
     @PostMapping("/add")
     public String addCustomer(@RequestParam String custTitle,
@@ -63,8 +64,5 @@ public class CustomerController {
         customerService.updateCustomerState(custSeq, state);
         return "redirect:/customer/";
     }
-
-
-
 
 }

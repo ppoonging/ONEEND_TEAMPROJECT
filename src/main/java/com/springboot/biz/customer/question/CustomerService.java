@@ -18,7 +18,7 @@ import java.util.UUID;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-    private  final HUserSerevice hUserSerevice;
+    private final HUserSerevice hUserSerevice;
 
 
     // 전체 고객 문의 조회
@@ -33,7 +33,7 @@ public class CustomerService {
     }
 
     // 고객 문의 등록
-    public void createCustomer(String custTitle, String custContent, Integer userSeq){
+    public void createCustomer(String custTitle, String custContent, Integer userSeq) {
 
 
         // 고객 정보 저장
@@ -55,7 +55,7 @@ public class CustomerService {
         customerRepository.save(customer);
         customerRepository.flush(); // 즉시 반영
     }
-    }
+}
 
 
 

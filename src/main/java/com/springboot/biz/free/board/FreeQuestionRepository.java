@@ -12,12 +12,11 @@ import java.util.List;
 public interface FreeQuestionRepository extends JpaRepository<FreeQuestion, Integer> {
 
 
-
-
+    //페이징처리
     @Override
     Page<FreeQuestion> findAll(Pageable pageable);
 
-
+    //제목으로 검색
     @Query("select q from FreeQuestion q where q.frboTitle like %:kw%")
     Page<FreeQuestion> findAllByTitle(@Param("kw") String kw, Pageable pageable);
 
@@ -31,6 +30,8 @@ public interface FreeQuestionRepository extends JpaRepository<FreeQuestion, Inte
                                                 @Param("contentKw") String contentKw,
                                                 Pageable pageable);
 
+
+    //추천순으로 검색
     @Query("SELECT q FROM FreeQuestion q LEFT JOIN q.freeCnt cnt " +
             "WHERE (q.frboTitle LIKE %:kw% OR q.frboContent LIKE %:kw%) " +
             "GROUP BY q " +
@@ -39,7 +40,8 @@ public interface FreeQuestionRepository extends JpaRepository<FreeQuestion, Inte
                                           @Param("searchType") String searchType,
                                           Pageable pageable);
 
-//    @Query("SELECT q FROM FreeQuestion q ORDER BY q.frboRegDate DESC")
+
+    //최신 등록일기준으로 5개 검색(메인에 들어감)
     List<FreeQuestion> findTop5ByOrderByFrboRegDateDesc();
 
 }

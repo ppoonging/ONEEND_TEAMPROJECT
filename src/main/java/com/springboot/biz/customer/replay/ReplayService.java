@@ -15,7 +15,7 @@ import java.util.List;
 public class ReplayService {
 
 
-    private final ReplayRepository repalyRepository;
+
     private final CustomerRepository customerRepository;
     private final HUserSerevice hUserSerevice;
     private final ReplayRepository replayRepository;
@@ -26,19 +26,15 @@ public class ReplayService {
     }
 
     // 답변 생성
-    public Replay replayCreate(Customer customer, HUser user, String replayContent){
+    public Replay replayCreate(Customer customer, HUser user, String replayContent) {
         Replay r = new Replay();
         r.setReplayContent(replayContent);
         r.setReplayRegTime(LocalDateTime.now());
         r.setCustomer(customer);
-        r.setUser(user); // 작성자 정보 저장
+        r.setUser(user);
 
         return replayRepository.save(r);
     }
-
-
-
-
 
 
 }

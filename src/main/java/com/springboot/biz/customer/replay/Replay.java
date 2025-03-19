@@ -29,5 +29,4 @@ public class Replay {
     private LocalDateTime replayRegTime = LocalDateTime.now(); // 답변 작성일
 
 
-
 }
