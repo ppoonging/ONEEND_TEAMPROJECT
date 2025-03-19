@@ -1,6 +1,16 @@
 <header th:fragment="header" id="header" class="bg-white pt-3 border-bottom sticky-top shadow-sm">
     <div class="container d-flex justify-content-end">
-        <span th:text="${#authentication.name} + ' 님'" sec:authorize="isAuthenticated()" style=" font-size: 14px; color: #777; transform: translateY(1.8px)" class="px-2"></span>
+
+
+       <span th:if="${#authentication.principal.isEnabled}"
+             th:text="${#authentication.name} + ' 님'"
+             sec:authorize="isAuthenticated()"
+             style="font-size: 14px; color: #777; transform: translateY(1.8px)"
+             class="px-2">
+</span>
+
+
+
         <a th:href="@{/users/signup}" sec:authorize="isAnonymous()" style="text-decoration: none">
             <span style="border-right: 1px solid #ccc; font-size: 14px; color: #777;" class="px-2">회원가입 </span>
         </a>

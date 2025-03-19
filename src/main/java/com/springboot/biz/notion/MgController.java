@@ -5,6 +5,9 @@ import com.springboot.biz.user.HUserSerevice;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -82,6 +85,25 @@ public class MgController {
 
         this.mgService.delete(mgNotion);
         return "redirect:/notion/";
+    }
+
+    @GetMapping("/list")
+    public String list(@RequestParam(value = "keyword", required = false) String keyword,
+                       @PageableDefault(size = 10, sort = "notionSeq", direction = Sort.Direction.DESC) Pageable pageable,
+                       Model model) {
+
+        Page<MgNotion> paging;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            paging = mgService.searchNotions(keyword, pageable);
+        } else {
+            paging = mgService.findAll(pageable);
+        }
+
+        model.addAttribute("paging", paging);
+        model.addAttribute("keyword", keyword);
+
+        return "notion/notionlist";
     }
 
 

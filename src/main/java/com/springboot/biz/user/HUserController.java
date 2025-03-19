@@ -1,6 +1,8 @@
 package com.springboot.biz.user;
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -135,10 +137,11 @@ public class HUserController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{username}")
-    public String questionDelete(Principal principal , @PathVariable("username") String username) {
+    public String questionDelete(Principal principal , @PathVariable("username") String username,
+                                 HttpServletRequest request, HttpServletResponse response) {
        HUser hUser= this.hUserSerevice.getUser(username);
 
-        this.hUserSerevice.delete(hUser);
+        this.hUserSerevice.delete(hUser, request, response);
         return"redirect:/";
     }
 

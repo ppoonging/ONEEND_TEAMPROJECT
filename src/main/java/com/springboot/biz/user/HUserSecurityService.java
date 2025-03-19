@@ -1,7 +1,6 @@
 package com.springboot.biz.user;
 
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +19,7 @@ import java.util.Optional;
 public class HUserSecurityService implements UserDetailsService {
 
     private final HUserRepository userRepository;
+
     //UserDetailssms는 가장 큰 씨큐리티
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<HUser> _hUser = this.userRepository.findByUsernameAndActive(username, true);//_안 넣어도 됨

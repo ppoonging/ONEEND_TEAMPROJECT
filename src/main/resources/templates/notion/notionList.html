@@ -8,61 +8,60 @@
     <div class="container py-5">
         <section class="py-2">
 
-            <div class="container mt-5">
+           <!--검색 칸-->
+            <div class="d-flex justify-content-end mb-3">
+                <form th:action="@{/notion/list}" method="get" class="d-flex align-items-center" style="width: 100%; max-width: 400px;">
+                    <input type="text" name="keyword" class="form-control me-2" placeholder="검색어 입력"
+                           th:value="${keyword} ?: ''" style="flex-grow: 1; min-width: 200px; height: 38px;">
+                    <button type="submit" class="btn btn-sm"
+                            style="background-color: #D2B48C; color: white; font-weight: bold; height: 38px; white-space: nowrap;">
+                        검색
+                    </button>
+                </form>
+            </div>
 
+
+
+            <div class="container mt-3">
                 <table class="table table-bordered table-hover">
                     <thead>
                     <tr>
-                        <th scope="col">No.</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Content</th>
-                        <th scope="col">Date</th>
+                        <th scope="col">번호.</th>
+                        <th scope="col">제목</th>
+                        <th scope="col">내용</th>
+                        <th scope="col">작성일</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="mgNotion, loop : ${paging}">
-                        <!-- Display the index of each row -->
                         <td th:text="${paging.totalElements - (paging.number * paging.size) - loop.index}"></td>
 
-                        <!-- Link to notion details with proper styling -->
                         <td>
                             <a th:href="@{|/notion/detail/${mgNotion.notionSeq}|}"
                                th:text="${#strings.length(mgNotion.notionTitle) > 20 ? #strings.substring(mgNotion.notionTitle, 0, 7) + '...' : mgNotion.notionTitle}">
                             </a>
                         </td>
 
-
-                        <!-- Display the notion content -->
                         <td th:text="${#strings.length(mgNotion.notionContent) > 20 ? #strings.substring(mgNotion.notionContent, 0, 13) + '...' : mgNotion.notionContent}"></td>
 
-
-                        <!-- Display the notion registration date -->
-                        <td th:text="${#temporals.format(mgNotion.notionRegDate, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${#temporals.format(mgNotion.notionRegDate, 'yyyy.MM.dd')}"></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
             <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-                <!-- 로그인 사용자만 -->
-                <a th:href="@{/notion/create}" sec:authorize="isAuthenticated()"
+                <a th:href="@{/notion/create}" sec:authorize="hasRole('ADMIN')"
                    class="btn"
                    style="background-color: #D2B48C; color: white; border: none; padding: 10px 20px; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-decoration: none;">
-                    질문 등록하기
-                </a>
-
-                <!-- 비로그인 사용자 -->
-                <a th:href="@{/users/login}" sec:authorize="isAnonymous()"
-                   class="btn"
-                   style="background-color: #D2B48C; color: white; border: none; padding: 10px 20px; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-decoration: none;">
-                    질문 등록하기
+                    등록
                 </a>
             </div>
 
         </section>
     </div>
 
-    <!--pagination-->
+    <!--페이지네이션-->
     <nav aria-label="Page navigation">
         <ul class="pagination d-flex justify-content-center align-items-center flex-grow-1 me-auto ">
             <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
@@ -79,12 +78,10 @@
         </ul>
     </nav>
 
-
 </main>
 <style>
-
     .fixed-btn {
-        position: fixed; /* ⭐ 무조건 필요 */
+        position: fixed;
         bottom: 30px;
         right: 30px;
         z-index: 1000;
@@ -95,9 +92,9 @@
         background-color: #b8946b;
     }
 
-     .table thead {
-         background-color: #f4e9;
-     }
+    .table thead {
+        background-color: #f4e9;
+    }
     .table th, .table td {
         text-align: center;
         vertical-align: middle;
@@ -109,7 +106,10 @@
     .table a:hover {
         color: #c6acae;
     }
-
-
+    .search-form input,
+    .search-form button {
+        height: 38px; /* 버튼과 같은 높이 */
+        padding: 5px 10px;
+    }
 </style>
 </html>
