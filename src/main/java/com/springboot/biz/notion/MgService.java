@@ -91,4 +91,13 @@ public class MgService {
     }
 
 
+    public Page<MgNotion> searchNotions(String keyword, Pageable pageable) {
+        return mgRepository.findByNotionTitleContainingIgnoreCaseOrNotionContentContainingIgnoreCase(keyword, keyword, pageable);
+    }
+
+    public Page<MgNotion> findAll(Pageable pageable) {
+        return mgRepository.findAll(pageable); // 🔹 JPA 기본 제공 메서드
+    }
+
+
 }
