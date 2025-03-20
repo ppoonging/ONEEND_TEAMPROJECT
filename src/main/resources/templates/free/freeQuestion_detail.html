@@ -7,18 +7,37 @@
     <div class="container py-5">
 
         <!-- 제목 -->
-        <h2 class="border p-3 mb-3 bg-light rounded" style="font-size: 20px;">[[${freeQuestion.frboTitle}]]</h2>
+        <h2 class="border p-3 mb-3 bg-light rounded" style="font-size: 20px;" id="title-display">
+            [[${freeQuestion.frboTitle}]]
+        </h2>
 
         <!-- 본문 내용 -->
-        <div class="border p-4 mb-4 bg-white rounded" style="min-height: 150px;">
+        <div class="border p-4 mb-4 bg-white rounded" style="min-height: 150px;" id="content-display">
             <div th:utext="${freeQuestion.frboContent}" style="font-size: 15px; line-height: 1.8;"></div>
         </div>
 
+        <!-- 수정 폼 (기본적으로 숨김) -->
+        <form id="edit-form" method="post" th:action="@{|/freequestion/modify/${freeQuestion.frboSeq}|}" style="display: none;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <div class="form-group">
+                <label for="frboTitle">제목</label>
+                <input type="text" name="frboTitle" id="frboTitle" class="form-control" required th:value="${freeQuestion.frboTitle}">
+            </div>
+
+            <div class="form-group">
+                <label for="frboContent">내용</label>
+                <textarea name="frboContent" id="frboContent" class="form-control" rows="10" required>[[${freeQuestion.frboContent}]]</textarea>
+            </div>
+
+            <div class="d-flex justify-content-end mt-3">
+                <button type="submit" class="btn btn-success btn-sm">수정 완료</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="cancelEdit()">취소</button>
+            </div>
+        </form>
 
         <!-- 추천 버튼 + 추천 수 -->
         <div class="my-4 d-flex align-items-center gap-3">
-
-            <!-- 로그인 사용자만 추천 가능 -->
             <div sec:authorize="isAuthenticated()">
                 <a th:href="@{|/freequestion/recommend/${freeQuestion.frboSeq}|}"
                    class="btn d-flex align-items-center"
@@ -30,19 +49,16 @@
                     <span class="ms-2 badge bg-light text-dark" th:text="${#lists.size(freeQuestion.freeCnt)}">0</span>
                 </a>
             </div>
-
         </div>
-
 
         <!-- 수정/삭제 버튼 -->
         <div class="text-end mb-4" sec:authorize="isAuthenticated()">
-            <a th:href="@{|/freequestion/modify/${freeQuestion.frboSeq}|}"
-               class="btn btn-outline-secondary btn-sm">수정</a>
+            <button class="btn btn-outline-secondary btn-sm" onclick="showEditForm()">수정</button>
             <a href="javascript:void(0);" th:data-uri="@{|/freequestion/delete/${freeQuestion.frboSeq}|}"
                class="delete btn btn-outline-danger btn-sm">삭제</a>
         </div>
 
-        <!--댓글 목록 (수정/삭제/작성) -->
+        <!-- 댓글 목록 (수정/삭제/작성) -->
         <div class="comment-list">
             <div th:each="answer : ${freeQuestion.answerList}" th:if="${answer.parentAnswer == null}"
                  class="my-3 p-2 border rounded">
@@ -55,8 +71,7 @@
 
                 <!-- 댓글 내용 or 수정 폼 -->
                 <div th:if="${#authentication.name == answer.frboAnsAuthor.username}">
-                    <p th:text="${answer.frboAnsContent}" th:id="'content-' + ${answer.frboAnSeq}"
-                       style="color: black;">댓글 내용</p>
+                    <p th:text="${answer.frboAnsContent}" th:id="'content-' + ${answer.frboAnSeq}" style="color: black;"></p>
 
                     <!-- 숨겨진 수정 폼 -->
                     <form th:action="@{'/freeanswer/modify/' + ${answer.frboAnSeq}}" method="post"
@@ -73,66 +88,14 @@
                     <button type="button" class="btn btn-sm btn-outline-secondary"
                             th:onclick="'showEditForm(' + ${answer.frboAnSeq} + ')'">수정
                     </button>
-                    <form th:action="@{'/freeanswer/delete/' + ${answer.frboAnSeq}}" method="post"
-                          style="display:inline;">
+                    <form th:action="@{'/freeanswer/delete/' + ${answer.frboAnSeq}}" method="post" style="display:inline;">
                         <button type="submit" class="btn btn-sm btn-outline-danger">삭제</button>
                     </form>
                 </div>
-
-                <div th:if="${#authentication.name != answer.frboAnsAuthor.username}">
-                    <p th:text="${answer.frboAnsContent}" style="color: black;">댓글 내용</p>
-                </div>
-
-                <!-- 대댓글 반복 -->
-                <div th:each="child : ${answer.childAnswers}" class="ms-4 border-start ps-3 mt-2">
-
-                    <div style="font-size: 13px;">
-                        ㄴ <b th:text="${child.frboAnsAuthor.nickname}"></b>:
-                        <span th:text="${#temporals.format(child.frboARegDate, 'yyyy-MM-dd HH:mm')}"></span>
-                    </div>
-
-                    <!-- 대댓글 내용 or 수정 폼 -->
-                    <div th:if="${#authentication.name == child.frboAnsAuthor.username}">
-                        <p th:text="${child.frboAnsContent}" th:id="'content-' + ${child.frboAnSeq}"
-                           style="color: black;">대댓글 내용</p>
-
-                        <form th:action="@{'/freeanswer/modify/' + ${child.frboAnSeq}}" method="post"
-                              th:id="'editForm-' + ${child.frboAnSeq}" style="display: none;">
-                            <textarea name="frboAnsContent" class="form-control mb-2" rows="2"
-                                      th:text="${child.frboAnsContent}"></textarea>
-                            <button type="submit" class="btn btn-primary btn-sm">수정 완료</button>
-                            <button type="button" class="btn btn-secondary btn-sm"
-                                    th:onclick="'hideEditForm(' + ${child.frboAnSeq} + ')'">취소
-                            </button>
-                        </form>
-
-                        <button type="button" class="btn btn-sm btn-outline-secondary"
-                                th:onclick="'showEditForm(' + ${child.frboAnSeq} + ')'">수정
-                        </button>
-                        <form th:action="@{'/freeanswer/delete/' + ${child.frboAnSeq}}" method="post"
-                              style="display:inline;">
-                            <button type="submit" class="btn btn-sm btn-outline-danger">삭제</button>
-                        </form>
-                    </div>
-
-                    <div th:if="${#authentication.name != child.frboAnsAuthor.username}">
-                        <p th:text="${child.frboAnsContent}" style="color: black;">대댓글 내용</p>
-                    </div>
-                </div>
-
-                <!-- 대댓글 작성 폼 -->
-                <form th:action="@{|/freeanswer/reply/${answer.frboAnSeq}|}" method="post" class="mt-3 ms-4">
-                    <textarea class="form-control form-control-sm" name="frboAnsContent" rows="1"
-                              placeholder="대댓글 작성..." required></textarea>
-                    <button type="submit" class="btn btn-sm btn-outline-primary mt-1"
-                            style="background-color: #D5C9C1; border-color: #D5C9C1; color: black;">등록
-                    </button>
-                </form>
-
             </div>
         </div>
 
-        <!-- 댓글 작성 폼 (최상위 댓글) -->
+        <!-- 댓글 작성 폼 -->
         <form th:action="@{|/freeanswer/create/${freeQuestion.frboSeq}|}" method="post" class="mt-4">
             <textarea class="form-control" name="frboAnsContent" rows="2" placeholder="댓글을 작성해주세요" required></textarea>
             <button type="submit" class="btn btn-outline-primary mt-2"
@@ -141,18 +104,19 @@
         </form>
     </div>
 
-    <!-- 댓글/대댓글 수정 토글 스크립트 -->
+    <!-- JavaScript for editing -->
     <script>
-        function showEditForm(id) {
-            document.getElementById('content-' + id).style.display = 'none';
-            document.getElementById('editForm-' + id).style.display = 'block';
+        function showEditForm() {
+            document.getElementById('edit-form').style.display = 'block';
+            document.getElementById('title-display').style.display = 'none';
+            document.getElementById('content-display').style.display = 'none';
         }
 
-        function hideEditForm(id) {
-            document.getElementById('content-' + id).style.display = 'block';
-            document.getElementById('editForm-' + id).style.display = 'none';
+        function cancelEdit() {
+            document.getElementById('edit-form').style.display = 'none';
+            document.getElementById('title-display').style.display = 'block';
+            document.getElementById('content-display').style.display = 'block';
         }
     </script>
-
 </main>
 </html>
