@@ -3,6 +3,8 @@ package com.springboot.biz.recipe.user;
 import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,9 +24,10 @@ public class UserController {
 
     private final UserService userService;
     private final HUserSerevice hUserSerevice;
+    private final UserRecipeRepository userRecipeRepository;
 
 
-   //유저 레시피 리스트 페이지
+    //유저 레시피 리스트 페이지
     //수정을 위함
     @GetMapping("/list")
     public String list(Model model,
@@ -72,11 +78,24 @@ public class UserController {
 
     //유저 레시피 상세 조회 (조회수 증가)
 
-    @GetMapping("/detail/{id}")
-    public String detail(@PathVariable Integer id, Model model) {
-        UserRecipe recipe = userService.getRecipe(id); // 조회수 증가 포함된 상세 조회
-        model.addAttribute("userRecipe", recipe);
-        return "userrecipe/user_detail"; // 상세 페이지 HTML 반환
+    @GetMapping("/detail/{userRecipeSeq}")
+    public ResponseEntity<Map<String, Object>> getRecipeDetail(@PathVariable Integer userRecipeSeq) {
+        UserRecipe recipe = userRecipeRepository.findByUserRecipeSeq(userRecipeSeq); // 레시피 ID로 조회
+        if (recipe == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 레시피 없으면 404 반환
+        }
+
+        // 레시피 상세 데이터를 반환 (JSON 형식)
+        Map<String, Object> response = new HashMap<>();
+        response.put("title", recipe.getUserRecipeTitle());
+        response.put("content", recipe.getUserRecipeContent()); //레시피
+        response.put("ingredients",recipe.getUserrecipeIngre());  //재료
+        response.put("ready", recipe.getUserrecipeReady()); //준비
+        return ResponseEntity.ok(response);
     }
+
+
+
+
 
 }

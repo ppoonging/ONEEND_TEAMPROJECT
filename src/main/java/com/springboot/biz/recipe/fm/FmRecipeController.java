@@ -1,6 +1,7 @@
 package com.springboot.biz.recipe.fm;
 
 import com.springboot.biz.favorite.FavoriteService;
+import com.springboot.biz.random.RandomService;
 import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Controller
@@ -26,7 +28,7 @@ public class FmRecipeController {
     private final HUserSerevice hUserSerevice;
     private final FavoriteService favoriteService;
     private final FmRecipeRepository fmRecipeRepository;
-
+    private final RandomService randomService;
 
     @GetMapping("/recipe")
     public String list(Model model,
@@ -78,4 +80,5 @@ public class FmRecipeController {
         }
 
 
-    }
+
+}

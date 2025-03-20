@@ -112,7 +112,7 @@
                 <!-- ✅ 대댓글 작성 폼 -->
                 <form th:action="@{|/freeanswer/reply/${answer.frboAnSeq}|}" method="post" class="mt-3 ms-4">
                     <textarea class="form-control form-control-sm" name="frboAnsContent" rows="1" placeholder="대댓글 작성..." required></textarea>
-                    <button type="submit" class="btn btn-sm btn-outline-primary mt-1">등록</button>
+                    <button type="submit" class="btn btn-sm mt-1" style="background: #ec8d53; color: #FFFFFF" >등록</button>
                 </form>
 
             </div>
@@ -121,7 +121,7 @@
         <!-- ✅ 댓글 작성 폼 (최상위 댓글) -->
         <form th:action="@{|/freeanswer/create/${freeQuestion.frboSeq}|}" method="post" class="mt-4">
             <textarea class="form-control" name="frboAnsContent" rows="2" placeholder="댓글을 작성해주세요" required></textarea>
-            <button type="submit" class="btn btn-outline-primary mt-2">댓글 등록</button>
+            <button type="submit" class="btn  float-end mt-1" style="background: #ec8d53; color: #FFFFFF">댓글 등록</button>
         </form>
     </div>
 

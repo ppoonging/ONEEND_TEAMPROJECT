@@ -22,7 +22,7 @@ public class FmRecipeApiController {
     @GetMapping("/detail/{id}")
     public Map<String, Object> getRecipeDetail(@PathVariable Integer id) {
         FmRecipe recipe = fmRecipeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("레시피가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("레시피 없다"));
 
         Map<String, Object> result = new HashMap<>();
         result.put("title", recipe.getFmrecipeTitle());
