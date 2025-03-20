@@ -1,5 +1,7 @@
 package com.springboot.biz.customer.question;
 
+import com.springboot.biz.customer.replay.Replay;
+import com.springboot.biz.customer.replay.ReplayService;
 import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +21,9 @@ public class CustomerController {
 
     private final CustomerService customerService;
     private final HUserSerevice hUserSerevice;
+    private final ReplayService replayService;
 
-
+    //고객센터 리스트
     @GetMapping("/")
     public String getAllCustomer(Model model) {
         List<Customer> customers = customerService.getAllCustomers();
@@ -36,7 +39,8 @@ public class CustomerController {
         model.addAttribute("userSeq", user.getUserSeq()); // 사용자 PK 전달
         return "customer/customer_form";
     }
-    //테스트
+
+
     // 문의 등록
     @PostMapping("/add")
     public String addCustomer(@RequestParam String custTitle,
@@ -47,12 +51,16 @@ public class CustomerController {
         customerService.createCustomer(custTitle, custContent, user.getUserSeq());
         return "redirect:/customer/";
     }
-
-    // 문의 상세 보기
+     
+    //문의 상세보기
     @GetMapping("/detail/{custSeq}")
     public String custDetail(Model model, @PathVariable("custSeq") Integer custSeq) {
         Customer customer = customerService.getCustomer(custSeq);
+        List<Replay> replays = replayService.getReplaysByCustomer(custSeq); // 답변 목록 조회
+
         model.addAttribute("customer", customer);
+        model.addAttribute("replays", replays); // 답변 목록 추가
+
         return "customer/customer_detail";
     }
 
@@ -63,8 +71,5 @@ public class CustomerController {
         customerService.updateCustomerState(custSeq, state);
         return "redirect:/customer/";
     }
-
-
-
 
 }

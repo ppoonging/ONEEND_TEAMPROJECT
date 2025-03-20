@@ -27,7 +27,8 @@ public class FreeQuestion {
     @Column(length = 200)
     private String frboTitle; //제목
 
-    @Column(columnDefinition = "TEXT")
+    @Lob // Large Object로 설정
+    @Column(columnDefinition = "LONGTEXT")
     private String frboContent; //내용
 
     private LocalDateTime frboRegDate; //작성일
@@ -39,18 +40,16 @@ public class FreeQuestion {
 
     private LocalDateTime frboModifyDate; //수정시간
 
-    //질문에 대한 답변
-    @OneToMany(mappedBy = "freeQuestion", cascade = CascadeType.REMOVE)
-    private List<FreeAnswer> answerList;
 
-    //추가함
+    @OneToMany(mappedBy = "freeQuestion", cascade = CascadeType.REMOVE)
+    private List<FreeAnswer> answerList; //관계맺기
+
+
     @ManyToOne
     private HUser freeAuthor;//작성자 
 
-    
+
     @ManyToMany
     private Set<HUser> freeCnt;//추천
-
-
 
 }

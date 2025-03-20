@@ -6,9 +6,26 @@
         <h2 class="text-center text-white py-2 font-bold-style">맛집 소개</h2>
     </div>
     <div class="container py-5">
-        <section>
 
-        <!-- 카드형 리스트 -->
+        <!-- 검색 폼 -->
+        <form th:action="@{/mjboard/list}" method="get" class="text-center mb-4" style="display: flex; justify-content: center; gap: 10px;">
+            <!-- 검색 타입 드롭다운 -->
+            <select name="searchType" style="padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+                <option value="title" th:selected="${searchType == 'title'}">제목</option>
+                <option value="content" th:selected="${searchType == 'content'}">내용</option>
+                <option value="both" th:selected="${searchType == 'both'}">제목+내용</option>
+            </select>
+            <!-- 검색어 입력 필드 -->
+            <input type="text" name="kw" placeholder="검색어 입력" th:value="${kw}"
+                   style="width: 300px; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+            <!-- 검색 버튼 -->
+            <button type="submit" style="padding: 8px 16px; border: none; background: #D5C9C1; color: white; border-radius: 5px;">검색</button>
+        </form>
+
+
+
+
+        <!-- 게시글 카드 리스트 -->
         <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
             <div class="col" th:each="mjboard : ${paging}">
                 <div class="card h-100">
@@ -41,8 +58,7 @@
                             <div>조회수: <span th:text="${mjboard.mjCnt}"></span></div>
                         </div>
 
-
-                        <!-- 작성자, 작성일자 (아이콘 변경 및 유지) -->
+                        <!-- 작성자, 작성일자 -->
                         <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
                             <small class="text-muted">
                                 <i class="bi bi-person-fill"></i>
@@ -56,7 +72,7 @@
                     </div>
                 </div>
             </div>
-
+        </div>
 
             <!-- 검색창 (작게 + 중앙 정렬) -->
             <div class="d-flex justify-content-center my-4">
@@ -73,32 +89,27 @@
 
 
             <!-- 페이징 -->
+
         <div class="d-flex justify-content-center mt-4">
             <ul class="pagination">
                 <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
-                    <a class="page-link" th:href="@{/mjboard/list(page=${paging.number-1}, kw=${kw})}">«</a>
+                    <a class="page-link" th:href="@{/mjboard/list(page=${paging.number-1}, kw=${kw}, searchType=${searchType}, sort=${sort})}">«</a>
                 </li>
                 <li th:each="page : ${#numbers.sequence(0, paging.totalPages - 1)}"
                     th:classappend="${page == paging.number} ? 'active'" class="page-item">
-                    <a class="page-link" th:href="@{/mjboard/list(page=${page}, kw=${kw})}" th:text="${page+1}"></a>
+                    <a class="page-link" th:href="@{/mjboard/list(page=${page}, kw=${kw}, searchType=${searchType}, sort=${sort})}" th:text="${page+1}"></a>
                 </li>
                 <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
-                    <a class="page-link" th:href="@{/mjboard/list(page=${paging.number+1}, kw=${kw})}">»</a>
+                    <a class="page-link" th:href="@{/mjboard/list(page=${paging.number+1}, kw=${kw}, searchType=${searchType}, sort=${sort})}">»</a>
                 </li>
             </ul>
         </div>
+
+        <!-- 맛집 등록 버튼 -->
+        <div class="d-flex justify-content-end mb-3">
+            <a th:href="@{/mjboard/create}" class="btn btn-sm btn-danger">맛집 등록</a>
+        </div>
+
     </div>
-
-    <script>
-        const btnSearchEl = document.querySelector("#btn_search");
-        const searchEl = document.querySelector("#search_kw");
-        btnSearchEl.addEventListener('click', function () {
-            location.href = '/mjboard/list?kw=' + encodeURIComponent(searchEl.value);
-        });
-        searchEl.addEventListener('keyup', function (e) {
-            if (e.key === 'Enter') location.href = '/mjboard/list?kw=' + encodeURIComponent(searchEl.value);
-        });
-    </script>
-
 </main>
 </html>

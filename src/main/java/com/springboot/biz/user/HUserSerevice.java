@@ -4,10 +4,14 @@ package com.springboot.biz.user;
 
 import com.springboot.biz.DataNotFoundException;
 import com.springboot.biz.notion.MgNotion;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -76,9 +80,13 @@ public class HUserSerevice {
         this.userRepository.save(hUser);
     }
 
-    public void delete(HUser hUser) {
+    public void delete(HUser hUser, HttpServletRequest request, HttpServletResponse response ) {
+
         hUser.setActive(false);
        this.userRepository.save(hUser);
+
+       new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
+       SecurityContextHolder.clearContext();
     }
 
 

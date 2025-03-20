@@ -21,20 +21,38 @@ public class MjboardService {
     private final MjthumbnailService mjthumbnailService;
     private final HUserSerevice hUserSerevice;
 
+    //상후 수정
     // 게시판 리스트 (추천수, 별점 계산 포함)
-    public Map<String, Object> getList(Pageable pageable, String kw) {
-        Page<Mjboard> paging = mjboardRepository.findAllByKeyword(kw, pageable);
+    public Map<String, Object> getList(Pageable pageable, String kw, String searchType) {
+        Page<Mjboard> paging;
+
+        // 검색 타입에 따라 다르게 처리 (상후수정)
+        if ("title".equals(searchType)) {
+            // 제목에서만 검색
+            paging = mjboardRepository.findAllByTitle(kw, pageable);
+        } else if ("content".equals(searchType)) {
+            // 내용에서만 검색
+            paging = mjboardRepository.findAllByContent(kw, pageable);
+        } else {
+            // 제목과 내용 모두 검색
+            paging = mjboardRepository.findAllByKeyword(kw, pageable);
+        }
+
+
         Map<Integer, Integer> starCountMap = new HashMap<>();
         for (Mjboard board : paging) {
             int recommendCount = board.getRecommendUsers().size();
             int starCount = (int) Math.min(5, Math.ceil((recommendCount / 50.0) * 5));
             starCountMap.put(board.getMjSeq(), starCount);
         }
+
         Map<String, Object> result = new HashMap<>();
-        result.put("paging", paging);
-        result.put("starCountMap", starCountMap);
+        result.put("paging", paging); // 페이징된 결과를 저장
+        result.put("starCountMap", starCountMap); // 별점 맵을 저장
+
         return result;
     }
+
 
     // 게시글 작성
     public void create(String mjTitle, String mjContent, MultipartFile file, HUser hUser, Integer mjCnt,

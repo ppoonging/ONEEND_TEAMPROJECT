@@ -1,7 +1,6 @@
 package com.springboot.biz.free.board;
 
 
-
 import com.springboot.biz.user.HUser;
 import com.springboot.biz.user.HUserSerevice;
 import jakarta.validation.Valid;
@@ -28,25 +27,9 @@ import java.util.Map;
 public class FreeQuestionController {
 
     private final FreeQuestionService freeQuestionService;
-    private final FreeThumbnailService freeThumbnailService;
     private final HUserSerevice hUserSerevice;
 
-    //자유게시판 view
-    /*@GetMapping("/list")
-    public String freeQuestion(Model model, @RequestParam(value = "page",
-            defaultValue = "0") int page) {
-        Page<FreeQuestion> paging = this.freeQuestionService.getFreeQuestionList(page);
-        model.addAttribute("pageing", paging);
-        return "freequestion_list";
-
-    }*/
- /*   @GetMapping
-    public String freeQuestionList(Model model, @RequestParam(value = "page",defaultValue = "0") int page) {
-        Page<FreeQuestion> paging = this.freeQuestionService.getFreeQuestionList(page);
-        model.addAttribute("pageing", paging);
-        return "freequestionList_From";
-    }*/
-
+    //자유게시판 리스트페이지
     @GetMapping("/")
     public String freeQuestionList(Model model,
                                    @RequestParam(value = "page", defaultValue = "0") int page,
@@ -56,11 +39,11 @@ public class FreeQuestionController {
 
         Page<FreeQuestion> paging;
 
-        // 정렬 조건에 따라 서비스 호출
+        // 인기순,최신순
         if ("popular".equals(sort)) {
             paging = freeQuestionService.getPopularQuestionList(page, kw, searchType); // 추천순
         } else {
-            paging = freeQuestionService.getFreeQuestionList(page, kw, searchType); // 최신순 (기본)
+            paging = freeQuestionService.getFreeQuestionList(page, kw, searchType); // 최신순
         }
 
         model.addAttribute("pageing", paging);
@@ -71,98 +54,92 @@ public class FreeQuestionController {
         return "free/freequestion_list";
     }
 
-
-
-
-
-
     //게시글 작성
-
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/form")
-  public String freeQuestionForm(FreeQuestionForm freeQuestionForm){
+    public String freeQuestionForm(FreeQuestionForm freeQuestionForm) {
 
         return "free/freeQuestion_form";
     }
 
+    //게시글 작성
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/form")
-    public String freeQuestionForm(@Valid FreeQuestionForm freeQuestionForm , BindingResult bindingResult
-            , @RequestParam("file")MultipartFile file, Principal principal)throws Exception{
+    public String freeQuestionForm(@Valid FreeQuestionForm freeQuestionForm, BindingResult bindingResult
+            , @RequestParam("file") MultipartFile file, Principal principal) throws Exception {
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "free/freeQuestion_form";
         }
-
         HUser hUser = this.hUserSerevice.getUser(principal.getName());
-
-
-        this.freeQuestionService.freeForm(freeQuestionForm.getFrboTitle(),freeQuestionForm.getFrboContent(),file,hUser);
+        this.freeQuestionService.freeForm(freeQuestionForm.getFrboTitle(), freeQuestionForm.getFrboContent(), file, hUser);
 
         return "redirect:/freequestion/";
-
     }
 
+    //게시글 상세보기
     @GetMapping("/detail/{frboSeq}")
-    public String freeDetail(Model model, @PathVariable("frboSeq")Integer frboSeq){
+    public String freeDetail(Model model, @PathVariable("frboSeq") Integer frboSeq) {
 
         FreeQuestion freeQuestion = this.freeQuestionService.getFreeQuestion(frboSeq);
-        model.addAttribute("freeQuestion",freeQuestion);
+        model.addAttribute("freeQuestion", freeQuestion);
 
         return "free/freeQuestion_detail";
-
     }
 
+    //게시글 수정
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{frboSeq}")
-    public String freeQuestionModify(FreeQuestionForm freeQuestionForm,@PathVariable("frboSeq") Integer frboSeq,Principal principal){
+    public String freeQuestionModify(FreeQuestionForm freeQuestionForm, @PathVariable("frboSeq") Integer frboSeq, Principal principal) {
 
         FreeQuestion question = this.freeQuestionService.getFreeQuestion(frboSeq);
-        if(!question.getFreeAuthor().getUsername().equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정 권한이 없습니다");
+        if (!question.getFreeAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다");
         }
 
         freeQuestionForm.setFrboTitle(question.getFrboTitle());
         freeQuestionForm.setFrboContent(question.getFrboContent());
 
-        return  "free/freeQuestion_form";
+        return "free/freeQuestion_form";
     }
 
+    //게시글 수정
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{frboSeq}")
-    public String freeQuestionModify(@Valid FreeQuestionForm freeQuestionForm,BindingResult bindingResult
-            ,@PathVariable("frboSeq")Integer frboSeq,Principal principal){
+    public String freeQuestionModify(@Valid FreeQuestionForm freeQuestionForm, BindingResult bindingResult
+            , @PathVariable("frboSeq") Integer frboSeq, Principal principal) {
 
-        if(bindingResult.hasErrors()){
-            return  "free/freeQuestion_form";
+        if (bindingResult.hasErrors()) {
+            return "free/freeQuestion_form";
         }
 
         FreeQuestion question = this.freeQuestionService.getFreeQuestion(frboSeq);
 
-        if(!question.getFreeAuthor().getUsername().equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정 권한이 없습니다");
+        if (!question.getFreeAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다");
         }
 
-        this.freeQuestionService.modify(question,freeQuestionForm.getFrboTitle(),freeQuestionForm.getFrboContent());
+        this.freeQuestionService.modify(question, freeQuestionForm.getFrboTitle(), freeQuestionForm.getFrboContent());
 
-        return  String.format("redirect:/freequestion/detail/%s", frboSeq);
+        return String.format("redirect:/freequestion/detail/%s", frboSeq);
 
     }
 
+    //게시글 삭제
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{frboSeq}")
-    public String questionDelete(@PathVariable("frboSeq")Integer frboSeq,Principal principal){
+    public String questionDelete(@PathVariable("frboSeq") Integer frboSeq, Principal principal) {
         FreeQuestion question = this.freeQuestionService.getFreeQuestion(frboSeq);
 
-        if(!question.getFreeAuthor().getUsername().equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"삭제권한이 없습니다");
+        if (!question.getFreeAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다");
         }
 
         this.freeQuestionService.delete(question);
         return "redirect:/freequestion/";
     }
 
-
+    //게시글 추천
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/recommend/{frboSeq}")
     public String toggleQuestionRecommend(Principal principal, @PathVariable("frboSeq") Integer frboSeq) {
@@ -171,11 +148,5 @@ public class FreeQuestionController {
         this.freeQuestionService.toggleRecommend(freeQuestion, hUser); // 추천/취소
         return String.format("redirect:/freequestion/detail/%s", frboSeq); // 상세로 리다이렉트
     }
-
-
-
-
-
-
 
 }

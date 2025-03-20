@@ -24,8 +24,7 @@
                 <label for="frboContent">내용</label>
                 <textarea name="frboContent" id="summernote" class="form-control" rows="10" required
                           th:text="${freeQuestionForm.frboContent}"></textarea>
-                <small class="text-danger" th:if="${#fields.hasErrors('frboContent')}"
-                       th:errors="*{frboContent}"></small>
+                <small class="text-danger" th:if="${#fields.hasErrors('frboContent')}" th:errors="*{frboContent}"></small>
             </div>
 
             <!-- 파일 업로드 (숨김 처리) -->
@@ -34,16 +33,19 @@
                 <input type="file" name="file" id="file" class="form-control-file">
             </div>
 
+
             <!-- 제출 버튼 -->
             <button type="submit" class="mt-1 float-end"
                     style="padding: 8px 16px; background: #ec8d53; color: white; border: none; border-radius: 5px; ">
                 글 등록
             </button>
+
+
         </form>
 
     </div>
 
-    <!-- 써머노트 초기화 스크립트 -->
+    <!-- 써머노트 스크립트 -->
     <script layout:fragment="script" type="text/javascript">
         $(document).ready(function () {
             // Summernote 에디터 초기화
@@ -64,5 +66,4 @@
         });
     </script>
 </main>
-
 </html>
