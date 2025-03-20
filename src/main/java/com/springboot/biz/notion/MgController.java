@@ -64,13 +64,13 @@ public class MgController {
 
         mgNotionForm.setNotionTitle(mgNotion.getNotionTitle());
         mgNotionForm.setNotionContent(mgNotion.getNotionContent());
-        return "notion/notionForm";
+        return "/notionForm";
     }
 
     @PostMapping("/modify/{notionSeq}")
     public String Modify(@Valid MgNotionForm mgNotionForm, BindingResult bindingResult, @PathVariable("notionSeq") Integer notionSeq, @RequestParam("file") MultipartFile file)throws Exception {
         if(bindingResult.hasErrors()) {
-            return "notion/notionForm";
+            return "/notionForm";
         }
         MgNotion mgNotion = this.mgService.getMgNotion(notionSeq);
 
