@@ -41,12 +41,12 @@
                 <!-- 버튼 -->
                 <!-- 버튼 -->
                 <div class="button-group">
-                    <a th:href="@{|/notion/modify/${mgNotion.notionSeq}|}"
+                    <a th:href="@{|/notion/modify/${mgNotion.notionSeq}|}" sec:authorize="hasRole('ADMIN')"
                        class="btn"
                        style="background-color: #F4E9E3; color: black; border: none; padding: 6px 15px; border-radius: 5px; font-weight: bold; margin-right: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                         수정
                     </a>
-                    <a th:href="@{|/notion/delete/${mgNotion.notionSeq}|}"
+                    <a th:href="@{|/notion/delete/${mgNotion.notionSeq}|}" sec:authorize="hasRole('ADMIN')"
                        class="btn delete"
                        style="background-color: #F4E9E3; color: black; border: none; padding: 6px 15px; border-radius: 5px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                         삭제
