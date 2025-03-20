@@ -1,28 +1,118 @@
+
+
+<html layout:decorate="~{layout}">
+<main layout:fragment="content">
+    <div class="d-flex justify-content-center align-items-center page-total-main-bg mb-5 shadow-sm">
+        <h2 class="text-center text-white py-2 font-bold-style">내 글 목록</h2>
+    </div>
+
+    <div class="container py-5">
+        <div class="header">
+            <h1 class="profile-header text-center " style="padding-bottom: 100px; font-size: 36px;">
+                <div th:text="${#authentication.name} + ' 님의 글 목록입니다'" sec:authorize="isAuthenticated()" >
+
+                </div>
+            </h1>
+        </div>
+
+        <div class="row mt-4">
+            <!-- 찜한 레시피 카드 리스트 (FmRecipe) -->
+            <div class="container">
+                <h2 class="text-start">내가 찜한 레시피</h2>
+
+                <!-- 찜한 레시피 카드 리스트 -->
+                <div class="row row-cols-2 row-cols-md-4 g-3 mt-4">
+                    <div th:each="recipe : ${favoriteRecipes}" class="col">
+                        <div class="card custom-card">
+                            <div class="card-body text-start" style="padding-left: 20px; ">
+                                <h5 class="card-title" th:text=" '레시피 이름 : '+${recipe.fmrecipeTitle}"></h5>
+
+                                <!-- 레시피 보기 버튼 -->
+                                <button type="button" class="btn custom-btn123 mb-2"
+                                        th:attr="data-recipe-id=${recipe.fmrecipeSeq}"
+                                        onclick="openRecipeModal1(this)">레시피 보기</button>
+
+                                <!-- 찜 해제 버튼 -->
+                                <button type="button" class="btn custom-btn123 mb-2"
+                                        th:attr="data-recipe-id=${recipe.fmrecipeSeq}"
+                                        onclick="toggleFavorite1(this)">★ 찜 해제</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 추천 레시피  -->
+                <h2 class="text-start" style="padding-top: 120px">추천 레시피</h2>
+                <div class=" row row-cols-2 row-cols-md-4 g-3 mt-4">
+
+                    <div th:each="recipere : ${recommendedRecipes}" class="col">
+                        <div class="card custom-card">
+                            <div class="card-body text-start" style="padding-left: 20px;">
+                                <h5 class="card-title" th:text="${recipere.userRecipeTitle}"></h5>
+
+                                <!-- 레시피 보기 버튼 (모달 오픈 AJAX) -->
+                                <button type="button" class="btn custom-btn123 mb-2"
+                                        th:attr="data-recipe-id=${recipere.userRecipeSeq}"
+                                        onclick="openRecipeModal(this)">레시피 보기</button>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2 class="text-start "style="padding-top: 120px" >인증된 Root 목록</h2>
+
+                <!-- Root 가져오깅~~~ -->
+                <div class="row row-cols-2 row-cols-md-4 g-3 mt-4">
+                    <div th:each="rootAuth : ${rootAuthPage}" th:if="${rootAuth.root.rootState}" class="col">
+                        <div class="card custom-card" style="cursor: pointer;"
+                             th:attr="onclick='location.href=\'/root/detail/' + ${rootAuth.rootAuthSeq} + '\''">
+                            <div class="card-body text-center" style="padding: 15px;">
+                                <h5 class="card-title">
+                                    <span th:text="'인증횟수: ' + ${rootAuth.rootAuthSeq}"></span>
+                                </h5>
+                                <p class="root-category" th:text="${rootAuth.root.rootTitle}" style="font-size: 14px; color: #888;"></p>
+
+                                <p class="root-title font-weight-bold" th:text="${rootAuth.rootAuthTitle}" style="margin-bottom: 8px;"></p>
+
+                                <div class="d-flex justify-content-between align-items-center" style="font-size: 14px;">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-person-fill me-2"></i>
+
+                                    </div>
+                                    <p class="text-muted" th:text="${#temporals.format(rootAuth.rootAuthDate, 'yyyy-MM-dd HH:mm')}" style="margin: 0;"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</main>
+</html>
+
+
+
+
+
+
 <link rel="stylesheet" type="text/css" th:href="@{/stylesmodal.css}">
 
 <!-- CSRF 토큰 추가 -->
 <meta th:name="_csrf" th:content="${_csrf.token}">
 <meta th:name="_csrf_header" th:content="${_csrf.headerName}">
 
-<h2 class="text-center">내가 찜한 레시피</h2>
-<div class="d-flex flex-wrap gap-3 justify-content-center mt-4">
-    <div th:each="recipe : ${favoriteRecipes}" class="card custom-card" style="width: 18rem;">
 
-        <div class="card-body">
-            <h5 class="card-title" th:text="${recipe.fmrecipeTitle}"></h5>
-
-            <!-- 레시피 보기 버튼 (모달 오픈 AJAX) -->
-            <button type="button" class="btn custom-btn123 mb-2"
-                    th:attr="data-recipe-id=${recipe.fmrecipeSeq}"
-                    onclick="openRecipeModal(this)">레시피 보기</button>
-
-            <!-- 찜 해제 버튼 (토글 AJAX) -->
-            <button type="button" class="btn custom-btn123 mb-2"
-                    th:attr="data-recipe-id=${recipe.fmrecipeSeq}"
-                    onclick="toggleFavorite(this)">★ 찜 해제</button>
-        </div>
-    </div>
-</div>
 
 
 <!-- 모달과 오버레이 (배경 흐림) -->
@@ -46,7 +136,7 @@
 
 <!-- 모달 보기 JS -->
 <script>
-    function openRecipeModal(button) {
+    function openRecipeModal1(button) {
         const recipeId = button.dataset.recipeId;
 
         //내가 만든주소 넣어줌
@@ -78,11 +168,47 @@
     }
 </script>
 
-<!-- 찜하기 토글 (찜 해제) -->
 <script>
-    function toggleFavorite(button) {
+    // 레시피 모달 열기 (AJAX로 데이터 로드)
+    function openRecipeModal(button) {
         const recipeId = button.dataset.recipeId;
 
+        // 레시피 상세 정보 가져오기
+        fetch('/userrecipe/detail/' + recipeId)  // UserRecipe의 상세 정보
+            .then(response => response.json())
+            .then(data => {
+                // 모달에 데이터 삽입
+                document.getElementById('modalTitle').innerText = data.title || '정보 없음';
+                document.getElementById('modalContent').innerText = data.content || '내용 없음';
+                document.getElementById('modalIngredients').innerText = data.ingredients || '재료 없음';
+                document.getElementById('modalReady').innerText = data.ready || '준비 과정 없음';
+
+                const imageElement = document.getElementById('modalImage');
+                if (data.image) {
+                    imageElement.src = data.image;
+                    imageElement.style.display = 'block';
+                } else {
+                    imageElement.style.display = 'none';
+                }
+
+                document.getElementById('recipeModal').classList.remove('hidden');
+                document.body.classList.add('modal-open'); // 배경 흐림
+            })
+            .catch(error => console.error('레시피 불러오기 실패:', error));
+    }
+
+    // 모달 닫기
+    function closeModal() {
+        document.getElementById('recipeModal').classList.add('hidden');
+        document.body.classList.remove('modal-open'); // 배경 복원
+    }
+
+</script>
+
+<!-- 찜하기 토글 (찜 해제) -->
+<script>
+    function toggleFavorite1(button) {
+        const recipeId = button.dataset.recipeId;
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
@@ -92,15 +218,22 @@
                 'Content-Type': 'application/x-www-form-urlencoded',
                 [csrfHeader]: csrfToken
             },
-            credentials: 'same-origin', // ✅ 세션 쿠키 포함
+            credentials: 'same-origin', // 세션 쿠키 포함
             body: 'recipeId=' + recipeId
         })
             .then(response => {
                 if (response.ok) {
-                    button.textContent = '☆ 찜하기';
-                    button.classList.remove('btn-outline-warning');
-                    button.classList.add('btn-outline-secondary');
-                    alert('찜이 해제되었습니다.');
+                    // 버튼 텍스트 및 스타일 변경
+                    if (button.textContent === '★ 찜 해제') {
+                        button.textContent = '☆ 찜하기';
+                        button.classList.remove('btn-outline-warning');
+                        button.classList.add('btn-outline-secondary');
+                    } else {
+                        button.textContent = '★ 찜 해제';
+                        button.classList.remove('btn-outline-secondary');
+                        button.classList.add('btn-outline-warning');
+                    }
+                    alert('찜 상태가 변경되었습니다.');
                 } else if (response.status === 403) {
                     alert('로그인이 필요합니다.');
                 } else {
@@ -111,6 +244,50 @@
                 console.error('찜 토글 실패:', error);
                 alert('서버 요청 실패!');
             });
-
     }
+
 </script>
+
+<style>
+    /* 컨테이너 스타일 */
+    .container {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    /* 헤더 스타일 */
+    .profile-header {
+        font-weight: bold;
+        font-size: 28px;
+        color: #D1C5B2;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* 카드 스타일 */
+    .custom-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .custom-card:hover {
+        transform: scale(1.05);
+    }
+
+    /* 버튼 스타일 */
+    .custom-btn123 {
+        background-color: #F4E9E3;
+        color: black;
+        padding: 8px 12px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .custom-btn123:hover {
+        background-color: #e0d1c4;
+    }
+
+</style>

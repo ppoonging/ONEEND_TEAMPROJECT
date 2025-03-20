@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -60,11 +61,10 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/users/login")
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService)  // 커스텀 서비스 연결
+                                .userService(customOAuth2UserService)
                         )
-                        .defaultSuccessUrl("/")  // 로그인 후 기본 페이지
+                        .successHandler(loginSuccessHandler()) // 로그인 후 기본 페이지
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/users/logout"))
@@ -87,5 +87,13 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler loginSuccessHandler() {
+        return (request, response, authentication) -> {
+
+            response.sendRedirect("/");
+        };
     }
 }

@@ -74,7 +74,22 @@
             </div>
         </div>
 
-        <!-- 페이징 -->
+            <!-- 검색창 (작게 + 중앙 정렬) -->
+            <div class="d-flex justify-content-center my-4">
+                <div class="input-group" style="max-width: 300px;">
+                    <input type="text" id="search_kw" class="form-control form-control-sm" th:value="${kw}" placeholder="검색어 입력">
+                    <button class="btn btn-warning btn-sm" type="button" id="btn_search">검색</button>
+                </div>
+            </div>
+
+            <!-- 맛집 등록 버튼 (오른쪽 정렬 + 깔끔) -->
+            <div class="d-flex justify-content-end my-4">
+                <a th:href="@{/mjboard/create}" class="btn" style="background: #ec8d53; color: #FFFFFF" >맛집 등록</a>
+            </div>
+
+
+            <!-- 페이징 -->
+
         <div class="d-flex justify-content-center mt-4">
             <ul class="pagination">
                 <li class="page-item" th:classappend="${paging.first} ? 'disabled'">

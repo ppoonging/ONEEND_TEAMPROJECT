@@ -92,15 +92,16 @@
                         <button type="submit" class="btn btn-sm btn-outline-danger">삭제</button>
                     </form>
                 </div>
+
             </div>
         </div>
 
         <!-- 댓글 작성 폼 -->
         <form th:action="@{|/freeanswer/create/${freeQuestion.frboSeq}|}" method="post" class="mt-4">
             <textarea class="form-control" name="frboAnsContent" rows="2" placeholder="댓글을 작성해주세요" required></textarea>
-            <button type="submit" class="btn btn-outline-primary mt-2"
-                    style="background-color: #D5C9C1; border-color: #D5C9C1; color: black;">댓글 등록
-            </button>
+
+            <button type="submit" class="btn  float-end mt-1" style="background: #ec8d53; color: #FFFFFF">댓글 등록</button>
+
         </form>
     </div>
 
