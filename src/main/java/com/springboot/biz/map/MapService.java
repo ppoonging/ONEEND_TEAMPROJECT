@@ -120,6 +120,7 @@ public class MapService {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(response.getBody());
 
+            // 경로 조회 결과
             JsonNode rootPath = rootNode.path("route").path(option).get(0).path("path");
             for(JsonNode itemNode : rootPath) {
                 List<Double> point = new ArrayList<>();
@@ -128,9 +129,10 @@ public class MapService {
                 pathList.add(point);
             }
 
+            // summary : 요약
             JsonNode summary = rootNode.path("route").path("trafast").get(0).path("summary");
-            int distance = summary.path("distance").asInt();
-            int duration = summary.path("duration").asInt();
+            int distance = summary.path("distance").asInt(); // 전체 경로
+            int duration = summary.path("duration").asInt(); // 전체 경로 소요 시간
 
             result.put("path", pathList);
             result.put("summary", Map.of(

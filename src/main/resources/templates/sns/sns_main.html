@@ -26,7 +26,10 @@
                         <div th:each="snsList : ${snsList}" class="col-md-4 mb-4">
                             <div style="width: 100%;" class="sns-card">
                                 <a th:href="@{${snsList.snsLink}}" style="text-decoration: none; color: black">
-                                    <img th:src="@{${snsList.snsImagePath}}" class="sns-card-image">
+                                    <img th:src="${snsList.snsImagePath != null and not #strings.isEmpty(snsList.snsImagePath)}
+                                           ? @{${snsList.snsImagePath}}
+                                           : @{/images/total/comming.png}"
+                                         class="sns-card-image">
                                     <p class="sns-card-title" th:text="${snsList.snsCommentTitle}"></p>
                                     <p class="sns-card-body" th:text="${snsList.snsCommentContent}"></p>
                                     <p class="sns-footer" th:text="${snsList.snsTag}"></p>
@@ -40,8 +43,12 @@
                     </div>
                 </div>
             </div>
+            <div class="d-flex justify-content-end mt-2">
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{/sns/form}"
+                   class="btn btn-sm btn-outline-secondary">등록</a>
+            </div>
         </section>
     </div>
 </main>
 </html>
-<link rel="stylesheet" type="text/css" th:href="@{/mj-design-css.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/mj-design-css.css}">

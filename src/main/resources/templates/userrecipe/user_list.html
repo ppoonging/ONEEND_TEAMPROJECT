@@ -7,10 +7,12 @@
         <!--카테고리 경로-->
         <div class="category5-menu mb-4 text-center">
             <a th:href="@{/userrecipe/list(category='')}" class="category5-btn">전체</a>
-            <a th:href="@{/userrecipe/list(category='구이')}" class="category5-btn">구이</a>
-            <a th:href="@{/userrecipe/list(category='밥')}" class="category5-btn">밥</a>
-            <a th:href="@{/userrecipe/list(category='국')}" class="category5-btn">국</a>
-            <a th:href="@{/userrecipe/list(category='김치')}" class="category5-btn">김치</a>
+            <a th:href="@{/userrecipe/list(category='술안주')}" class="category5-btn">술안주</a>
+            <a th:href="@{/userrecipe/list(category='흑백요리사')}" class="category5-btn">흑백요리사</a>
+            <a th:href="@{/userrecipe/list(category='화재의 TV레시피')}" class="category5-btn">화재의 TV레시피</a>
+            <a th:href="@{/userrecipe/list(category='꿀맛 반친')}" class="category5-btn">꿀맛 반친</a>
+            <a th:href="@{/userrecipe/list(category='엄마표 살찌개')}" class="category5-btn">엄마표 살찌개</a>
+
         </div>
 
         <!-- 카드 리스트 -->
@@ -31,7 +33,7 @@
 
         <!-- 로그인 유저만 작성 가능 -->
         <div class="d-flex justify-content-end my-4">
-            <a class="btn btn-primary btn-lg ml-auto" sec:authorize="isAuthenticated()" th:href="@{/userrecipe/create}">등록</a>
+            <a class="btn" style="background: #ec8d53; color: #FFFFFF" sec:authorize="isAuthenticated()" th:href="@{/userrecipe/create}">등록</a>
         </div>
 
         <!-- 페이지네이션 -->
@@ -63,7 +65,7 @@
                         <img th:if="${user.userRecipeFilePath != null}" th:src="@{'/files/userRecipe/' + ${user.userRecipeFileName}}"
                              class="img-fluid mb-3 modal-img"  alt="이미지">
                         <p><strong>작성자:</strong> <span th:text="${user.userId.nickname}"></span></p>
-                        <p><strong>조회수:</strong> <span th:text="${user.userRecipeCnt}"></span></p>
+<!--                        <p><strong>조회수:</strong> <span th:text="${user.userRecipeCnt}"></span></p>-->
                         <p><strong>재료 및 분량:</strong> <span th:text="${user.userrecipeIngre}"></span></p>
                         <p><strong>준비하기:</strong> <span th:text="${user.userrecipeReady}"></span></p>
                         <p><strong>레시피 내용:</strong> <span th:text="${user.userRecipeContent}"></span></p>
@@ -82,8 +84,8 @@
             </div>
         </div>
         <!-- 스타일 + 모달 JS -->
-        <script th:src="@{/fmRecipeModal.js}"></script>
-        <link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
+        <script th:src="@{/js/fmRecipeModal.js}"></script>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/stylesModal.css}">
     </div>
 </main>
 </html>

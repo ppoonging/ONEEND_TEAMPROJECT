@@ -42,7 +42,13 @@ public class MgService {
     }
 
     public void create(String notionTitle, String notionContent, MultipartFile file) throws Exception {
-       String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files";
+       // String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files";
+        String projectPath = "/home/ubuntu/oneend/files/notion";
+
+        File directory = new File(projectPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
         // Generate the file name with UUID
         UUID uuid = UUID.randomUUID();
         String frboFileName = uuid + "_" + file.getOriginalFilename();
@@ -56,7 +62,7 @@ public class MgService {
         q.setNotionTitle(notionTitle);
         q.setNotionContent(notionContent);
         q.setNotionRegDate(LocalDateTime.now());
-        q.setFrboFilePath("/files/" + frboFileName);  // Use the correct file name
+        q.setFrboFilePath("/files/notion/" + frboFileName);  // Use the correct file name
         q.setFrboFileName(frboFileName);
 
         // Save the MgNotion entity to the repository
@@ -70,7 +76,13 @@ public class MgService {
 
 
         if (!file.isEmpty()) {
-            String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files";
+            // String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files";
+            String projectPath = "/home/ubuntu/oneend/files/notion";
+
+            File directory = new File(projectPath);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
             UUID uuid = UUID.randomUUID();
             String frboFileName = uuid + "_" + file.getOriginalFilename();
 
@@ -79,7 +91,7 @@ public class MgService {
             file.transferTo(saveFile);
 
             // 파일 정보 저장 (기존 파일 대체)
-            mgNotion.setFrboFilePath("/files/" + frboFileName);
+            mgNotion.setFrboFilePath("/files/notion/" + frboFileName);
             mgNotion.setFrboFileName(frboFileName);
         }
 

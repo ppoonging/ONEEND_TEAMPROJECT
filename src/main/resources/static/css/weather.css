@@ -9,23 +9,23 @@
 }
 
 .weather-card {
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.24)); /*  */
+    background: rgba(0, 0, 0, 0.29);
     width: 250px; /* 기존보다 살짝 더 크게 */
     height: 350px;
     border-radius: 15px;
     padding: 15px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* 더 부드러운 그림자 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* 더 부드러운 그림자 */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.11);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .weather-city {
     font-size: 20px; /
-    font-weight: bold;
+font-weight: bold;
     margin-bottom: 10px;
     color: #333; /* 다크 그레이 */
 }
@@ -44,7 +44,7 @@
     font-size: 24px; /* 온도는 좀 더 강조 */
     font-weight: bold;
     margin: 0;
-    color: #ff7f50; /* 코랄색으로 포인트 */
+    color: #000000; /* 코랄색으로 포인트 */
 }
 
 .weather-summary {
@@ -67,7 +67,7 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
 }
 .weather-btn {
-    background-color: #ec8d53;
+    background-color: rgba(236, 141, 83, 0.48);
     color: white;
     border: none;
     padding: 8px 10px;

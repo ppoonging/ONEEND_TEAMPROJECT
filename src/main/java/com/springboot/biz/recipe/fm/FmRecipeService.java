@@ -30,7 +30,13 @@ public class FmRecipeService {
                              MultipartFile file) throws IOException {
 
         /*ㄱ경로*/
-       String imgPath = System.getProperty("user.dir")+"/src/main/resources/static/files/fmrecipe/";
+        // String imgPath = System.getProperty("user.dir")+"/src/main/resources/static/files/fmrecipe/";
+        String imgPath = "/home/ubuntu/oneend/files/fmrecipe";
+
+        File directory = new File(imgPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
 
         UUID uuid = UUID.randomUUID();
 

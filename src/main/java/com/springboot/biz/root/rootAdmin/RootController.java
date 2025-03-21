@@ -36,7 +36,7 @@ public class RootController {
     public String list(Model model) {
         List<Root> list = this.rootService.getList();
         model.addAttribute("list", list);
-        return "/root/admin/root_list_admin";
+        return "root/admin/root_list_admin";
     }
 
 //    @GetMapping("/form/save")
@@ -61,7 +61,7 @@ public class RootController {
         model.addAttribute("rootList", rootList);
         model.addAttribute("root", root);
 
-        return "/root/admin/root_detail_admin";
+        return "root/admin/root_detail_admin";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -77,7 +77,7 @@ public class RootController {
 
         model.addAttribute("root", rootDTO);
 
-        return "/root/admin/root_form_admin";
+        return "root/admin/root_form_admin";
     }
 
 
@@ -144,7 +144,7 @@ public class RootController {
         model.addAttribute("rootSeq", rootSeq);
 
 
-        return "/root/admin/root_form_admin";
+        return "root/admin/root_form_admin";
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -174,7 +174,7 @@ public class RootController {
             model.addAttribute("rootList", rootList);
             model.addAttribute("root", root);
             model.addAttribute("rootSeq", rootSeq);
-            return "/root/admin/root_form_admin";
+            return "root/admin/root_form_admin";
         }
 
 

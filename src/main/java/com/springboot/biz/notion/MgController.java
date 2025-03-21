@@ -39,7 +39,7 @@ public class MgController {
 
     @GetMapping("/create")
     public String Create(MgNotionForm mgNotionForm) {
-        return "notionForm";
+        return "notion/notionForm";
     }
 
 
@@ -64,13 +64,13 @@ public class MgController {
 
         mgNotionForm.setNotionTitle(mgNotion.getNotionTitle());
         mgNotionForm.setNotionContent(mgNotion.getNotionContent());
-        return "/notionForm";
+        return "notion/notionForm";
     }
 
     @PostMapping("/modify/{notionSeq}")
     public String Modify(@Valid MgNotionForm mgNotionForm, BindingResult bindingResult, @PathVariable("notionSeq") Integer notionSeq, @RequestParam("file") MultipartFile file)throws Exception {
         if(bindingResult.hasErrors()) {
-            return "/notionForm";
+            return "notion/notionForm";
         }
         MgNotion mgNotion = this.mgService.getMgNotion(notionSeq);
 
@@ -103,7 +103,7 @@ public class MgController {
         model.addAttribute("paging", paging);
         model.addAttribute("keyword", keyword);
 
-        return "notion/notionlist";
+        return "notion/notionList";
     }
 
 

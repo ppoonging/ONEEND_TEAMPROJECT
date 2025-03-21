@@ -58,7 +58,13 @@ public class MjboardService {
     public void create(String mjTitle, String mjContent, MultipartFile file, HUser hUser, Integer mjCnt,
                        String mjMapTitle, String mjMapAddress, String mjMapRodeAddress, Double mjMapLatitude,
                        Double mjMapLongitude, String mjMapLink, String mjMapCategory) throws Exception {
-        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/mj";
+        // String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/mj";
+        String projectPath = "/home/ubuntu/oneend/files/mj";
+
+        File directory = new File(projectPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
         UUID uuid = UUID.randomUUID();
         String mjFileName = uuid + "_" + file.getOriginalFilename();
         File saveFile = new File(projectPath, mjFileName);
@@ -90,7 +96,12 @@ public class MjboardService {
 
     // 썸머노트 이미지 저장
     public String saveSummernoteImage(MultipartFile file) throws Exception {
-        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/mj";
+        String projectPath = "/home/ubuntu/oneend/files/mj";
+
+        File directory = new File(projectPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
         UUID uuid = UUID.randomUUID();
         String fileName = uuid + "_" + file.getOriginalFilename();
         File saveFile = new File(projectPath, fileName);

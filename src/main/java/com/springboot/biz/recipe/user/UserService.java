@@ -51,7 +51,13 @@ public class UserService {
         userRecipe.setUserRecipeCnt("0");
         userRecipe.setRecipeRecommend(0);
 
-        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/userRecipe";
+        // String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/userRecipe";
+        String projectPath = "/home/ubuntu/oneend/files/userRecipe";
+
+        File directory = new File(projectPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
 
         if (!file.isEmpty()) {
             String fileName = file.getOriginalFilename(); // 원본 파일명
