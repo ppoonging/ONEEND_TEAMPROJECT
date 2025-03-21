@@ -62,7 +62,6 @@
                                 </button>
                                 <!--                                        <button type="submit" id="search-submit" class="btn btn-sm">길찾기</button>-->
                             </div>
-                            <div id="info" class="fs-6 text-center text-danger mb-3"></div> <!-- 거리, 소요시간 표시 -->
                         </form>
                         <div id="info" class="mb-1 mt-2 fs-6 text-center text-danger"></div> <!-- 거리, 소요시간 표시 -->
                     </div>
@@ -92,7 +91,7 @@
     </section>
 
     <!--게시판-->
-    <section id="section3" class="container pt-5 mt-5 " style="padding-bottom: 200px;">
+    <section id="section3" class="container pt-5 mt-5 ">
         <h3>#인기 맛집</h3>
         <div class="row" style="height: 500px">
             <!-- Swiper -->
@@ -100,10 +99,12 @@
                 <div class="swiper-wrapper">
                     <div class="swiper-slide" th:each="board : ${top9MjBoard}" style="text-align: center;">
                         <div class="card-mj">
-                            <a th:href="@{'/mjboard/detail/' + ${board.mjSeq}}" style="text-decoration: none;">
-                                <img th:src="${imageUrlMap[board.mjSeq]} ? ${imageUrlMap[board.mjSeq]} : '/images/total/default.png'"
-                                     alt="썸네일"
-                                     style="width: 90%; height: 80%; object-fit: cover; border-radius: 10px;">
+                            <a th:href="@{'/mjboard/detail/' + ${board.mjSeq}}"  class="w-100" style="text-decoration: none;">
+                                <img th:src="${imageUrlMap != null and imageUrlMap[board.mjSeq] != null  ? imageUrlMap[board.mjSeq]
+                                     : '/images/total/default.png'}"
+                                     class="card-img-top"
+                                     style="height:300px; object-fit:cover;"
+                                     alt="썸네일">
                                 <h5 th:text="${board.mjTitle}" style="margin-top: 10px; color: black;"></h5>
                                 <p th:text="${board.mjMapTitle}" style="font-size: 14px; color: gray;"></p>
                                 <p th:text="'조회수: ' + ${board.mjCnt}" style="font-size: 12px; color: gray;"></p>
@@ -167,9 +168,9 @@
 
 
 
-            <div style="width: 25%;  border: 1px solid #eee; border-radius: 10px; background-color: #baa491;">
+            <div style="width: 25%;  border: 1px solid rgba(238,238,238,0); border-radius: 10px; ">
                 <div class="d-flex justify-content-center align-items-center">
-                    <span style="font-weight: 500; font-size: 36px;">날씨 정보</span>
+                    <span style="font-weight: 400; font-size: 36px;">날씨 정보</span>
                 </div>
 
                 <!--  날씨 api 적용 젝슨으로함 -->
@@ -203,12 +204,17 @@
 
 </html>
 <!-- ✅ 고정 날씨 카드: 꼭 <main> 바깥 -->
-<link rel="stylesheet" type="text/css" th:href="@{/weather.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/main.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/weather.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
-<script th:inline="javascript">
+<script th:inline="javascript" layout:fragment="script" >
+    let map;
+    let markerList = [];
+    let routeLine = null;
+
+    let mjboard = /*[[${mjboard}]]*/ [];
 
     document.addEventListener('DOMContentLoaded', function () {
         console.log("✅ 페이지 로드 완료");
@@ -330,7 +336,6 @@
         // 필터링한 값으로 마커 재생성
         filter.forEach(data => {
             let location = new naver.maps.LatLng(data.mjMapLatitude, data.mjMapLongitude);
-            let imgSrc = imageUrlMap[data.mjSeq] ? imageUrlMap[data.mjSeq] : '/images/total/default.png';
 
             const marker = new naver.maps.Marker({
                 position: location,
@@ -350,7 +355,7 @@
                     padding: 15px;
                     box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
                 <div class="d-flex">
-                    <img src="${imgSrc}" class="card-img-top me-3" style="width: 80px; height: 80px; object-fit:cover;" alt="썸네일">
+
                     <div>
                         <h5 style="font-size: 13px;" class="font-bold-style">${data.mjMapTitle}</h5>
                         <h6 style="font-size: 11px; color: #555">${data.mjMapAddress}</h6>
@@ -503,7 +508,7 @@
         // Polyline (경로)
         const routePath = pathList.map(coord => new naver.maps.LatLng(coord[0], coord[1]));
 
-        // 기존 라인 제거 (중복 방지)
+
         if (routeLine) routeLine.setMap(null);
 
         // 새 라인 생성
@@ -515,7 +520,7 @@
             strokeOpacity: 0.8
         });
 
-        // 지도 중심을 출발지로 이동
+
         map.setCenter(routePath[0]);
     }
 

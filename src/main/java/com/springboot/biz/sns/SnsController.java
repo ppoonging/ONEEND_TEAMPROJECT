@@ -92,4 +92,5 @@ public class SnsController {
 
         return "redirect:/sns";
     }
+
 }

@@ -27,9 +27,6 @@ public class Mjboard {
     @ManyToOne
     private HUser userId; // 유저 번호 (FK)
 
-    @OneToMany
-    private List<Root> tourSeq;  //투어 루트번호
-
     @Column(length = 100)
     private String mjTitle;   //제목
 

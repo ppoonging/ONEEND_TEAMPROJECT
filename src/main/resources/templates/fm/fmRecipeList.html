@@ -87,6 +87,20 @@
         <a class="btn" style="background: #ec8d53; color: #ffffff;" sec:authorize="hasRole('ADMIN')" th:href="@{/fm/create}">등록</a>
     </div>
     <!-- 인라인 CSS -->
+    <div class="d-flex justify-content-center mt-4">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
+                <a class="page-link" th:href="@{/fm/recipe(page=${paging.number-1}, kw=${kw}, searchType=${searchType}, sort=${sort})}">«</a>
+            </li>
+            <li th:each="page : ${#numbers.sequence(0, paging.totalPages - 1)}"
+                th:classappend="${page == paging.number} ? 'active'" class="page-item">
+                <a class="page-link" th:href="@{/fm/recipe(page=${page}, kw=${kw}, searchType=${searchType}, sort=${sort})}" th:text="${page+1}"></a>
+            </li>
+            <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
+                <a class="page-link" th:href="@{/fm/recipe(page=${paging.number+1}, kw=${kw}, searchType=${searchType}, sort=${sort})}">»</a>
+            </li>
+        </ul>
+    </div>
 
 
 
@@ -103,8 +117,8 @@
     </script>
 
     <!-- JS -->
-    <script th:src="@{/fmRecipeModal.js}"></script>
-    <link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
+    <script th:src="@{/js/fmRecipeModal.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/stylesModal.css}">
 
     <!-- CSRF -->
     <meta sec:authorize="isAuthenticated()" name="_csrf" th:content="${_csrf.token}"/>

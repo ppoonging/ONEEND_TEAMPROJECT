@@ -64,7 +64,7 @@ public class RootAuthController {
         model.addAttribute("rootAuthPage", rootAuthPage);
         model.addAttribute("chkCategory", chkCategory); // 선택한 값 유지
 
-        return "/root/user/root_list_user";
+        return "root/user/root_list_user";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -154,7 +154,7 @@ public class RootAuthController {
         model.addAttribute("rootAuth", rootAuth);
         model.addAttribute("rootList", rootList);
 
-        return "/root/user/root_detail_user";
+        return "root/user/root_detail_user";
     }
 
 
@@ -203,7 +203,7 @@ public class RootAuthController {
         model.addAttribute("root", rootService.getList());
         model.addAttribute("rootAuthSeq", rootAuthSeq);
 
-        return "/root/user/root_form_user";
+        return "root/user/root_form_user";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -236,7 +236,7 @@ public class RootAuthController {
             model.addAttribute("selRoot", selRoot);
             model.addAttribute("selRootList", selRoot.getRootList());
             model.addAttribute("selRootUserList", rootAuthList);
-            return "/root/user/root_form_user";
+            return "root/user/root_form_user";
         }
 
         System.out.println("리스트 오나 테스트 " + rootAuthList);
