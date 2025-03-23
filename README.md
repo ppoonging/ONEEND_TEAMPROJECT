@@ -10,3 +10,5 @@
 
 - MYSQL
 - AWS LightSale 배포 성공
+
+![Uploading 프로젝트 발표.png…]()
