@@ -64,12 +64,12 @@ public class RootController {
         return "root/admin/root_detail_admin";
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/form/search")
-    @ResponseBody
-    public List<Map<String, String>> search(@RequestParam String query) {
-        return mapService.search(query); // JSON 형태로 반환
-    }
+//    @PreAuthorize("isAuthenticated()")
+//    @GetMapping("/form/search")
+//    @ResponseBody
+//    public List<Map<String, String>> search(@RequestParam String query) {
+//        return mapService.search(query); // JSON 형태로 반환
+//    }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/form")

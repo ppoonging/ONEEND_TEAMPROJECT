@@ -44,3 +44,6 @@ BOOT-INF/
 node_modules/
 build/
 *.log
+
+.env
+application.properties

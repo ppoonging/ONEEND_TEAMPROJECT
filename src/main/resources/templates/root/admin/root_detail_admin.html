@@ -56,148 +56,103 @@
     </div>
 
     <script th:inline="javascript" layout:fragment="script">
+        // 카카오맵 적용 버전 (글 수정 화면)
         let map;
-        let marker;
         let polyline;
-
+        let marker;
         let rootList = /*[[${root.rootList}]]*/ [];
 
+        // 마커 배열
+        window.markers = [];
 
-        // 초기 map 설정
-        function setMap() {
-            map = new naver.maps.Map("map", {
-                center: getCenter(rootList),
-                zoom: 12, // 값이 클수록 확대
-                zoomControl: true,
-                mapTypeControl: true
+        function setMap(center) {
+            map = new kakao.maps.Map(document.getElementById("map"), {
+                center: center,
+                level: 4
             });
 
-            naver.maps.Event.addListener(map, 'init', function () {
-                if (rootList.length > 0) {
-                    displayMap(rootList);
-                    centerRootMove(rootList);
-                }
-            });
+            if (rootList.length > 0) {
+                displayMap(rootList);
+                centerRootMove(rootList);
+            }
         }
 
-        // 페이지 로드 시 동작
         document.addEventListener("DOMContentLoaded", () => {
-            if (rootList.length > 0) {
-                setMap();
-            } else {
-                setMap(37.5666805, 126.9784147);
-            }
+            const center = rootList.length > 0 ? getCenter(rootList) : new kakao.maps.LatLng(37.5666805, 126.9784147);
+            setMap(center);
 
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-
-
+            [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el));
         });
 
-        // map 에 표시
         function displayMap(rootList) {
             if (!rootList || rootList.length === 0) return;
-
             drawPolyline(rootList);
         }
 
-        // 라인 그리기
         function drawPolyline(line) {
-
             if (!line || line.length === 0) return;
 
-            const path = line.map((data) => {
-                // console.log(data)
-                return new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)
-            })
+            const path = line.map(data => new kakao.maps.LatLng(data.rootListLatitude, data.rootListLongitude));
 
             if (polyline) polyline.setMap(null);
 
-            polyline = new naver.maps.Polyline({
+            polyline = new kakao.maps.Polyline({
                 map: map,
                 path: path,
-                strokeColor: '#FE2E2E',
-                strokeStyle: 'stroke',
-                strokeWeight: 2
+                strokeColor: '#FA5858',
+                strokeWeight: 3,
+                strokeOpacity: 1,
+                strokeStyle: 'solid'
             });
 
             addMarkers(line);
-
         }
 
-        // 마커 추가
         function addMarkers(line) {
-            if (window.markers) {
+            if (window.markers.length > 0) {
                 window.markers.forEach(marker => marker.setMap(null));
+                window.markers = [];
             }
-            window.markers = [];
 
-            // 순서대로 마커 추가
             line.forEach(data => {
-                const marker = new naver.maps.Marker({
-                    position: new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude),
-                    map: map,
-                    icon: {
-                        content: `<img width="30" height="30" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
-                        anchor: new naver.maps.Point(14, 20)
-                    }
+                const marker = new kakao.maps.Marker({
+                    position: new kakao.maps.LatLng(data.rootListLatitude, data.rootListLongitude),
+                    map: map
                 });
-
                 window.markers.push(marker);
-
             });
         }
 
-
-        // root 중앙 이동
         function centerRootMove(root) {
-
             if (!root || root.length === 0) return;
 
-            const path = root.map(data => new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude))
-
-            const center = getCenter(root);
-
-            map.setCenter(center);
-
-            // 경로에 맞게 줌 자동 조정
-            const bounds = new naver.maps.LatLngBounds();
-            path.forEach(coord => bounds.extend(coord));
-            map.fitBounds(bounds);
+            const bounds = new kakao.maps.LatLngBounds();
+            root.forEach(data => bounds.extend(new kakao.maps.LatLng(data.rootListLatitude, data.rootListLongitude)));
+            map.setBounds(bounds);
         }
 
-        // 버튼 클릭 시 중앙 이동
         document.getElementById("map-button").addEventListener("click", function () {
-            console.log("click");
             centerRootMove(rootList);
-        })
+        });
 
-        // 중앙 값 구해서 설정
         function getCenter(root) {
-
-            if (!root || root.length === 0) return new naver.maps.LatLng(37.5666805, 126.9784147);
+            if (!root || root.length === 0) return new kakao.maps.LatLng(37.5666805, 126.9784147);
 
             let latSum = 0;
             let lngSum = 0;
-            let cnt = root.length;
-
             root.forEach(data => {
-                latSum += data.latitude;
-                lngSum += data.longitude;
+                latSum += data.rootListLatitude;
+                lngSum += data.rootListLongitude;
             });
-
-            return new naver.maps.LatLng(latSum / cnt, lngSum / cnt);
+            return new kakao.maps.LatLng(latSum / root.length, lngSum / root.length);
         }
 
         document.getElementById("delete-btn").addEventListener("click", function () {
             if (confirm("삭제하시겠습니까?")) {
                 window.location.href = this.dataset.url;
-            } else {
-                console.log("취소");
             }
-        })
-
-
+        });
     </script>
 
 </main>

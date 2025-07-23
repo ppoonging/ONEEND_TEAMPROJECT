@@ -142,557 +142,333 @@
         let map;
         let marker;
         let polyline;
+        let selPolyline;
         let rootList = /*[[${selRootList}]]*/ [];
         let rootAuthList = /*[[${rootAuthList}]]*/ [];
-        let selPolyline;
-
-        console.log(rootAuthList);
-
         let initMaker = [];
         let selMaker = [];
 
-        // 페이지 로드 시 동작
         document.addEventListener("DOMContentLoaded", () => {
-            setMap();
+            initMap();
             drawPolyline(rootList);
             updateSelectList();
 
-            let isModify = rootAuthList && rootAuthList.length > 0;
-
-            console.log("확인 " + rootAuthList)
+            const isModify = rootAuthList?.length > 0;
 
             if (isModify) {
                 drawAuthPolyline(rootAuthList);
                 sessionStorage.setItem("checkRootUser", JSON.stringify(rootAuthList));
-            }
-
-            if (!isModify) {
+                modifySaveCheckList();
+            } else {
                 document.querySelectorAll('.mb-3 .form-control').forEach(div => {
                     div.parentElement.style.display = 'none';
                 });
             }
 
-            if (isModify) {
-                modifySaveCheckList();
-            }
         });
 
-        // 초기 map 설정
-        function setMap() {
+        function initMap() {
+            const center = (rootAuthList?.length > 0)
+                ? getCenter(rootAuthList)
+                : new kakao.maps.LatLng(37.5666805, 126.9784147);
 
-            let center = rootAuthList != null ? getCenter(rootAuthList) : new naver.maps.LatLng(37.5666805, 126.9784147);
-
-            map = new naver.maps.Map("map", {
-                center: center,
-                zoom: 15, // 기본 줌 설정
-                zoomControl: true,
-                mapTypeControl: true
+            map = new kakao.maps.Map(document.getElementById('map'), {
+                center,
+                level: 4, // zoom
             });
 
             if (rootList.length > 0) {
-                const bounds = new naver.maps.LatLngBounds();
-                rootList.forEach(data => bounds.extend(new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)));
-                map.fitBounds(bounds);
+                const bounds = new kakao.maps.LatLngBounds();
+                rootList.forEach(d => bounds.extend(new kakao.maps.LatLng(d.rootListLatitude, d.rootListLongitude)));
+                map.setBounds(bounds);
             }
-
         }
 
-        // 초반 경로 라인 그리기
-        function drawPolyline(value) {
+        function drawPolyline(arr) {
+            if (!arr?.length) return;
 
-            if (!rootList || rootList.length === 0) return;
+            const path = arr.map(d => new kakao.maps.LatLng(d.rootListLatitude, d.rootListLongitude));
 
-            const path = value.map((data) => {
-                // console.log(data)
-                return new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)
-            })
+            if (polyline) polyline.setMap(null);
 
-            if (polyline) {
-                polyline.setMap(null);
-            }
-
-            polyline = new naver.maps.Polyline({
-                map: map,
-                path: path,
+            polyline = new kakao.maps.Polyline({
+                path,
+                strokeWeight: 3,
                 strokeColor: '#FE2E2E',
-                strokeStyle: 'longdash',
                 strokeOpacity: 0.5,
-                strokeWeight: 2
+                strokeStyle: 'dash',
+                map,
             });
 
-            if (window.markers) {
-                window.markers.forEach(marker => marker.setMap(null));
-            }
-            window.markers = [];
+            initMaker.forEach(m => m.setMap(null));
+            initMaker = [];
 
-            // 순서대로 마커 추가
-            value.forEach((data) => {
-                const marker = new naver.maps.Marker({
-                    position: new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude),
-                    map: map,
-                    icon: {
-                        content: `<span style="font-size: 10px; color: white; width: 10px; height: 10px; padding: 3px 5px; background-color: #FE2E2E; border-radius: 50%; opacity: 50%">${data.rootListIndex}</span>`,
-                        anchor: new naver.maps.Point(10, 15)
-                    }
+            arr.forEach(d => {
+                const m = new kakao.maps.CustomOverlay({
+                    position: new kakao.maps.LatLng(d.rootListLatitude, d.rootListLongitude),
+                    content: `<div style="
+          font-size:10px;color:white;background-color:#FE2E2E;
+          border-radius:50%;padding:3px 5px;opacity:0.5;
+        ">${d.rootListIndex}</div>`
                 });
-
-                initMaker.push(marker);
-
+                m.setMap(map);
+                initMaker.push(m);
             });
-
         }
 
-        // rootAuthList를 기반으로 폴리라인 그리기
-        function drawAuthPolyline(value) {
-            if (!value || value.length === 0) return;
+        function drawAuthPolyline(arr) {
+            if (!arr?.length) return;
 
-            const path = value.map((data) => {
-                return new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude);
-            });
+            const path = arr.map(d => new kakao.maps.LatLng(d.rootAuthListLatitude, d.rootAuthListLongitude));
+            if (selPolyline) selPolyline.setMap(null);
 
-            if (selPolyline) {
-                selPolyline.setMap(null);
-            }
-
-            selPolyline = new naver.maps.Polyline({
-                map: map,
-                path: path,
+            selPolyline = new kakao.maps.Polyline({
+                path,
+                strokeWeight: 4,
                 strokeColor: '#FA5858',
                 strokeStyle: 'solid',
-                strokeWeight: 3
+                map,
             });
 
-            addAuthMarkers(value);
+            addAuthMarkers(arr);
         }
 
-        // rootAuthList 위치에 마커 추가
-        function addAuthMarkers(value) {
-            if (selMaker.length > 0) {
-                selMaker.forEach(marker => marker.setMap(null));
-                selMaker = [];
-            }
-
-            value.forEach(data => {
-                const marker = new naver.maps.Marker({
-                    position: new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude),
-                    map: map,
-                    icon: {
-                        content: `<img width="30" height="30" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
-                        anchor: new naver.maps.Point(17, 20)
-                    }
-                });
-
-                selMaker.push(marker);
-            });
-        }
-
-        // select 선택 시
-        document.getElementById("select-root").addEventListener("change", function () {
-            sessionStorage.removeItem("checkRootUser");
-            // document.getElementById("select-form").submit();
-            const selectedValue = this.value;
-            window.location.href = '/root/form?rootSeq=' + selectedValue;
-        });
-
-        // 중앙 값 구해서 설정
-        function getCenter(value) {
-
-            if (value.length === 0) {
-                return new naver.maps.LatLng(37.5666805, 126.9784147); // 기본 위치 (서울 시청)
-            }
-
-            let latSum = 0;
-            let lngSum = 0;
-            let cnt = value.length;
-
-            value.forEach(data => {
-                latSum += data.rootListLatitude;
-                lngSum += data.rootListLongitude;
-            });
-
-            return new naver.maps.LatLng(latSum / cnt, lngSum / cnt);
-        }
-
-        // title 체크 시 지도/마커
-        document.querySelectorAll('h6[name="click-address"]').forEach((data) => {
-            data.addEventListener("click", function () {
-                const lat = parseFloat(data.dataset.lat);
-                const lng = parseFloat(data.dataset.lng);
-
-                const position = new naver.maps.LatLng(lat, lng);
-
-                if (marker) marker.setMap(null);
-
-                marker = new naver.maps.Marker({
-                    position: new naver.maps.LatLng(lat, lng),
-                    map: map,
-                    icon: {
-                        content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
-                        anchor: new naver.maps.Point(12, 40)
-                    },
-                    animation: naver.maps.Animation.BOUNCE
-                });
-
-                map.setCenter(position);
-                map.setZoom(17);
-
-            });
-        });
-
-        // 수정 -> 체크 및 이미지 업로드 검토
-        function modifySaveCheckList() {
-            const savedList = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
-
-            document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
-                const dataTitle = checkbox.dataset.title;
-                const matched = savedList.find(item => item.rootAuthListTitle === dataTitle);
-
-                if (matched) {
-                    checkbox.checked = true;
-                    const checkLi = checkbox.closest('li');
-                    const fileContainer = checkLi.querySelector('.file-container');
-
-                    if (fileContainer) {
-                        fileContainer.style.display = 'block';
-                    }
-
-                    if (matched.rootAuthListImagePath && matched.rootAuthListImageName) {
-                        const existingPreview = fileContainer.querySelector('.image-preview');
-                        const fullImagePath = matched.rootAuthListImagePath;
-
-                        if (!existingPreview) {
-                            const img = document.createElement('img');
-                            img.src = fullImagePath;
-                            img.classList.add('image-preview');
-                            img.style.width = '80px';
-                            img.style.height = '80px';
-                            img.style.objectFit = 'cover';
-                            img.style.marginBottom = '10px';
-                            fileContainer.insertBefore(img, fileContainer.firstChild); // 파일 input 위에 삽입
-                        }
-                    }
-                }
-            });
-        }
-
-        // 체크 시 동작
-        document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
-            checkbox.addEventListener("change", function () {
-
-                const checkVaild = document.getElementById("checkVaild");
-                checkVaild.style.display = 'none';
-
-                const checkLi = checkbox.closest('li');
-                const fileContainer = checkLi.querySelector('.file-container');
-
-                const obj = {
-                    rootAuthListTitle: checkbox.dataset.title,
-                    rootAuthListAddress: checkbox.dataset.address,
-                    rootAuthListRoadAddress: checkbox.dataset.roadaddress,
-                    rootAuthListLatitude: checkbox.dataset.latitude,
-                    rootAuthListLongitude: checkbox.dataset.longitude,
-                    rootAuthListLink: checkbox.dataset.link,
-                    rootAuthListCategory: checkbox.dataset.category
-                };
-
-                let sessionChkDataSel = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
-
-                if (this.checked) {
-                    if (!sessionChkDataSel.some(item => item.rootAuthListTitle === obj.rootAuthListTitle)) {
-                        sessionChkDataSel.push(obj);
-                    }
-                    fileContainer.style.display = 'block'; // 파일 업로드 보이기
-                } else {
-                    sessionChkDataSel = sessionChkDataSel.filter(item => item.rootAuthListTitle !== obj.rootAuthListTitle);
-                    fileContainer.style.display = 'none'; // 파일 업로드 숨기기
-                }
-
-                sessionStorage.setItem("checkRootUser", JSON.stringify(sessionChkDataSel));
-
-                checkDrawPolyline();
-
-            })
-        })
-
-        // list 업데이트
-        function updateSelectList() {
-            const rootSelectList = document.getElementById("rootSelectList");
-            rootSelectList.innerHTML = "";
-            const sessionChkData = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
-
-            if (sessionChkData.length === 0) {
-                rootSelectList.innerHTML = "<li> 위치를 추가하세요 </li>";
-                return;
-            }
-
-            sessionChkData.forEach((item) => {
-                const li = document.createElement("li");
-
-                const cleanTitle = item.rootAuthListTitle;
-                li.textContent = cleanTitle;
-                li.classList.add("root-list-style");
-
-                // 삭제 버튼 추가
-                const removeBtn = document.createElement("button");
-
-                const icon = document.createElement("i");
-                icon.classList.add("bi", "bi-x");
-
-                removeBtn.appendChild(icon);
-                removeBtn.classList.add("root-remove-btn-style");
-
-                removeBtn.addEventListener("click", (event) => {
-                    event.stopPropagation(); // li 의 클릭 이벤트 방지
-                    removeSelectStorage(item);
-                });
-
-                li.appendChild(removeBtn);
-
-                li.dataset.rootAuthListTitle = item.rootAuthListTitle
-                li.dataset.rootAuthListAddress = item.rootAuthListAddress
-                li.dataset.rootAuthListRoadAddress = item.rootAuthListRoadAddress
-                li.dataset.rootAuthListLatitude = item.rootAuthListLatitude
-                li.dataset.rootAuthListLongitude = item.rootAuthListLongitude
-                li.dataset.rootAuthListLink = item.rootAuthListLink
-                li.dataset.rootAuthListCategory = item.rootAuthListCategory
-
-                rootSelectList.appendChild(li);
-            });
-        }
-
-        document.getElementById("rootSelectList").addEventListener("click", function (event) {
-
-            const targetLi = event.target.closest(".root-list-style");
-
-            if (targetLi) {
-                const lat = parseFloat(targetLi.dataset.rootAuthListLatitude);
-                const lng = parseFloat(targetLi.dataset.rootAuthListLongitude);
-                const position = new naver.maps.LatLng(lat, lng);
-
-                map.setCenter(position);
-                map.setZoom(17);
-
-                if (marker) {
-                    marker.setMap(null);
-                }
-
-                // 선택한 좌표에 마커 추가
-                marker = new naver.maps.Marker({
-                    position: position,
-                    map: map,
-                    icon: {
-                        content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
-                        anchor: new naver.maps.Point(10, 40)
-                    },
-                    animation: naver.maps.Animation.BOUNCE
-                });
-            }
-
-        })
-
-        // 체크하면 라인 그리기
-        function checkDrawPolyline() {
-            const sessionChkData = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
-
-
-            if (sessionChkData.length === 0) return;
-
-            const path = sessionChkData.map(data => new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude))
-
-            // console.log(path);
-
-            // 기존 폴리라인 제거
-            if (selPolyline) {
-                selPolyline.setMap(null);
-                selPolyline = null;
-            }
-
-            if (selMaker) {
-                selMaker.forEach(marker => marker.setMap(null));
-            }
+        function addAuthMarkers(arr) {
+            selMaker.forEach(m => m.setMap(null));
             selMaker = [];
 
-            if (sessionChkData.length === 0) return;
-
-            selPolyline = new naver.maps.Polyline({
-                map: map,
-                path: path,
-                strokeColor: '#FA5858',
-                strokeStyle: 'stroke',
-                strokeWeight: 2
-            });
-
-            sessionChkData.forEach((data, index) => {
-                const marker = new naver.maps.Marker({
-                    position: new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude),
-                    map: map,
-                    icon: {
-                        content: `<img width="30" height="30" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
-                        anchor: new naver.maps.Point(17, 20)
-                    }
+            arr.forEach(d => {
+                const m = new kakao.maps.CustomOverlay({
+                    position: new kakao.maps.LatLng(d.rootAuthListLatitude, d.rootAuthListLongitude),
+                    content: `<img src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png"/>`
                 });
-
-                selMaker.push(marker);
-
+                m.setMap(map);
+                selMaker.push(m);
             });
-
-            updateSelectList();
-
         }
 
-        // 파일 미리보기
-        document.querySelectorAll('.file-input').forEach(input => {
-            input.addEventListener('change', function (event) {
-                const file = event.target.files[0];
+        function getCenter(arr) {
+            if (!arr.length) return new kakao.maps.LatLng(37.5666805, 126.9784147);
+            const avgLat = arr.reduce((s,d)=>s+d.rootAuthListLatitude,0)/arr.length;
+            const avgLng = arr.reduce((s,d)=>s+d.rootAuthListLongitude,0)/arr.length;
+            return new kakao.maps.LatLng(avgLat, avgLng);
+        }
 
-                if (file && file.type.startsWith('image/')) {
-                    const reader = new FileReader();
+        document.querySelectorAll('h6[name="click-address"]').forEach(el => {
+            el.addEventListener('click', () => {
+                const {lat, lng} = el.dataset;
+                const pos = new kakao.maps.LatLng(+lat, +lng);
+                if (marker) marker.setMap(null);
 
-                    reader.onload = function (e) {
-                        const existingPreview = input.parentElement.querySelector('.image-preview');
-                        if (existingPreview) {
-                            existingPreview.src = e.target.result;
-                        } else {
+                marker = new kakao.maps.Marker({ position: pos, map });
+                map.setCenter(pos);
+                map.setLevel(2);
+            });
+        });
+
+        function modifySaveCheckList() {
+            const arr = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
+            document.querySelectorAll('input[name="checkbox"]').forEach(cb => {
+                const ti = cb.dataset.title;
+                const m = arr.find(it => it.rootAuthListTitle === ti);
+                if (m) {
+                    cb.checked = true;
+                    const fc = cb.closest('li').querySelector('.file-container');
+                    if (fc) {
+                        fc.style.display = 'block';
+                        if (m.rootAuthListImagePath) {
                             const img = document.createElement('img');
-                            img.src = e.target.result;
+                            img.src = m.rootAuthListImagePath;
                             img.classList.add('image-preview');
-                            img.style.width = '80px';
-                            img.style.height = '80px';
-                            img.style.objectFit = 'cover';
-                            img.style.marginBottom = '10px';
-                            input.parentElement.insertBefore(img, input);
+                            img.style.cssText = 'width:80px;height:80px;object-fit:cover;margin-bottom:10px';
+                            fc.insertBefore(img, fc.firstChild);
                         }
-                    };
+                    }
+                }
+            });
+        }
 
+        document.querySelectorAll('input[name="checkbox"]').forEach(cb => {
+            cb.addEventListener('change', () => {
+                document.getElementById("checkVaild").style.display = 'none';
+                const li = cb.closest('li');
+                const fc = li.querySelector('.file-container');
+                const obj = {
+                    rootAuthListTitle: cb.dataset.title,
+                    rootAuthListLatitude: cb.dataset.latitude,
+                    rootAuthListLongitude: cb.dataset.longitude,
+                    rootAuthListAddress: cb.dataset.address,
+                    rootAuthListRoadAddress: cb.dataset.roadaddress,
+                    rootAuthListLink: cb.dataset.link,
+                    rootAuthListCategory: cb.dataset.category
+                };
+                let arr = JSON.parse(sessionStorage.getItem("checkRootUser"))||[];
+                if (cb.checked) {
+                    if (!arr.some(it=>it.rootAuthListTitle===obj.rootAuthListTitle))
+                        arr.push(obj);
+                    fc.style.display='block';
+                } else {
+                    arr = arr.filter(it=>it.rootAuthListTitle!==obj.rootAuthListTitle);
+                    fc.style.display='none';
+                }
+                sessionStorage.setItem("checkRootUser", JSON.stringify(arr));
+                checkDrawPolyline();
+            });
+        });
+
+        function updateSelectList() {
+            const ul = document.getElementById("rootSelectList");
+            ul.innerHTML = '';
+            const arr = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
+            if (!arr.length) {
+                ul.innerHTML = '<li> 위치를 추가하세요 </li>';
+                return;
+            }
+            arr.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item.rootAuthListTitle;
+                li.classList.add("root-list-style");
+                ['rootAuthListTitle','rootAuthListAddress','rootAuthListRoadAddress','rootAuthListLatitude','rootAuthListLongitude','rootAuthListLink','rootAuthListCategory']
+                    .forEach(k=>li.dataset[k] = item[k]);
+                const btn = document.createElement('button');
+                const icon = document.createElement('i');
+                icon.classList.add('bi','bi-x');
+                btn.appendChild(icon);
+                btn.classList.add('root-remove-btn-style');
+                btn.addEventListener('click', ev=>{
+                    ev.stopPropagation();
+                    removeSelectStorage(item);
+                });
+                li.appendChild(btn);
+                ul.appendChild(li);
+            });
+        }
+
+        document.getElementById("rootSelectList").addEventListener('click', ev => {
+            const li = ev.target.closest('.root-list-style');
+            if (!li) return;
+            const pos = new kakao.maps.LatLng(+li.dataset.rootAuthListLatitude, +li.dataset.rootAuthListLongitude);
+            map.setCenter(pos);
+            map.setLevel(2);
+            if (marker) marker.setMap(null);
+            marker = new kakao.maps.Marker({ position: pos, map });
+        });
+
+        function checkDrawPolyline() {
+            const arr = JSON.parse(sessionStorage.getItem("checkRootUser"))||[];
+            if (!arr.length) return;
+            if (selPolyline) selPolyline.setMap(null);
+            selMaker.forEach(m=>m.setMap(null));
+            selMaker = [];
+            const path = arr.map(d=>new kakao.maps.LatLng(d.rootAuthListLatitude, d.rootAuthListLongitude));
+            selPolyline = new kakao.maps.Polyline({
+                path,
+                strokeWeight: 3,
+                strokeColor: '#FA5858',
+                strokeStyle: 'solid',
+                map
+            });
+            arr.forEach(d=>{
+                const m = new kakao.maps.CustomOverlay({
+                    position: new kakao.maps.LatLng(d.rootAuthListLatitude, d.rootAuthListLongitude),
+                    content: `<img src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png"/>`
+                });
+                m.setMap(map);
+                selMaker.push(m);
+            });
+            updateSelectList();
+        }
+
+        document.getElementById("map-button").addEventListener('click', () => {
+            const bounds = new kakao.maps.LatLngBounds();
+            rootList.forEach(d=>bounds.extend(new kakao.maps.LatLng(d.rootAuthListLatitude, d.rootAuthListLongitude)));
+            map.setBounds(bounds);
+        });
+
+        document.getElementById("map-root-remove-button").addEventListener('click', () => {
+            if (selPolyline) selPolyline.setMap(null);
+            selMaker.forEach(m=>m.setMap(null));
+            selMaker = [];
+            document.querySelectorAll('input[name="checkbox"]').forEach(cb=>cb.checked=false);
+            sessionStorage.removeItem("checkRootUser");
+        });
+
+        document.getElementById("map-marker-remove-button").addEventListener('click', () => {
+            if (marker) marker.setMap(null);
+        });
+
+        document.getElementById("form-submit").addEventListener('click', ev => {
+            const saveForm = document.getElementById("register-form");
+            const selForm = document.getElementById("select-form");
+            const arr = JSON.parse(sessionStorage.getItem("checkRootUser"))||[];
+            document.getElementById("rootListData").value = JSON.stringify(arr);
+            const checkVaild = document.getElementById("checkVaild");
+            const checked = document.querySelectorAll('input[name="checkbox"]:checked').length > 0;
+            checkVaild.style.display = checked ? 'none' : 'block';
+            saveForm.classList.add('was-validated');
+            selForm.classList.add('was-validated');
+            if (!checked || !saveForm.checkValidity() || !selForm.checkValidity()) {
+                ev.preventDefault();
+                ev.stopPropagation();
+            } else {
+                sessionStorage.removeItem("checkRootUser");
+                const mode = document.getElementById("form-mod").value;
+                const authSeq = document.getElementById("rootAuthSeq").value;
+                document.getElementById("rootSeq").value = document.getElementById("select-root").value;
+                saveForm.action = (mode === 'save') ? '/root/form/save' : `/root/form/modify/${authSeq}`;
+                saveForm.submit();
+            }
+        });
+
+        document.querySelectorAll('.file-input').forEach(inp => {
+            inp.addEventListener('change', ev => {
+                const file = ev.target.files[0];
+                if (file?.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        let img = inp.parentElement.querySelector('.image-preview');
+                        if (!img) {
+                            img = document.createElement('img');
+                            img.classList.add('image-preview');
+                            img.style.cssText = 'width:80px;height:80px;object-fit:cover;margin-bottom:10px';
+                            inp.parentElement.insertBefore(img, inp);
+                        }
+                        img.src = e.target.result;
+                    };
                     reader.readAsDataURL(file);
                 }
             });
         });
 
-        // 로컬스토리지에서 값 삭제하는 함수
-        function removeSelectStorage(value) {
-            let sessionChkData = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
-            sessionChkData = sessionChkData.filter(item => item.rootAuthListTitle !== value.rootAuthListTitle);
-            sessionStorage.setItem("checkRootUser", JSON.stringify(sessionChkData));
-
-            document.querySelectorAll('input[name="checkbox"]').forEach((chk) => {
-                if (chk.dataset.rootAuthListTitle === value.rootAuthListTitle) {
-                    chk.checked = false;
-                    const parentLi = chk.closest('li');
-                    const fileInputDiv = parentLi.querySelector('.mb-3');
-                    fileInputDiv.style.display = 'none';
-                    fileInputDiv.querySelector('input').value = '';
+        function removeSelectStorage(item) {
+            let arr = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
+            arr = arr.filter(it => it.rootAuthListTitle !== item.rootAuthListTitle);
+            sessionStorage.setItem("checkRootUser", JSON.stringify(arr));
+            document.querySelectorAll('input[name="checkbox"]').forEach(cb => {
+                if (cb.dataset.title === item.rootAuthListTitle) {
+                    cb.checked = false;
+                    const fc = cb.closest('li').querySelector('.file-container');
+                    fc.style.display = 'none';
+                    fc.querySelector('input').value = '';
                 }
             });
-
-            selMaker = selMaker.filter(marker => {
-                const position = marker.getPosition();
-                if (position.lat() === parseFloat(value.rootAuthListLatitude) && position.lng() === parseFloat(value.rootAuthListLongitude)) {
-                    marker.setMap(null);
-                    return false; // 필터에서 제거 (삭제된 마커만 필터링)
+            selMaker = selMaker.filter(m => {
+                const pos = m.getPosition();
+                if (pos.getLat() === +item.rootAuthListLatitude && pos.getLng() === +item.rootAuthListLongitude) {
+                    m.setMap(null);
+                    return false;
                 }
-                return true; // 유지할 마커
+                return true;
             });
-
             checkDrawPolyline();
             updateSelectList();
         }
 
-        // 루트 중앙 이동
-        document.getElementById("map-button").addEventListener("click", function () {
-            // console.log("click")
-
-            const path = rootList.map((data) => {
-                // console.log(data);
-                return new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude)
-            })
-
-            const center = getCenter(rootList);
-
-            map.setCenter(center);
-
-            const bounds = new naver.maps.LatLngBounds();
-            path.forEach(coord => bounds.extend(coord));
-            map.fitBounds(bounds);
-        })
-
-        // 루트 폴리라인 지우기
-        document.getElementById("map-root-remove-button").addEventListener("click", function () {
-            console.log("click");
-
-            // 기존 폴리라인 제거
-            if (selPolyline) {
-                selPolyline.setMap(null);
-                selPolyline = null;
-            }
-
-            if (selMaker) {
-                selMaker.forEach(marker => marker.setMap(null));
-            }
-            selMaker = [];
-
-            document.querySelectorAll('input[name="checkbox"]').forEach((checkbox) => {
-                checkbox.checked = false;
-            });
-
+        document.getElementById("select-root").addEventListener("change", function () {
             sessionStorage.removeItem("checkRootUser");
-        })
-
-        // 위치 마커 지우기
-        document.getElementById("map-marker-remove-button").addEventListener("click", function () {
-            console.log("click");
-
-            if (marker) marker.setMap(null);
-        })
-
-        // 저장
-        document.getElementById("form-submit").addEventListener("click", function () {
-            console.log("click");
-
-            const saveForm = document.getElementById("register-form");
-            const selForm = document.getElementById("select-form");
-
-            let list = JSON.parse(sessionStorage.getItem("checkRootUser")) || [];
-            document.getElementById("rootListData").value = JSON.stringify(list);
-
-            const formMode = document.getElementById("form-mod").value;
-            const rootAuthSeq = document.getElementById("rootAuthSeq").value;
-
-            let check = document.querySelectorAll('input[name="checkbox"]:checked');
-            const checkVaild = document.getElementById("checkVaild");
-            let checkSel = check.length > 0;
-
-            checkVaild.style.display = `none`;
-
-            let hasError = false;
-
-            // 체크박스 유효성 검사용
-            if (!checkSel) {
-                checkVaild.style.display = `block`;
-                hasError = true;
-
-            }
-
-            if (hasError || !saveForm.checkValidity() || !selForm.checkValidity() || !checkSel) {
-                event.preventDefault();
-                event.stopPropagation();
-
-            } else {
-
-                let rootseq = document.getElementById("select-root").value;
-                document.getElementById("rootSeq").value = rootseq;
-                sessionStorage.removeItem("checkRootUser");
-
-                if (formMode === 'save') {
-                    saveForm.action = "/root/form/save"; // 저장
-                } else if (formMode === 'modify') {
-                    saveForm.action = `/root/form/modify/${rootAuthSeq}`; // 수정
-                }
-
-                saveForm.submit();
-            }
-            saveForm.classList.add('was-validated');
-            selForm.classList.add('was-validated');
+            // document.getElementById("select-form").submit();
+            const selectedValue = this.value;
+            window.location.href = '/root/form?rootSeq=' + selectedValue;
         });
 
     </script>

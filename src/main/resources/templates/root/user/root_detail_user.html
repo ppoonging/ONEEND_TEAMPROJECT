@@ -116,217 +116,165 @@
         let initMaker = [];
         let selMaker = [];
 
-        console.log(rootList);
-
-        // 페이지 로드 시 동작
         document.addEventListener("DOMContentLoaded", () => {
             setMap();
             drawPolyline(rootList);
             drawAuthPolyline(rootAuthList);
-
-            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-
         });
 
-        // 초기 map 설정
         function setMap() {
-
             let center;
 
-            if (!rootList) {
-                center = new naver.maps.LatLng(37.5666805, 126.9784147);
+            if (!rootList || rootList.length === 0) {
+                center = new kakao.maps.LatLng(37.5666805, 126.9784147);
             } else {
                 center = getCenter(rootList);
             }
 
-            map = new naver.maps.Map("map", {
+            const container = document.getElementById('map');
+            const options = {
                 center: center,
-                zoom: 15,
-                zoomControl: true,
-                mapTypeControl: true
-            });
+                level: 5
+            };
 
-            if (rootList.length > 0) {
-                const bounds = new naver.maps.LatLngBounds();
-                rootList.forEach(data => bounds.extend(new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)));
-                map.fitBounds(bounds);
-            }
-
+            map = new kakao.maps.Map(container, options);
         }
 
-        // 초반 경로 라인 그리기
         function drawPolyline(value) {
+            if (!value || value.length === 0) return;
 
-            if (!rootList || rootList.length === 0) return;
-
-            const path = value.map((data) => {
-                console.log(data)
-                return new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)
-            })
+            const path = value.map(data => new kakao.maps.LatLng(data.rootListLatitude, data.rootListLongitude));
 
             if (polyline) {
                 polyline.setMap(null);
             }
 
-            polyline = new naver.maps.Polyline({
+            polyline = new kakao.maps.Polyline({
                 map: map,
                 path: path,
-                strokeColor: '#FE2E2E',
-                strokeStyle: 'longdash',
-                strokeOpacity: 0.5,
-                strokeWeight: 2
+                strokeWeight: 2,
+                strokeColor: '#ff6767',
+                strokeOpacity: 0.4,
+                strokeStyle: 'dash'
             });
 
-            if (window.markers) {
-                window.markers.forEach(marker => marker.setMap(null));
-            }
-            window.markers = [];
+            initMaker.forEach(m => m.setMap(null));
+            initMaker = [];
 
-            // 순서대로 마커 추가
             value.forEach((data) => {
-                const marker = new naver.maps.Marker({
-                    position: new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude),
-                    map: map,
-                    icon: {
-                        content: `<span style="font-size: 10px; color: white; width: 10px; height: 10px; padding: 3px 5px; background-color: #FE2E2E; border-radius: 50%; opacity: 50%">${data.rootListIndex}</span>`,
-                        anchor: new naver.maps.Point(10, 15)
-                    }
+                const position = new kakao.maps.LatLng(data.rootListLatitude, data.rootListLongitude);
+
+                const content = `
+        <div style="
+            font-size: 11px;
+            color: white;
+            width: 22px;
+            height: 22px;
+            padding: 3px;
+            background-color: #ff6767;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-weight: bold;
+            opacity: 0.5;
+        ">
+            ${data.rootListIndex}
+        </div>
+    `;
+
+                const customOverlay = new kakao.maps.CustomOverlay({
+                    position: position,
+                    content: content,
+                    yAnchor: 1
                 });
 
-                initMaker.push(marker);
-
+                customOverlay.setMap(map);
+                initMaker.push(customOverlay);
             });
-
         }
 
-        // rootAuthList를 기반으로 폴리라인 그리기
         function drawAuthPolyline(value) {
             if (!value || value.length === 0) return;
 
-            const path = value.map((data) => {
-                return new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude);
-            });
+            const path = value.map(data => new kakao.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude));
 
             if (selPolyline) {
                 selPolyline.setMap(null);
             }
 
-            selPolyline = new naver.maps.Polyline({
+            selPolyline = new kakao.maps.Polyline({
                 map: map,
                 path: path,
+                strokeWeight: 3,
                 strokeColor: '#FA5858',
-                strokeStyle: 'solid',
-                strokeWeight: 3
+                strokeOpacity: 0.8,
+                strokeStyle: 'solid'
             });
 
             addAuthMarkers(value);
         }
 
-        // rootAuthList 위치에 마커 추가
         function addAuthMarkers(value) {
-            if (selMaker.length > 0) {
-                selMaker.forEach(marker => marker.setMap(null));
-                selMaker = [];
-            }
+            selMaker.forEach(m => m.setMap(null));
+            selMaker = [];
 
             value.forEach(data => {
-                const marker = new naver.maps.Marker({
-                    position: new naver.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude),
+                const marker = new kakao.maps.Marker({
+                    position: new kakao.maps.LatLng(data.rootAuthListLatitude, data.rootAuthListLongitude),
                     map: map,
-                    icon: {
-                        content: `<img width="30" height="30" src="https://img.icons8.com/stickers/30/standing-man-skin-type-1.png" alt="marker"/>`,
-                        anchor: new naver.maps.Point(17, 20)
-                    }
+                    image: new kakao.maps.MarkerImage(
+                        "https://img.icons8.com/stickers/30/standing-man-skin-type-1.png",
+                        new kakao.maps.Size(30, 30),
+                        { offset: new kakao.maps.Point(15, 30) }
+                    )
                 });
-
                 selMaker.push(marker);
             });
         }
 
-        // 중앙 값 구해서 설정
         function getCenter(value) {
-
-            if (value.length === 0) {
-                return new naver.maps.LatLng(37.5666805, 126.9784147); // 서울 시청
-            }
+            if (value.length === 0) return new kakao.maps.LatLng(37.5666805, 126.9784147);
 
             let latSum = 0;
             let lngSum = 0;
-            let cnt = value.length;
 
             value.forEach(data => {
-                latSum += data.rootAuthListLatitude;
-                lngSum += data.rootAuthListLongitude;
+                latSum += data.rootListLatitude;
+                lngSum += data.rootListLongitude;
             });
 
-            return new naver.maps.LatLng(latSum / cnt, lngSum / cnt);
+            return new kakao.maps.LatLng(latSum / value.length, lngSum / value.length);
         }
 
-        // title 체크 시 지도/마커
         document.querySelectorAll('h6[name="click-address"]').forEach((data) => {
             data.addEventListener("click", function () {
                 const lat = parseFloat(data.dataset.lat);
                 const lng = parseFloat(data.dataset.lng);
 
-                const position = new naver.maps.LatLng(lat, lng);
+                const position = new kakao.maps.LatLng(lat, lng);
 
                 if (marker) marker.setMap(null);
 
-                map.setCenter(position);
-                map.setZoom(17);
-
-                marker = new naver.maps.Marker({
+                marker = new kakao.maps.Marker({
                     position: position,
-                    map: map,
-                    icon: {
-                        content: `<img width="20" height="20" src="https://img.icons8.com/material-outlined/24/map-pin.png" alt="map-pin" />`,
-                        anchor: new naver.maps.Point(12, 40)
-                    },
-                    animation: naver.maps.Animation.BOUNCE
+                    map: map
                 });
 
+                map.setCenter(position);
+                map.setLevel(3);
             });
         });
 
-
-        // 루트 중앙 이동
         document.getElementById("map-button").addEventListener("click", function () {
-            console.log("click")
+            const bounds = new kakao.maps.LatLngBounds();
 
-            const path = rootList.map((data) => {
-                console.log(data);
-                return new naver.maps.LatLng(data.rootListLatitude, data.rootListLongitude)
-            })
+            rootList.forEach(data => {
+                const coord = new kakao.maps.LatLng(data.rootListLatitude, data.rootListLongitude);
+                bounds.extend(coord);
+            });
 
-            const center = getCenter(rootList);
-
-            map.setCenter(center);
-
-            // 경로에 맞게 줌 자동 조정
-            const bounds = new naver.maps.LatLngBounds();
-            path.forEach(coord => bounds.extend(coord));
-            map.fitBounds(bounds);
-        })
-
-        // 이미지 모달 동작
-        function openModal(imgElement) {
-            let imageSrc = imgElement.getAttribute("data-img");
-            let modal = document.getElementById("root-image-modal");
-            let modalImg = document.getElementById("root-modal-image");
-
-            modal.style.display = "block";
-            modalImg.src = imageSrc;
-        }
-
-        document.querySelector(".close").addEventListener("click", function () {
-            document.getElementById("root-image-modal").style.display = "none";
+            map.setBounds(bounds);
         });
-
-        document.getElementById("root-image-modal").addEventListener("click", function (event) {
-            this.style.display = "none";
-        });
-
 
         document.getElementById("delete-btn").addEventListener("click", function () {
             if (confirm("삭제하시겠습니까?")) {
@@ -335,6 +283,7 @@
                 console.log("취소");
             }
         })
+
 
     </script>
 
