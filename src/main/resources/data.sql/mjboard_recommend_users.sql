@@ -1,0 +1,13 @@
+insert into oneend.mjboard_recommend_users (mjboard_mj_seq, recommend_users_user_seq) values (15, 1);
+insert into oneend.mjboard_recommend_users (mjboard_mj_seq, recommend_users_user_seq) values (16, 1);
+insert into oneend.mjboard_recommend_users (mjboard_mj_seq, recommend_users_user_seq) values (17, 1);
+insert into oneend.mjboard_recommend_users (mjboard_mj_seq, recommend_users_user_seq) values (18, 1);
+insert into oneend.mjboard_recommend_users (mjboard_mj_seq, recommend_users_user_seq) values (19, 1);
+insert into oneend.mjboard_recommend_users (mjboard_mj_seq, recommend_users_user_seq) values (19, 2);
+insert into oneend.mjboard_recommend_users (mjboard_mj_seq, recommend_users_user_seq) values (14, 3);
+insert into oneend.mjboard_recommend_users (mjboard_mj_seq, recommend_users_user_seq) values (18, 3);
+insert into oneend.mjboard_recommend_users (mjboard_mj_seq, recommend_users_user_seq) values (19, 3);
+insert into oneend.mjboard_recommend_users (mjboard_mj_seq, recommend_users_user_seq) values (21, 3);
+insert into oneend.mjboard_recommend_users (mjboard_mj_seq, recommend_users_user_seq) values (14, 4);
+insert into oneend.mjboard_recommend_users (mjboard_mj_seq, recommend_users_user_seq) values (14, 5);
+insert into oneend.mjboard_recommend_users (mjboard_mj_seq, recommend_users_user_seq) values (20, 5);

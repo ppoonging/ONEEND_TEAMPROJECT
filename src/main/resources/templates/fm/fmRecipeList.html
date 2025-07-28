@@ -105,18 +105,46 @@
     <!-- 인라인 JS -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // 모든 카드에 클릭 이벤트 추가 → 모달 열기
             document.querySelectorAll('[data-modal-id]').forEach(card => {
-                card.addEventListener('click', () => document.getElementById(card.dataset.modalId).classList.remove('hidden'));
+                const modalId = card.getAttribute('data-modal-id');
+                const modal = document.getElementById(modalId);
+
+                if (modal) {
+                    card.addEventListener('click', () => {
+                        modal.classList.remove('hidden');
+                        document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+                    });
+                }
             });
+
+            // 모든 닫기 버튼에 클릭 이벤트 추가 → 모달 닫기
             document.querySelectorAll('[data-modal-close]').forEach(closeBtn => {
-                closeBtn.addEventListener('click', () => closeBtn.closest('.custom-modal').classList.add('hidden'));
+                closeBtn.addEventListener('click', () => {
+                    const modal = closeBtn.closest('.custom-modal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            });
+
+            // ESC 키 눌렀을 때 모달 닫기
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.custom-modal').forEach(modal => {
+                        modal.classList.add('hidden');
+                    });
+                    document.body.style.overflow = 'auto';
+                }
             });
         });
     </script>
 
+
     <!-- JS -->
-    <script th:src="@{/fmRecipeModal.js}"></script>
-    <link rel="stylesheet" type="text/css" th:href="@{/stylesModal.css}">
+    <script th:src="@{/js/fmRecipeModal.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/stylesModal.css}">
 
     <!-- CSRF -->
     <meta sec:authorize="isAuthenticated()" name="_csrf" th:content="${_csrf.token}"/>

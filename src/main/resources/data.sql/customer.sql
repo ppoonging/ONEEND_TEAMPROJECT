@@ -1,0 +1,3 @@
+insert into oneend.customer (cust_seq, cust_content, cust_file_name, cust_file_path, cust_reg_time, cust_state, cust_title, user_user_seq) values (1, '알려주세요', null, null, '2025-03-20 18:07:24.356916', 'COMPLETED', '비밀번호 변경은 어떻게 하나요', 2);
+insert into oneend.customer (cust_seq, cust_content, cust_file_name, cust_file_path, cust_reg_time, cust_state, cust_title, user_user_seq) values (2, '글 작성이 안돼요', null, null, '2025-03-21 09:39:44.367119', 'COMPLETED', '글 작성', 1);
+insert into oneend.customer (cust_seq, cust_content, cust_file_name, cust_file_path, cust_reg_time, cust_state, cust_title, user_user_seq) values (3, 'ㅎㅇ', null, null, '2025-03-21 12:21:13.533337', 'PENDING', 'ㅎㅇ', 1);
