@@ -35,7 +35,7 @@ public class FmRecipeController {
                        @RequestParam(value = "page", defaultValue = "0") int page,
                        Principal principal) {
 
-        // 1. 레시피 리스트 조회
+        // 1. 레시피 리스트 조회 12345
         Page<FmRecipe> paging = fmRecipeService.getList(kw, category, page);
         if (paging == null) paging = Page.empty(); // null 방지 (빈 페이지)
 
