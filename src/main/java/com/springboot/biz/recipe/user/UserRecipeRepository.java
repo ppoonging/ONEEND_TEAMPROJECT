@@ -24,4 +24,11 @@ public interface UserRecipeRepository extends JpaRepository<UserRecipe, Integer>
                                               @Param("category") String category,
                                               Pageable pageable);
 
+
+
+        // 추천 수가 0보다 큰 레시피들 조회
+        List<UserRecipe> findByRecipeRecommendGreaterThan(Integer recommendCount);
+
+
+    UserRecipe findByUserRecipeSeq(Integer userRecipeSeq);
 }

@@ -23,7 +23,13 @@ public class SnsService {
         String originalImgName = multipartFile.getOriginalFilename();
         String imgName = "";
 
-        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/sns";
+        // String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/sns";
+        String projectPath = "/home/ubuntu/oneend/files/sns";
+
+        File directory = new File(projectPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
 
         UUID uuid = UUID.randomUUID();
 
@@ -68,7 +74,13 @@ public class SnsService {
         String imgName = sns.getSnsImageName();
         String imgPath = sns.getSnsImagePath();
 
-        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/sns/";
+        // String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/sns/";
+        String projectPath = "/home/ubuntu/oneend/files/sns";
+
+        File directory = new File(projectPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
 
         if (file != null && !file.isEmpty()) {
             String originalImgName = file.getOriginalFilename();
@@ -92,6 +104,9 @@ public class SnsService {
 
         this.snsRepository.save(sns);
 
+    }
+    public void delete(Integer snsSeq){
+        snsRepository.deleteById(snsSeq);
     }
 
 }

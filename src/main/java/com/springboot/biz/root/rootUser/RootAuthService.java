@@ -38,7 +38,7 @@ public class RootAuthService {
 
     // rootAuth list 가져오기
     public Page<RootAuth> getAll(int page) {
-        Pageable pageable = PageRequest.of(page, 9, Sort.by(Sort.Order.desc("rootAuthDate")));
+        Pageable pageable = PageRequest.of(page, 9, Sort.by(Sort.Order.asc("rootAuthDate")));
 
         return this.rootAuthRepository.findAll(pageable);
     }
@@ -83,7 +83,12 @@ public class RootAuthService {
 
         this.rootAuthRepository.save(rootAuth);
 
-        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/rootauth/";
+        String projectPath = "/home/ubuntu/oneend/files/rootauth";
+
+        File directory = new File(projectPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
         Integer index = 1;
 
         for (int i = 0; i < rootAuthListDTO.size(); i++) {
@@ -141,7 +146,12 @@ public class RootAuthService {
         rootAuthListRepository.deleteByRootAuth(rootAuth);
 
 
-        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/rootauth/";
+        String projectPath = "/home/ubuntu/oneend/files/rootauth";
+
+        File directory = new File(projectPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
         Integer index = 1;
 
 

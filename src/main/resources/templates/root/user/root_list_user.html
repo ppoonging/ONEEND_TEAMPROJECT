@@ -28,7 +28,6 @@
                                 </a>
                             </div>
                         </div>
-
                     </div>
                     <div class="py-3">
                         <h5 class="text-white">종료된</h5>
@@ -59,6 +58,7 @@
                 </div>
             </div>
         </div>
+
         <div class="container py-5">
             <h2 class="text-start py-3 mb-5 root-border-bottom">루트 인증 현황</h2>
 
@@ -73,6 +73,7 @@
                     </select>
                 </div>
             </div>
+            <!--여기-->
             <div class="d-flex justify-content-start flex-wrap" style="margin-bottom: 50px">
                 <div th:each="rootAuth : ${rootAuthPage}" th:if="${rootAuth.root.rootState}" class="root-list-card-container">
                     <a th:href="@{|/root/detail/${rootAuth.rootAuthSeq}|}" class="root-list-card" style="text-decoration: none; color: #333">
@@ -98,6 +99,7 @@
                     </a>
                 </div>
             </div>
+            <!--여기-->
 
             <!--하단 줄 (필요에 따라 사용)-->
             <!--pagination-->

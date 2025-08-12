@@ -1,278 +1,272 @@
 <html layout:decorate="~{layout}">
-    <main layout:fragment="content" style="background-color: white;">
-        <!--상단-->
-        <section id="section1" class="text-center " style="height: 450px; background-color: #c0bcbc" >
-            <img width="100%" height="100%" class="opacity-75" th:src="@{/images/main/main-image-1.jpg}">
-        </section>
+<main layout:fragment="content" style="background-color: white;">
+    <!--상단-->
+    <section id="section1" class="text-center " style="height: 450px; background-color: #c0bcbc">
+        <img width="100%" height="100%" class="opacity-75" th:src="@{/images/main/main-image-1.jpg}">
+    </section>
 
-        <!--지도/랭킹/날씨-->
-        <section id="section2" class="container pt-5">
+    <!--지도/랭킹/날씨-->
+    <section id="section2" class="container pt-5">
 
-            <ul class="nav nav-tabs" id="regionTab">
+        <ul class="nav nav-tabs" id="regionTab">
 
-            </ul>
+        </ul>
 
-            <div class="d-flex justify-content-between">
-                <!--지도-->
-                <div style="width: 65%; height: 700px;">
-                    <div id="map" style="width: 100%; min-height: 690px;"></div>
-                </div>
-                <div style="width: 30%; height: 700px;">
-                        <aside class="h-100">
-
-
-                            <!-- 상세 날씨 정보 추가 -->
-                         <!--       <div style="margin-top: 15px; padding: 10px;">
-                                    <p style="font-size: 1rem; margin: 5px 0;">도시 : <span th:text="${weatherData.name}">도시명</span></p>
-                                    <p style="font-size: 1rem; margin: 5px 0;">기온 : <span th:text="${weatherData.main.temp}">온도</span> °C</p>
-                                    <p style="font-size: 1rem; margin: 5px 0;">습도 : <span th:text="${weatherData.main.humidity}">습도</span> %</p>
-                                    <p style="font-size: 1rem; margin: 5px 0;">날씨 : <span th:text="${weatherData.weather[0].description}">날씨설명</span></p>
-                                </div>
-                                <body>
-                                <div class="container">
-                                    &lt;!&ndash; 지역 선택 버튼 &ndash;&gt;
-
-                                    <div class="btn-group" role="group" aria-label="Location buttons">
-                                        <a href="/weather?location=Seoul" class="btn btn-primary btn-sm">서울</a>
-                                        <a href="/weather?location=Incheon" class="btn btn-primary btn-sm">인천</a>
-                                        &lt;!&ndash; <a href="/weather?location=Gyeonggi_do" class="btn btn-primary btn-sm">경기도</a>
-                                         <a href="/weather?location=Gangwon" class="btn btn-primary btn-sm">강원도</a>
-                                         <a href="/weather?location=Gyeongsang" class="btn btn-primary btn-sm">경상도</a>
-                                         <a href="/weather?location=Jeolla" class="btn btn-primary btn-sm">전라도</a>
-                                         <a href="/weather?location=Busan" class="btn btn-primary btn-sm">부산</a>
-                                         <a href="/weather?location=Daegu" class="btn btn-primary btn-sm">대구</a>&ndash;&gt;
-                                    </div>
-
-                                        <div th:if="${weatherData}">
-                                            <p style="font-size: 1rem; margin: 5px 0;">도시 : <span th:text="${weatherData.name}"></span></p>
-                                            <p style="font-size: 1rem; margin: 5px 0;">기온 : <span th:text="${weatherData.main.temp}"></span> °C</p>
-                                            <p style="font-size: 1rem; margin: 5px 0;">습도 : <span th:text="${weatherData.main.humidity}"></span> %</p>
-                                            <p style="font-size: 1rem; margin: 5px 0;">날씨 : <span th:text="${weatherData.weather[0].description}"></span></p>
-                                        </div>
--->
-                            <div class="calign-middle" style="height: 40%; border-bottom: 1px solid #eee">
-                                <div class="d-flex justify-content-start">
-                                    <h5 class="bold mb-3 ps-2 brutal-subscribe__title me-2" style="font-weight: bold">맛집에서 맛집으로</h5>
-                                    <img width="40" height="40" src="https://img.icons8.com/external-flat-wichaiwi/64/external-food-soft-power-flat-wichaiwi.png" alt="external-food-soft-power-flat-wichaiwi"/>
-                                </div>
-                                <form id="directionsForm" class="p-2 border card" style="background-color: #eee">
-                                    <div class="mb-1" style="height: 100px;">
-                                        <div class="row mb-3 d-flex justify-content-center">
-                                            <label class="col-sm-2 text-center me-1" style="font-size: 14px; padding: 0.3em 0.5em; border: 1px solid #fff; background-color: #C8AB8F; border-radius: 20px; color: #fff;">출발</label>
-                                            <input type="hidden" id="start">
-                                            <input class="col-sm-8 border-0" type="text" id="startValue" PLACEHOLDER="지도에서 출발지 선택" readonly>
-                                        </div>
-                                        <div class="row d-flex justify-content-center">
-                                            <label class="col-sm-2 text-center me-1" style="font-size: 14px; padding: 0.3em 0.5em; border: 1px solid #fff; background-color: #C8AB8F; border-radius: 20px; color: #fff;">도착 </label>
-                                            <input type="hidden" id="goal">
-                                            <input class="col-sm-8 border-0" id="goalValue" PLACEHOLDER="지도에서 도착지 선택" readonly>
-                                        </div>
-                                    </div>
-                                    <p class="text-end" style="font-size: 11px; color: #555">(자동차 기준)</p>
-                                    <div class="d-flex justify-content-end">
-                                        <button type="submit" id="search-submit" class="cssbuttons-io-button mb-2">
-                                            최적 거리 보기
-                                            <div class="icon">
-                                                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path>
-                                                </svg>
-                                            </div>
-                                        </button>
-<!--                                        <button type="submit" id="search-submit" class="btn btn-sm">길찾기</button>-->
-                                    </div>
-                                    <div id="info" class="fs-6 text-center text-danger mb-3"></div> <!-- 거리, 소요시간 표시 -->
-                                </form>
-                                <div id="info" class="mb-1 mt-2 fs-6 text-center text-danger"></div> <!-- 거리, 소요시간 표시 -->
-                            </div>
-
-                            <div class="align-bottom mt-3" style="height: 60%">
-                                <div class="p-2">
-                                    <div class="d-flex justify-content-start">
-                                        <h5 class="bold mb-3 ps-2 brutal-subscribe__title me-2" style="font-weight: bold">레시피 추천</h5>
-                                        <img width="40" height="40" src="https://img.icons8.com/pulsar-color/48/cookbook.png" alt="cookbook"/>
-
-                                    </div>
-                                    <div class="container-recipe">
-                                        <div class="mb-2 card-recipe">
-                                            <div class="w-100 d-flex justify-content-center align-items-center">
-                                                <span class="d-inline-block" style="width: 10%">1</span>
-                                                <span class="d-inline-block" style="width: 30%">국</span>
-                                                <span class="d-inline-block" style="width: 50%">김치찌개</span>
-                                            </div>
-                                        </div>
-                                        <div class="mb-2 card-recipe">
-                                            <div class="w-100 d-flex justify-content-center align-items-center">
-                                                <span class="d-inline-block" style="width: 10%">2</span>
-                                                <span class="d-inline-block" style="width: 30%">국</span>
-                                                <span class="d-inline-block" style="width: 50%">김치찌개</span>
-                                            </div>
-                                        </div>
-                                        <div class="mb-2 card-recipe">
-                                            <div class="w-100 d-flex justify-content-center align-items-center">
-                                                <span class="d-inline-block" style="width: 10%">3</span>
-                                                <span class="d-inline-block" style="width: 30%">국</span>
-                                                <span class="d-inline-block" style="width: 50%">김치찌개</span>
-                                            </div>
-                                        </div>
-                                        <div class="mb-2 card-recipe">
-                                            <div class="w-100 d-flex justify-content-center align-items-center">
-                                                <span class="d-inline-block" style="width: 10%">4</span>
-                                                <span class="d-inline-block" style="width: 30%">국</span>
-                                                <span class="d-inline-block" style="width: 50%">김치찌개</span>
-                                            </div>
-                                        </div>
-                                        <div class="mb-2 card-recipe">
-                                            <div class="w-100 d-flex justify-content-center align-items-center">
-                                                <span class="d-inline-block" style="width: 10%">5</span>
-                                                <span class="d-inline-block" style="width: 30%">국</span>
-                                                <span class="d-inline-block" style="width: 50%">김치찌개</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </aside>
-
-                </div>
+        <div class="d-flex justify-content-between">
+            <!--지도-->
+            <div style="width: 65%; height: 700px;">
+                <div id="map" style="width: 100%; min-height: 690px;"></div>
             </div>
-        </section>
+            <div style="width: 30%; height: 700px;">
+                <aside class="h-100">
 
-        <!--게시판-->
-        <section id="section3" class="container pt-5 mt-5">
-            <h3>#인기 맛집</h3>
-            <div class="row" style="height: 450px">
-                <!-- Swiper -->
-                <div class="swiper mySwiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide" th:each="board : ${top9MjBoard}" style="text-align: center;">
-                            <div class="card-mj">
-                                <a th:href="@{'/mjboard/detail/' + ${board.mjSeq}}" style="text-decoration: none;">
-                                    <img th:src="${imageUrlMap[board.mjSeq]} ? ${imageUrlMap[board.mjSeq]} : '/images/total/default.png'"
-                                         alt="썸네일"
-                                         style="width: 90%; height: 80%; object-fit: cover; border-radius: 10px;">
-                                    <h5 th:text="${board.mjTitle}" style="margin-top: 10px; color: black;"></h5>
-                                    <p th:text="${board.mjMapTitle}" style="font-size: 14px; color: gray;"></p>
-                                    <p th:text="'조회수: ' + ${board.mjCnt}" style="font-size: 12px; color: gray;"></p>
-                                </a>
+
+
+
+                    <div class="calign-middle" style="height: 40%; border-bottom: 1px solid #eee">
+                        <div class="d-flex justify-content-start">
+                            <h5 class="bold mb-3 ps-2 brutal-subscribe__title me-2" style="font-weight: bold">맛집에서
+                                맛집으로</h5>
+                            <img width="40" height="40"
+                                 src="https://img.icons8.com/external-flat-wichaiwi/64/external-food-soft-power-flat-wichaiwi.png"
+                                 alt="external-food-soft-power-flat-wichaiwi"/>
+                        </div>
+                        <form id="directionsForm" class="p-2 border card" style="background-color: #eee">
+                            <div class="mb-1" style="height: 100px;">
+                                <div class="row mb-3 d-flex justify-content-center">
+                                    <label class="col-sm-2 text-center me-1"
+                                           style="font-size: 14px; padding: 0.3em 0.5em; border: 1px solid #fff; background-color: #C8AB8F; border-radius: 20px; color: #fff;">출발</label>
+                                    <input type="hidden" id="start">
+                                    <input class="col-sm-8 border-0" type="text" id="startValue"
+                                           PLACEHOLDER="지도에서 출발지 선택" readonly>
+                                </div>
+                                <div class="row d-flex justify-content-center">
+                                    <label class="col-sm-2 text-center me-1"
+                                           style="font-size: 14px; padding: 0.3em 0.5em; border: 1px solid #fff; background-color: #C8AB8F; border-radius: 20px; color: #fff;">도착 </label>
+                                    <input type="hidden" id="goal">
+                                    <input class="col-sm-8 border-0" id="goalValue" PLACEHOLDER="지도에서 도착지 선택" readonly>
+                                </div>
+                            </div>
+                            <p class="text-end" style="font-size: 11px; color: #555">(자동차 기준)</p>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" id="search-submit" class="cssbuttons-io-button mb-2">
+                                    최적 거리 보기
+                                    <div class="icon">
+                                        <svg height="24" width="24" viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                                                  fill="currentColor"></path>
+                                        </svg>
+                                    </div>
+                                </button>
+                                <!--                                        <button type="submit" id="search-submit" class="btn btn-sm">길찾기</button>-->
+                            </div>
+                        </form>
+                        <div id="info" class="mb-1 mt-2 fs-6 text-center text-danger"></div> <!-- 거리, 소요시간 표시 -->
+                    </div>
+
+
+                    <div class="align-bottom mt-3" style="height: 60%;">
+                        <div class="p-2">
+                            <div class="d-flex justify-content-start">
+                                <h5 class="bold mb-3 ps-2 brutal-subscribe__title me-2" style="font-weight: bold">레시피
+                                    추천</h5>
+                                <img width="40" height="40" src="https://img.icons8.com/pulsar-color/48/cookbook.png"
+                                     alt="cookbook"/>
+                            </div>
+
+                            <!-- 레시피 카드 컨테이너 -->
+                            <div class="container-recipe">
+                                <div id="randomRecipeList">
+                                    <!-- AJAX로 랜덤 레시피 불러옴 -->
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                </div>
-            </div>
-        </section>
+                </aside>
 
-        <!--기타-->
-        <section id="section4" class="container py-5 mt-5">
-            <div class="row d-flex justify-content-between" style="height: 100%">
-                <!-- 게시판 -->
-                <div style="width: 35%">
-                    <div class="d-flex justify-content-between" style="border-bottom: 2px solid black" >
-                        <h4 class="mb-0">자유 게시판</h4>
-                        <a th:href="@{/freequestion/}" style="text-decoration: none; color: #c8aa95"><i class="bi bi-plus fs-3"></i></a>
-                    </div>
-                    <ul class="ps-0">
-                        <li th:each="freeboard : ${freeQuestionBoard}" class="py-2" style="border-bottom: 1px solid #e1e1e1">
-                            <a th:href="@{|/freequestion/detail/${freeboard.frboSeq}|}" class="d-flex justify-content-between" style="text-decoration: none; color: #333; font-size: 15px">
-                                <span th:text="${freeboard.frboSeq}" style="width: 10%;" class="ps-2"></span>
-                                <span th:text="${freeboard.frboTitle}" class="line-text" style="width: 55%;"></span>
-                                <span th:text="${#temporals.format(freeboard.frboRegDate, 'yyyy-MM-dd')}" class="text-end pe-2" style="width: 35%;"></span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- 게시판 -->
-                <div style="width: 35%">
-                    <div class="d-flex justify-content-between" style="border-bottom: 2px solid black" >
-                        <h4 class="mb-0">진행중인 루트 이벤트</h4>
-                        <a th:href="@{/root/list}" style="text-decoration: none; color: #c8aa95"><i class="bi bi-plus fs-3"></i></a>
-                    </div>
-                    <ul class="ps-0">
-                        <li th:each="rootList : ${rootList}" class="py-2" style="border-bottom: 1px solid #e1e1e1">
-                            <a th:href="@{|/root/register/detail/${rootList.rootSeq}|}" class="d-flex justify-content-between" style="text-decoration: none; color: #333; font-size: 15px">
-                                <span th:text="${rootList.rootSeq}" style="width: 10%;" class="ps-2"></span>
-                                <span th:text="${rootList.rootTitle}" class="line-text" style="width: 55%;"></span>
-<!--                                <span th:text="${#temporals.format(rootList.frboRegDate, 'yyyy-MM-dd')}" class="text-end pe-2" style="width: 35%;"></span>-->
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div style="width: 30%; border: 1px solid #eee; border-radius: 10px; background-color: #baa491;">
-                    <div class="d-flex justify-content-center align-items-center">
-                        <span style="font-weight: 500; font-size: 36px;">
-                            Q&A
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-        <div class="btn-group" role="group" aria-label="Location buttons">
-            <a href="/weather?location=Seoul" class="btn btn-primary btn-sm">서울</a>
-            <a href="/weather?location=Incheon" class="btn btn-primary btn-sm">인천</a>
-        </div>
-
-        <!-- 오른쪽 상단 자연스러운 날씨 카드 -->
-        <div class="weather-card-container" id="weatherCard" th:if="${weatherData}">
-            <div class="weather-card">
-                <p class="weather-city" th:text="${weatherData.name}">도시명</p>
-                <!-- 아이콘 -->
-                <img th:src="${weatherIcon}" alt="날씨 아이콘" class="weather-icon">
-
-                <!-- 온도, 설명 -->
-                <div class="weather-info">
-                    <p class="weather-temp" th:text="${weatherData.main.temp + ' °C'}">32°C</p>
-                    <p class="weather-summary" th:text="${weatherData.weather[0].description}">맑음</p>
-                </div>
-
-                <!-- 날짜, 습도 -->
-                <div class="weather-details">
-                    <p>날짜 : <span th:text="${today}">2025-03-13</span></p>
-                    <p>습도 : <span th:text="${weatherData.main.humidity}">25</span> %</p>
-                </div>
             </div>
         </div>
+    </section>
 
-        </body>
-    </main>
-    <!-- From Uiverse.io 날씨어플-->
+    <!--게시판-->
+    <section id="section3" class="container pt-5 mt-5 ">
+        <h3>#인기 맛집</h3>
+        <div class="row" style="height: 500px">
+            <!-- Swiper -->
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" th:each="board : ${top9MjBoard}" style="text-align: center;">
+                        <div class="card-mj">
+                            <a th:href="@{'/mjboard/detail/' + ${board.mjSeq}}"  class="w-100" style="text-decoration: none;">
+                                <img th:src="${imageUrlMap != null and imageUrlMap[board.mjSeq] != null  ? imageUrlMap[board.mjSeq]
+                                     : '/images/total/default.png'}"
+                                     class="card-img-top"
+                                     style="height:300px; object-fit:cover;"
+                                     alt="썸네일">
+                                <h5 th:text="${board.mjTitle}" style="margin-top: 10px; color: black;"></h5>
+                                <p th:text="${board.mjMapTitle}" style="font-size: 14px; color: gray;"></p>
+                                <p th:text="'조회수: ' + ${board.mjCnt}" style="font-size: 12px; color: gray;"></p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </section>
 
-    <!-- ✅ 고정 날씨 카드: 꼭 <main> 바깥 -->
+    <!--기타-->
+    <section id="section4" class="container py-5 mt-5">
+        <div class="row d-flex justify-content-between" style="height:500px;">
 
-</html>
+
+            <!-- 게시판 -->
+            <div style="width: 35%">
+                <div class="d-flex justify-content-between" style="border-bottom: 2px solid black">
+                    <h4 class="mb-0">자유 게시판</h4>
+                    <a th:href="@{/freequestion/}" style="text-decoration: none; color: #c8aa95"><i
+                            class="bi bi-plus fs-3"></i></a>
+                </div>
+                <ul class="ps-0">
+                    <li th:each="freeboard : ${freeQuestionBoard}" class="py-2"
+                        style="border-bottom: 1px solid #e1e1e1">
+                        <a th:href="@{|/freequestion/detail/${freeboard.frboSeq}|}"
+                           class="d-flex justify-content-between"
+                           style="text-decoration: none; color: #333; font-size: 15px">
+                            <span th:text="${freeboard.frboSeq}" style="width: 10%;" class="ps-2"></span>
+                            <span th:text="${freeboard.frboTitle}" class="line-text" style="width: 55%;"></span>
+                            <span th:text="${#temporals.format(freeboard.frboRegDate, 'yyyy-MM-dd')}"
+                                  class="text-end pe-2" style="width: 35%;"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+
+
+            <!-- 게시판 -->
+            <div style="width: 35%">
+                <div class="d-flex justify-content-between" style="border-bottom: 2px solid black">
+                    <h4 class="mb-0">진행중인 루트 이벤트</h4>
+                    <a th:href="@{/root/list}" style="text-decoration: none; color: #c8aa95"><i
+                            class="bi bi-plus fs-3"></i></a>
+                </div>
+                <ul class="ps-0">
+                    <li th:each="rootList : ${rootList}" class="py-2" style="border-bottom: 1px solid #e1e1e1">
+                        <a th:href="@{|/root/register/detail/${rootList.rootSeq}|}"
+                           class="d-flex justify-content-between"
+                           style="text-decoration: none; color: #333; font-size: 15px">
+                            <span th:text="${rootList.rootSeq}" style="width: 10%;" class="ps-2"></span>
+                            <span th:text="${rootList.rootTitle}" class="line-text" style="width: 55%;"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+
+
+            <div style="width: 25%;  border: 1px solid rgba(238,238,238,0); border-radius: 10px; ">
+                <div class="d-flex justify-content-center align-items-center">
+                    <span style="font-weight: 400; font-size: 36px;">날씨 정보</span>
+                </div>
+
+                <!--  날씨 api 적용 젝슨으로함 -->
+                <div class="weather-card-container">
+                    <div class="weather-card" id="weatherCard" style="display: none;">
+                        <p class="weather-city" id="weatherCity">도시명</p>
+                        <p class="weather-summary" id="weatherSummary">날씨 설명</p>
+                        <img id="weatherIcon" class="weather-icon" src="" alt="날씨 아이콘">
+                        <p class="weather-temp" id="weatherTemp">온도</p>
+                        <div class="weather-details">
+                            <p> 날짜 : <span id="weatherDate"></span></p>
+                            <p> 습도 : <span id="weatherHumidity"></span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!--  날씨 버튼  -->
+                <div class="text-center mt-3">
+                    <button class="weather-btn" onclick="getWeather('Seoul')">서울</button>
+                    <button class="weather-btn" onclick="getWeather('Incheon')">인천</button>
+                    <button class="weather-btn" onclick="getWeather('Busan')">부산</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+<!-- From Uiverse.io 날씨어플-->
+
+
+
 
 <link rel="stylesheet" type="text/css" th:href="@{/css/weather.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
 
 
-<script th:inline="javascript">
+
+<script th:inline="javascript" layout:fragment="script" >
     let map;
-    let mjboard = /*[[${mjboard}]]*/ [];
     let markerList = [];
-
-    let imageUrlMap = /*[[${imageUrlMap}]]*/ {};
-
     let routeLine = null;
 
-    console.log("있니?" + mjboard);
+    let mjboard = /*[[${mjboard}]]*/ [];
 
-    let swiper = new Swiper('.swiper', {
-        slidesPerView: 3,
-        direction: getDirection(),
-        spaceBetween: 20,
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        on: {
-            resize: function () {
-                swiper.changeDirection(getDirection());
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("✅ 페이지 로드 완료");
+
+        getWeather("Seoul");
+
+        let swiper = new Swiper('.swiper', {
+            slidesPerView: 3,
+            direction: getDirection(),
+            spaceBetween: 20,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
             },
-        },
+            on: {
+                resize: function () {
+                    swiper.changeDirection(getDirection());
+                },
+            },
+        });
     });
+
+    function getWeather(city) {
+        console.log(`🌤️ Fetching weather for ${city}...`);
+
+        $.ajax({
+            url: `/weather?location=${city}`,
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                console.log("✅ Received weather data:", data);
+
+                if (!data || !data.weatherData) {
+                    console.error("❌ 데이터 없음:", data);
+                    alert("날씨 데이터를 불러올 수 없습니다.");
+                    return;
+                }
+
+                $("#weatherCity").text(data.location || "알 수 없음");
+                $("#weatherSummary").text(data.weatherData.weather[0]?.description || "날씨 정보 없음");
+                $("#weatherIcon").attr("src", data.weatherIcon || "/images/default-weather.png");
+                $("#weatherTemp").text(data.weatherData.main.temp + ' °C' || "온도 없음");
+                $("#weatherHumidity").text(data.weatherData.main.humidity + ' %' || "습도 없음");
+                $("#weatherDate").text(data.today || "날짜 없음");
+
+                $("#weatherCard").show();
+            },
+            error: function (xhr, status, error) {
+                console.error("❌ Error fetching weather:", error);
+                alert("날씨 정보를 가져오는 중 오류가 발생했습니다.");
+            }
+        });
+    }
 
     function getDirection() {
         let windowWidth = window.innerWidth;
@@ -282,51 +276,28 @@
     }
 
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const weatherCard = document.getElementById('weatherCard');
-        let lastScrollY = window.scrollY;
 
-        window.addEventListener('scroll', function() {
-            // 현재 스크롤 위치
-            const currentScrollY = window.scrollY;
-
-            // 이동할 위치  처음~나중에 까지 120까지 먹힘
-            const targetTop = currentScrollY + 120;
-
-            // 부드럽게 이동 (CSS transition이 알아서 처리)
-            weatherCard.style.top = targetTop + 'px';
-
-            // 현재 위치 저장 (필요 시 사용)
-            lastScrollY = currentScrollY;
-        });
-
-        setMap(new naver.maps.LatLng(36.751351, 128.0316113)); // 기본 지도 위치
+    setMap(new naver.maps.LatLng(36.751351, 128.0316113)); // 기본 지도 위치
 
 
-        // 지도 Tab 관리
-        let addrList = mjboard.map(data => data.mjMapAddress);
-        let Regions = regionAddress(addrList);
-        console.log("추출된 지역 리스트: ", Regions);
+    // 지도 Tab 관리
+    let addrList = mjboard.map(data => data.mjMapAddress);
+    let Regions = regionAddress(addrList);
+    console.log("추출된 지역 리스트: ", Regions);
 
-        const regionTab = document.getElementById('regionTab');
-        regionTab.innerHTML = `
+    const regionTab = document.getElementById('regionTab');
+    regionTab.innerHTML = `
             <li class="nav-item">
                 <span class="nav-link active" style="color: #1a1d20" onclick="onClickRegionTab(event, 'all')">전체</span>
             </li>
         `;
 
-        Regions.forEach(region => {
-            regionTab.innerHTML += `
+    Regions.forEach(region => {
+        regionTab.innerHTML += `
                 <li class="nav-item">
                     <span class="nav-link" style="color: #1a1d20" onclick="onClickRegionTab(event, '${region}')">${region}</span>
                 </li>
             `;
-        });
-
-        // 최초 전체 마커 표시
-        // updateMarkers('all');
-
-
     });
 
     // map
@@ -339,7 +310,7 @@
         });
 
         let markersLoaded = false;
-        naver.maps.Event.addListener(map, 'tilesloaded', function() {
+        naver.maps.Event.addListener(map, 'tilesloaded', function () {
             if (!markersLoaded) {
                 updateMarkers('all');
                 markersLoaded = true;
@@ -364,7 +335,6 @@
         // 필터링한 값으로 마커 재생성
         filter.forEach(data => {
             let location = new naver.maps.LatLng(data.mjMapLatitude, data.mjMapLongitude);
-            let imgSrc = imageUrlMap[data.mjSeq] ? imageUrlMap[data.mjSeq] : '/images/total/default.png';
 
             const marker = new naver.maps.Marker({
                 position: location,
@@ -384,7 +354,7 @@
                     padding: 15px;
                     box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
                 <div class="d-flex">
-                    <img src="${imgSrc}" class="card-img-top me-3" style="width: 80px; height: 80px; object-fit:cover;" alt="썸네일">
+
                     <div>
                         <h5 style="font-size: 13px;" class="font-bold-style">${data.mjMapTitle}</h5>
                         <h6 style="font-size: 11px; color: #555">${data.mjMapAddress}</h6>
@@ -476,7 +446,7 @@
         value.forEach(address => {
 
             let region = address.substring(0, 2);
-            if(region !== ''){
+            if (region !== '') {
                 regionSet.add(region);
             }
         });
@@ -506,7 +476,7 @@
         if (!startInput || !goalInput) {
             alert("출발지와 도착지를 정확히 선택해주세요.");
             return;
-        } else if(startInput === goalInput) {
+        } else if (startInput === goalInput) {
             alert("출발지와 도착지를 다르게 선택하주세요");
             return;
         }
@@ -537,7 +507,7 @@
         // Polyline (경로)
         const routePath = pathList.map(coord => new naver.maps.LatLng(coord[0], coord[1]));
 
-        // 기존 라인 제거 (중복 방지)
+
         if (routeLine) routeLine.setMap(null);
 
         // 새 라인 생성
@@ -549,9 +519,57 @@
             strokeOpacity: 0.8
         });
 
-        // 지도 중심을 출발지로 이동
+
         map.setCenter(routePath[0]);
     }
 
 
+</script>
+
+
+<!--렌담 매뉴 추천 ㅎ-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/api/random/recipes')
+            .then(response => response.json())
+            .then(data => {
+                let recipeListHtml = '';
+
+                if (data.length === 0) {
+                    recipeListHtml = '<p style="color: red;">랜덤 레시피가 없습니다!</p>';
+                } else {
+                    data.forEach((recipe, index) => {
+                        recipeListHtml += `
+                        <div class="card mb-3 recipe-card" style="width: 100%; max-width: 600px; border-radius: 15px; overflow: hidden;">
+                            <div class="card-body" style="background: #C8AB8F; border-radius: 15px; transition: background 0.3s ease-in-out;">
+                                <div class="d-flex align-items-center">
+                                    <span class="d-inline-block me-3" style="width: 10%; font-weight: bold; color: #fff;">${index + 1}</span>
+                                    <span class="d-inline-block me-3" style="width: 30%; font-weight: bold; color: #fff;">${recipe.fmrecipeCategory}</span>
+                                    <span class="d-inline-block" style="width: 50%;">
+                                        <div style="text-decoration: none; color: #fff; font-weight: bold;">
+                                            ${recipe.fmrecipeTitle}
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    });
+                }
+
+                document.getElementById('randomRecipeList').innerHTML = recipeListHtml;
+
+                // 호버 효과 적용
+                document.querySelectorAll('.recipe-card .card-body').forEach(card => {
+                    card.addEventListener('mouseover', function () {
+                        this.style.background = "#A08D74"; // 호버 시 색상 변경
+                    });
+                    card.addEventListener('mouseout', function () {
+                        this.style.background = "#C8AB8F"; // 원래 색상으로 복귀
+                    });
+                });
+
+            })
+            .catch(error => console.error('랜덤 레시피 로딩 실패:', error));
+    });
 </script>

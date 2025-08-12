@@ -1,7 +1,7 @@
 package com.springboot.biz.recipe.user;
 
-import com.springboot.biz.free.board.FreeQuestion;
 import com.springboot.biz.user.HUser;
+import com.springboot.biz.user.HUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,12 +14,15 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRecipeRepository userRecipeRepository;
+
+    private final HUserRepository hUserRepository;
 
 //수정
      //레시피 리스트
@@ -48,7 +51,13 @@ public class UserService {
         userRecipe.setUserRecipeCnt("0");
         userRecipe.setRecipeRecommend(0);
 
-        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/userRecipe";
+        // String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/userRecipe";
+        String projectPath = "/home/ubuntu/oneend/files/userRecipe";
+
+        File directory = new File(projectPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
 
         if (!file.isEmpty()) {
             String fileName = file.getOriginalFilename(); // 원본 파일명
@@ -88,4 +97,13 @@ public class UserService {
         userRecipeRepository.save(recipe);
     }
 
+    // HUserService.java
+    public List<UserRecipe> getRecommendedRecipes() {
+        return userRecipeRepository.findByRecipeRecommendGreaterThan(0);  // 추천 수가 0보다 큰 레시피들만 가져옴
+    }
+
 }
+
+
+
+

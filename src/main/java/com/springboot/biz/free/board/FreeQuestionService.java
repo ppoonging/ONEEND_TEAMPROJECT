@@ -50,7 +50,14 @@ public class FreeQuestionService {
     //글 등록,파일 업로드
     public void freeForm(String frboTitle, String frboContent, MultipartFile file, HUser hUser) throws Exception {
         //파일업로드 경로 설정
-        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files";
+        // String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files";
+        String projectPath = "/home/ubuntu/oneend/files/free";
+
+
+        File directory = new File(projectPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
 
         //UUID를 사용해서 파일명 중복 방지
         UUID uuid = UUID.randomUUID();
@@ -62,7 +69,7 @@ public class FreeQuestionService {
 
         //데이터 저장
         FreeQuestion f = new FreeQuestion();
-        f.setFrboFilePath("/files/" + frboFileName);
+        f.setFrboFilePath("/files/free/" + frboFileName);
         f.setFrboFileName(frboFileName);
         f.setFrboTitle(frboTitle);
         f.setFrboContent(frboContent);

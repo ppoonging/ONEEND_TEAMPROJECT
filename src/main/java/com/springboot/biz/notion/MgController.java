@@ -39,7 +39,7 @@ public class MgController {
 
     @GetMapping("/create")
     public String Create(MgNotionForm mgNotionForm) {
-        return "notionForm";
+        return "notion/notionForm";
     }
 
 
@@ -103,7 +103,7 @@ public class MgController {
         model.addAttribute("paging", paging);
         model.addAttribute("keyword", keyword);
 
-        return "notion/notionlist";
+        return "notion/notionList";
     }
 
 

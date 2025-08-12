@@ -1,4 +1,5 @@
 .weather-card-container {
+
     position: absolute; /* 고정이 아닌 절대 위치 */
     top: 120px; /* 시작 위치 */
     right: 20px;
@@ -13,11 +14,13 @@
     border-radius: 15px;
     padding: 15px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     text-align: center;
+
 }
 .weather-city {
     font-size: 18px;
@@ -25,12 +28,14 @@
     margin-bottom: -20px;
     color: black;
     text-align: center;
+
 }
 
 .weather-icon {
     width: 100px;
     height: 100px;
     margin-bottom: 0px;
+
 
 
 }
@@ -58,3 +63,4 @@
     line-height: 0.5; /* 줄 간격  둘사이 가깝게 만들기 코드*/
 
 }
+
