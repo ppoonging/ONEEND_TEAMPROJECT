@@ -100,11 +100,13 @@
     font-size: 12px;
     padding: 2px 10px;
 
+
 }
 /* 네이버 스타일 고정 버튼 */
 .btn-naver-fixed {
     background-color: #ec8d53; /* 베이지 */
     color: #ffffff; /* 글자 */
+
     padding: 12px 30px;
     font-size: 16px;
     font-weight: 600;
@@ -113,12 +115,14 @@
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
     transition: all 0.2s ease-in-out;
     cursor: pointer;
+
     margin-left: 87%;
 
 
    margin-top:50px ;
     bottom: 30px;
     right: 30px;
+
 
 }
 

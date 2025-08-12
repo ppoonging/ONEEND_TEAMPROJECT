@@ -9,7 +9,7 @@ PEM_PATH=~/springboot_keypair.pem                # PEM 키 파일 경로 (로컬
 SERVER_USER=ubuntu                              # EC2 사용자명
 SERVER_IP=3.37.33.160                         # EC2 퍼블릭 IP
 DEPLOY_PATH=/home/ubuntu/deploy                 # ⭐️ EC2 서버 절대경로로 명시
-JAR_NAME=oneend-0.0.1-SNAPSHOT.jar               # JAR 파일명
+JAR_NAME=oneend-0.0.1-SNAPSHOT.jar              # JAR 파일명
 BACKUP_PATH=$DEPLOY_PATH/backup                 # 백업 경로 (절대 경로)
 
 # 2. 빌드 시작

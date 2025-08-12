@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     overlay.classList.add("modal-overlay");
     document.body.appendChild(overlay);
 
+
     document.querySelectorAll(".card.custom-card").forEach(function (card) {
         card.addEventListener("click", function () {
             var modalId = this.getAttribute("data-modal-id");

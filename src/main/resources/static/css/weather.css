@@ -1,82 +1,66 @@
 .weather-card-container {
-    position: relative; /* 절대 위치 제거 */
-    top: auto;
-    right: auto;
-    width: 100%;
-    display: flex;
-    justify-content: center; /* 가운데 정렬 */
-    margin-top: 20px;
+
+    position: absolute; /* 고정이 아닌 절대 위치 */
+    top: 120px; /* 시작 위치 */
+    right: 20px;
+    z-index: 1000;
+    transition: top 0.5s ease; /* 부드럽게 이동 */
 }
 
 .weather-card {
-    background: rgba(0, 0, 0, 0.29);
-    width: 250px; /* 기존보다 살짝 더 크게 */
-    height: 350px;
+    background-color: rgba(0, 0, 0, 0.07);
+    width: 200px;
+    height: 250px;
     border-radius: 15px;
     padding: 15px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* 더 부드러운 그림자 */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-}
 
+}
 .weather-city {
-    font-size: 20px; /
-font-weight: bold;
-    margin-bottom: 10px;
-    color: #333; /* 다크 그레이 */
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: -20px;
+    color: black;
+    text-align: center;
+
 }
 
 .weather-icon {
     width: 100px;
     height: 100px;
     margin-bottom: 0px;
+
+
+
 }
 
 .weather-info {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .weather-temp {
-    font-size: 24px; /* 온도는 좀 더 강조 */
+    font-size: 22px;
     font-weight: bold;
     margin: 0;
-    color: #000000; /* 코랄색으로 포인트 */
 }
 
 .weather-summary {
-    font-size: 16px;
+    font-size: 14px;
     margin: 0;
-    opacity: 0.8;
-    color: #555; /* 기존보다 더 세련된 회색 */
+    opacity: 0.9;
 }
 
 .weather-details {
-    font-size: 13px;
+    font-size: 12px;
     text-align: center;
-    color: #333;
-    line-height: 1.5; /* 기존보다 가독성 향상 */
+    color: black;
+    line-height: 0.5; /* 줄 간격  둘사이 가깝게 만들기 코드*/
+
 }
 
-/* 추가적인 애니메이션 효과 */
-.weather-card:hover {
-    transform: scale(1.05); /* 마우스를 올리면 살짝 확대 */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
-}
-.weather-btn {
-    background-color: rgba(236, 141, 83, 0.48);
-    color: white;
-    border: none;
-    padding: 8px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.3s;
-}
-
-.weather-btn:hover {
-    background-color: darkorange;
-}
