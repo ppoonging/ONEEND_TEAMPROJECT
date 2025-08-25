@@ -276,175 +276,136 @@
     }
 
 
+    // 초기 지도 생성
+    setMap(new kakao.maps.LatLng(36.751351, 128.0316113));
 
-    setMap(new naver.maps.LatLng(36.751351, 128.0316113)); // 기본 지도 위치
-
-
-    // 지도 Tab 관리
+    // 지역 목록 추출
     let addrList = mjboard.map(data => data.mjMapAddress);
     let Regions = regionAddress(addrList);
     console.log("추출된 지역 리스트: ", Regions);
 
+    // 지역 탭 렌더링
     const regionTab = document.getElementById('regionTab');
     regionTab.innerHTML = `
-            <li class="nav-item">
-                <span class="nav-link active" style="color: #1a1d20" onclick="onClickRegionTab(event, 'all')">전체</span>
-            </li>
-        `;
-
+    <li class="nav-item">
+        <span class="nav-link active" style="color: #1a1d20" onclick="onClickRegionTab(event, 'all')">전체</span>
+    </li>`;
     Regions.forEach(region => {
         regionTab.innerHTML += `
-                <li class="nav-item">
-                    <span class="nav-link" style="color: #1a1d20" onclick="onClickRegionTab(event, '${region}')">${region}</span>
-                </li>
-            `;
+        <li class="nav-item">
+            <span class="nav-link" style="color: #1a1d20" onclick="onClickRegionTab(event, '${region}')">${region}</span>
+        </li>`;
     });
 
-    // map
+    // 지도 생성 함수
     function setMap(center) {
-        map = new naver.maps.Map("map", {
+        const container = document.getElementById('map');
+        const options = {
             center: center,
-            zoom: 7,
-            zoomControl: true,
-            mapTypeControl: true
-        });
+            level: 13
+        };
 
-        let markersLoaded = false;
-        naver.maps.Event.addListener(map, 'tilesloaded', function () {
-            if (!markersLoaded) {
+        map = new kakao.maps.Map(container, options);
+
+        kakao.maps.event.addListener(map, 'tilesloaded', function () {
+            if (markerList.length === 0) {
                 updateMarkers('all');
-                markersLoaded = true;
             }
         });
-
     }
 
-    // 마커 설정
+    // 마커 생성 및 업데이트
     function updateMarkers(value) {
-        // 기존 마커 지도에서 제거
+        // 기존 마커 제거
         markerList.forEach(marker => marker.setMap(null));
         markerList = [];
 
-        // 지역 필터링 (all 이면 전체, 아니면 해당하는 value 값 필터링)
-        let filter = value === 'all' ? mjboard : mjboard.filter(data => data.mjMapAddress.includes(value));
-
+        const filter = value === 'all' ? mjboard : mjboard.filter(data => data.mjMapAddress.includes(value));
         console.log(`선택된 지역: ${value}, 마커 수: ${filter.length}`);
 
-        const bounds = new naver.maps.LatLngBounds();
+        const bounds = new kakao.maps.LatLngBounds();
 
-        // 필터링한 값으로 마커 재생성
         filter.forEach(data => {
-            let location = new naver.maps.LatLng(data.mjMapLatitude, data.mjMapLongitude);
+            const position = new kakao.maps.LatLng(data.mjMapLatitude, data.mjMapLongitude);
 
-            const marker = new naver.maps.Marker({
-                position: location,
+            const marker = new kakao.maps.Marker({
+                position: position,
                 map: map,
-                icon: {
-                    content: `<img width="30" height="30" src="https://img.icons8.com/stickers/100/marker.png" alt="marker"/>`,
-                    anchor: new naver.maps.Point(15, 30)
-                }
+                image: new kakao.maps.MarkerImage(
+                    "https://img.icons8.com/stickers/100/marker.png",
+                    new kakao.maps.Size(30, 30),
+                    { offset: new kakao.maps.Point(15, 30) }
+                )
             });
 
-            const contentString = `
-                <div class="iw_inner" style="
-                    border-radius: 10px;
-                    border: 1px solid #ccc;
-                    background: white;
-                    max-width: 900px;
-                    padding: 15px;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+            const iwContent = `
+            <div class="iw_inner" style="border-radius: 10px; border: 1px solid #ccc; background: white; max-width: 900px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
                 <div class="d-flex">
-
                     <div>
                         <h5 style="font-size: 13px;" class="font-bold-style">${data.mjMapTitle}</h5>
                         <h6 style="font-size: 11px; color: #555">${data.mjMapAddress}</h6>
                         <p class="mb-1" style="font-size: 11px;">${data.mjMapRodeAddress}</p>
                     </div>
                 </div>
-                <div>
-                    <div class="text-center">
-                        <a href="/mjboard/detail/${data.mjSeq}" style="font-size: 13px; padding: 5px 8px; border: 1px solid #fff; background-color: #ec8d53; border-radius: 20px; color: #fff;">자세히 보기</a>
-                    </div>
-                    <div class="text-end">
-                        <button class="directionStart btn btn-sm btn-outline-secondary"
-                            data-latitude="${data.mjMapLatitude}"
-                            data-longitude="${data.mjMapLongitude}"
-                            data-title="${data.mjMapTitle}">
-                                출발</button>
-                        <button class="directionGoal btn btn-sm btn-outline-secondary"
-                                data-latitude="${data.mjMapLatitude}"
-                                data-longitude="${data.mjMapLongitude}"
-                                data-title="${data.mjMapTitle}">
-                                도착</button>
-                    </div>
+                <div class="text-center">
+                    <a href="/mjboard/detail/${data.mjSeq}" style="font-size: 13px; padding: 5px 8px; border: 1px solid #fff; background-color: #ec8d53; border-radius: 20px; color: #fff;">자세히 보기</a>
                 </div>
-
+                <div class="text-end mt-2">
+                    <button class="directionStart btn btn-sm btn-outline-secondary"
+                        data-latitude="${data.mjMapLatitude}"
+                        data-longitude="${data.mjMapLongitude}"
+                        data-title="${data.mjMapTitle}">
+                            출발</button>
+                    <button class="directionGoal btn btn-sm btn-outline-secondary"
+                        data-latitude="${data.mjMapLatitude}"
+                        data-longitude="${data.mjMapLongitude}"
+                        data-title="${data.mjMapTitle}">
+                            도착</button>
+                </div>
             </div>`;
 
-            const infowindow = new naver.maps.InfoWindow({
-                content: contentString,
-                maxWidth: 550,
-                backgroundColor: "none",
-                borderColor: "none",
+            const infowindow = new kakao.maps.InfoWindow({
+                content: iwContent
             });
 
-            naver.maps.Event.addListener(map, "click", function () {
-                infowindow.close();
-            });
-
-            naver.maps.Event.addListener(marker, "click", function () {
-                map.setCenter(location);
-                // map.setZoom(11);
+            kakao.maps.event.addListener(marker, "click", function () {
                 infowindow.open(map, marker);
+                map.setCenter(position);
 
                 setTimeout(() => {
-                    const startBtn = document.querySelector('.directionStart');
-                    const goalBtn = document.querySelector('.directionGoal');
+                    document.querySelector('.directionStart')?.addEventListener('click', function () {
+                        document.getElementById('start').value = `${this.dataset.longitude},${this.dataset.latitude}`;
+                        document.getElementById('startValue').value = this.dataset.title;
+                    });
 
-                    if (startBtn) {
-                        startBtn.addEventListener('click', function () {
-                            const latitude = this.dataset.latitude;
-                            const longitude = this.dataset.longitude;
-                            const title = this.dataset.title;
-                            console.log('출발 ', latitude, longitude);
-                            document.getElementById('start').value = `${longitude},${latitude}`;
-                            document.getElementById('startValue').value = title;
-                        });
-                    }
-
-                    if (goalBtn) {
-                        goalBtn.addEventListener('click', function () {
-                            const latitude = this.dataset.latitude;
-                            const longitude = this.dataset.longitude;
-                            const title = this.dataset.title;
-                            console.log('도착 ', latitude, longitude);
-                            document.getElementById('goal').value = `${longitude},${latitude}`;
-                            document.getElementById('goalValue').value = title;
-                        });
-                    }
+                    document.querySelector('.directionGoal')?.addEventListener('click', function () {
+                        document.getElementById('goal').value = `${this.dataset.longitude},${this.dataset.latitude}`;
+                        document.getElementById('goalValue').value = this.dataset.title;
+                    });
                 }, 300);
             });
 
+            kakao.maps.event.addListener(map, "click", function () {
+                infowindow.close();
+            });
+
             markerList.push(marker);
-            bounds.extend(location);
+            bounds.extend(position);
         });
 
-        // 지도 중심 자동 이동
+        // 화면 조정
         if (markerList.length > 0) {
-            map.fitBounds(bounds);
+            map.setBounds(bounds);
         } else {
-
-            map.setCenter(new naver.maps.LatLng(36.751351, 128.0316113));
-            map.setZoom(6);
+            map.setCenter(new kakao.maps.LatLng(36.751351, 128.0316113));
+            map.setLevel(13);
         }
     }
 
-
-    // 지도 주소 글자 추출
+    // 지역 이름 추출 함수
     function regionAddress(value) {
         const regionSet = new Set();
         value.forEach(address => {
-
             let region = address.substring(0, 2);
             if (region !== '') {
                 regionSet.add(region);
@@ -453,18 +414,16 @@
         return Array.from(regionSet);
     }
 
-    // 지도 Tab 이벤트
+    // 탭 클릭 시 마커 필터링
     function onClickRegionTab(e, value) {
         e.preventDefault();
 
-        document.querySelectorAll('#regionTab .nav-link').forEach(data => {
-            data.classList.remove('active');
-        });
-
+        document.querySelectorAll('#regionTab .nav-link').forEach(data => data.classList.remove('active'));
         e.target.classList.add('active');
 
         updateMarkers(value);
     }
+
 
     // 길찾기 버튼
     document.getElementById("directionsForm").addEventListener("submit", function (e) {
@@ -477,7 +436,7 @@
             alert("출발지와 도착지를 정확히 선택해주세요.");
             return;
         } else if (startInput === goalInput) {
-            alert("출발지와 도착지를 다르게 선택하주세요");
+            alert("출발지와 도착지를 다르게 선택해주세요.");
             return;
         }
 
@@ -489,10 +448,13 @@
             .then(data => {
                 console.log(data);
 
-                // 지도 그리기 함수 호출
+                if (!data.path || !Array.isArray(data.path)) {
+                    alert("경로 정보를 불러오는 데 실패했습니다.");
+                    return;
+                }
+
                 drawRoute(data.path);
 
-                // 거리/시간 표시
                 const distanceKm = (data.summary.distance / 1000).toFixed(2);
                 const durationMin = Math.ceil(data.summary.duration / 60000);
                 document.getElementById('info').innerText = `총 거리: ${distanceKm}km, 자동차 소요 시간: ${durationMin}분`;
@@ -500,28 +462,25 @@
             .catch(error => console.error("길찾기 오류:", error));
     });
 
-
     // 출발/도착 라인 생성
     function drawRoute(pathList) {
+        const routePath = pathList.map(coord => new kakao.maps.LatLng(coord[0], coord[1]));
 
-        // Polyline (경로)
-        const routePath = pathList.map(coord => new naver.maps.LatLng(coord[0], coord[1]));
-
-
-        if (routeLine) routeLine.setMap(null);
+        if (window.routeLine) window.routeLine.setMap(null);
 
         // 새 라인 생성
-        routeLine = new naver.maps.Polyline({
+        window.routeLine = new kakao.maps.Polyline({
             map: map,
             path: routePath,
-            strokeColor: '#FF0000',
             strokeWeight: 5,
-            strokeOpacity: 0.8
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeStyle: 'solid'
         });
-
 
         map.setCenter(routePath[0]);
     }
+
 
 
 </script>

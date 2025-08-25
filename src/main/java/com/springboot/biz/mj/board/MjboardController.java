@@ -173,10 +173,10 @@ public class MjboardController {
     }
 
     //검색 기능
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/form/search")
-    @ResponseBody
-    public List<Map<String, String>> search(@RequestParam String query) {
-        return mapService.search(query);
-    }
+//    @PreAuthorize("isAuthenticated()")
+//    @GetMapping("/form/search")
+//    @ResponseBody
+//    public List<Map<String, String>> search(@RequestParam String query) {
+//        return mapService.search(query);
+//    }
 }
